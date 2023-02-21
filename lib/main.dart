@@ -1,5 +1,7 @@
-import 'package:first_app/feature/pages/home_page.dart';
+import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/forgot_password.dart';
 import 'package:first_app/feature/pages/login_page.dart';
+import 'package:first_app/feature/pages/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,46 +16,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Ask-Kstu-App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home ,ok oo'),
+      home: const WelcomeScreenPage(),
     );
   }
 }
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    double fullScreenHeight = MediaQuery.of(context).size.height;
-
-    const topColor = Color(0xFF4E489C);
-
-    return Scaffold(
-        // backgroundColor: Colors.red,
-        resizeToAvoidBottomInset: false,
-        backgroundColor: topColor,
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Container(height: fullScreenHeight, child: LoginPage()),
-            ),
-          ),
-        ) // This traili ng comma makes auto-formatting nicer for build methods.
-        );
-  }
-}
-// ignore: file_names
-// ignore_for_file: file_names
-

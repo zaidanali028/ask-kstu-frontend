@@ -4,28 +4,42 @@ import 'package:flutter/material.dart';
 
 
 class LoginPage extends StatelessWidget {
-  // const HomePage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double halfScreenWidth = MediaQuery.of(context).size.width / 2;
 
-
-    return Stack(
-      children: [
-        Row(
-          children: [
-            Container(
-              // height:50,
-              width: halfScreenWidth, color: bottomColor,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: topColor,
+      body: SafeArea(
+        
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        // height:50,
+                        width: halfScreenWidth, color: bottomColor,
+                      ),
+                      Container(width: halfScreenWidth, color: topColor
+                          // height:50
+                          )
+                    ],
+                  ),
+                  homeScreen(context, topColor, bottomColor, 60.0)
+                ],
+              ),
             ),
-            Container(width: halfScreenWidth, color: topColor
-                // height:50
-                )
-          ],
+          ),
         ),
-        homeScreen(context, topColor, bottomColor, 60.0)
-      ],
+      ),
     );
   }
 }
@@ -53,7 +67,7 @@ Widget homeScreen(context, topColor, bottomColor, radius) {
       Expanded(
         // flex: 3,
         child: Container(
-            // height: halfScreenHeight2,
+            height: halfScreenHeight2,
             decoration: BoxDecoration(
               color: bottomColor,
               borderRadius: BorderRadius.only(
@@ -94,7 +108,7 @@ Widget topPortion(context) {
         child: const Center(
             child: Text(
           'SIGN IN',
-          style: TextStyle(fontSize: 40, color: Colors.white),
+          style: TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),
         )),
       )
     ],
@@ -102,28 +116,30 @@ Widget topPortion(context) {
 }
 
 Widget bottomPortion(context) {
-  return ListView(
+  return Column(
     children: [
-      SizedBox(
-        height: 50,
+      const SizedBox(
+        height: 30,
       ),
-       inputField("Username"),
-          inputField("Password"),
+       inputField("Username", Icons.email),
+          inputField("Password", Icons.lock),
           signingButton("Sign In")
       
     ],
   );
 }
 
-Widget inputField(label) {
+Widget inputField(label, icons,{ suffixIcon}) {
   return Container(
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: EdgeInsets.all(25.0),
-          child: TextField(
+          child: TextFormField(
             decoration: InputDecoration(
               label: Text(label),
               hintText: '',
+              prefixIcon: Icon(icons),
+              suffixIcon: suffixIcon,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
