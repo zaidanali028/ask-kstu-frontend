@@ -56,7 +56,7 @@ class WelcomeScreenPage extends StatelessWidget {
                                               color: bottomColor,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   )),

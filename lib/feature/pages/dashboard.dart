@@ -83,7 +83,6 @@ class _DashboardState extends State<Dashboard> {
                                 ],
                               ),
                               const HeadPicture()
-                            
                             ],
                           ),
                         ),
@@ -102,7 +101,8 @@ class _DashboardState extends State<Dashboard> {
                           scrollDirection: Axis.vertical,
                           children: [
                             const Padding(
-                              padding: EdgeInsets.all(18.0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 15.0),
                               child: Text(
                                 "Notice Board",
                                 style: TextStyle(color: topColor, fontSize: 25),
@@ -110,7 +110,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 18.0),
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Container(
                                 height: 200,
                                 child: ListView(
@@ -155,58 +155,27 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               ),
                             ),
+                            const SizedBox(
+                              height: 18,
+                            ),
                             const Padding(
-                              padding: EdgeInsets.all(18.0),
+                              padding: EdgeInsets.symmetric(horizontal: 18.0),
                               child: Text(
-                                "HomeWork",
+                                "What's trending?",
                                 style: TextStyle(color: topColor, fontSize: 25),
                               ),
                             ),
-                            const HomeworkCard(
-                              title: "Learn Chapter 5 with one Essay",
-                              icons: Icons.circle_outlined,
-                              subtitle: "English  /  Today",
-                            ),
                             const SizedBox(
                               height: 10,
                             ),
-                            const HomeworkCard(
-                              title: "Exercise Trigonometry 1st topic",
-                              icons: Icons.circle_outlined,
-                              subtitle: "Maths  /  Today",
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const HomeworkCard(
-                              title: "Twi writing 3 pages",
-                              icons: Icons.circle_outlined,
-                              subtitle: "Twi  /  Yesterday",
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const HomeworkCard(
-                              title: "Test for History first session",
-                              icons: Icons.circle_outlined,
-                              subtitle: "Social Science  /  Yesterday",
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const HomeworkCard(
-                              title: "Learn Atoms Physics",
-                              icons: Icons.circle_outlined,
-                              subtitle: "Science  /  16 march 2020",
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const HomeworkCard(
-                              title: "English writing 3 pages",
-                              icons: Icons.circle_outlined,
-                              subtitle: "English  /  16 march 2020",
-                            ),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
+                            
                           ],
                         ),
                       ),
@@ -217,6 +186,90 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         )));
+  }
+}
+
+class TrendingNews extends StatelessWidget {
+  const TrendingNews({
+    Key? key,
+    required this.title,
+    required this.date, required this.imagePath,
+  }) : super(key: key);
+
+  final String title;
+  final String date;
+  final String imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 320,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                      image: AssetImage(imagePath),
+                      fit: BoxFit.cover)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.alarm,
+                  color: Colors.grey,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  date,
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Text(
+                  "Views",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "23",
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Divider(
+              thickness: 1,
+              color: Colors.grey,
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -235,8 +288,7 @@ class HeadPicture extends StatelessWidget {
             maxRadius: 24,
             minRadius: 24,
             backgroundColor: bottomColor,
-            backgroundImage: AssetImage(
-                "assets/images/student_profile.jpeg"),
+            backgroundImage: AssetImage("assets/images/student_profile.jpeg"),
           ),
           Positioned(
             right: 0,
