@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
-import 'package:first_app/models/api_response.dart';
-import 'package:first_app/models/constant.dart';
-import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -15,39 +15,47 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   void _loadUserInfo() async {
-    String token = await getToken();
-    if (token == '') {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    if (token != null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          (route) => false);
+    } else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
           (route) => false);
-    } else {
-      ApiResponse response = await getUserDetail();
-      if (response.error == null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard()),
-            (route) => false);
-      } else if (response.error == unauthorized) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
-            (route) => false);
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('${response.error}')));
-      }
     }
+    // String token = await getToken();
+    // if (token == '') {
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //       MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
+    //       (route) => false);
+    // } else {
+    //   Future<User>? _fetchUser = getUserDetail();
+    //   if (_fetchUser == null) {
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
+    //         (route) => false);
+    //   } else {
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(builder: (context) => Dashboard()),
+    //         (route) => false);
+    //   }
+    // }
   }
 
-  // @override
-  // void initState() {
-  //   _loadUserInfo();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 4), _loadUserInfo);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 4), () {
-      _loadUserInfo();
-    });
+    // Future.delayed(Duration(seconds: 7), () {
+    //   _loadUserInfo();
+    // });
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -61,8 +69,8 @@ class _LoadingPageState extends State<LoadingPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 350,
-                    height: 350,
+                    width: 270,
+                    height: 270,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("assets/images/f.png"),
@@ -76,7 +84,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     style: TextStyle(
                         color: bottomColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 25),
+                        fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
                 ],

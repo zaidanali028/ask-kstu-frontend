@@ -1,5 +1,5 @@
 import 'package:first_app/feature/colors.dart';
-import 'package:first_app/glassmorphic_container.dart';
+import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -50,7 +50,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Dashboard()));
+                                      },
                                       icon: const Icon(
                                         Icons.arrow_back,
                                         color: bottomColor,
@@ -135,11 +142,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 const Spacer(),
                                 GestureDetector(
                                   onTap: () {},
-                                  child: CustomGlassmorphicContainer(
-                                    width: double.infinity,
-                                    height: 50,
-                                    borderRadius: 25,
-                                    child: Container(
+                                  child:  Container(
                                       width: double.infinity,
                                       height: 50,
                                       decoration: BoxDecoration(
@@ -154,7 +157,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       )),
                                     ),
                                   ),
-                                )
                               ],
                             ),
                           ),

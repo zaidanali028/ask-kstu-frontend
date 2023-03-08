@@ -1,5 +1,14 @@
+import 'dart:io';
+
+import 'package:first_app/feature/pages/dashboard_drawer.dart';
+import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/user.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -9,6 +18,28 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  var user;
+  var email;
+  var profileImage;
+  var studentNumber;
+  // File? _imageFile;
+  // final _picker = ImagePicker();
+
+  void getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() async {
+      user = await prefs.getString("name");
+      studentNumber = await prefs.getString("studentNumber");
+      profileImage = await prefs.getString("profileImage");
+    });
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +80,13 @@ class _DashboardState extends State<Dashboard> {
                               Row(
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DashboardDrawer()));
+                                      },
                                       icon: const Icon(
                                         Icons.dashboard_rounded,
                                         color: bottomColor,
@@ -62,19 +99,19 @@ class _DashboardState extends State<Dashboard> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
+                                    children: [
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Text(
-                                        "Saani Iddi",
+                                        "${user}",
                                         style: TextStyle(
                                           color: bottomColor,
                                           fontSize: 20,
                                         ),
                                       ),
                                       Text(
-                                        "Class BTC 3",
+                                        "${studentNumber}",
                                         style: TextStyle(
                                             color: Colors.grey, fontSize: 15),
                                       )
@@ -168,14 +205,48 @@ class _DashboardState extends State<Dashboard> {
                             const SizedBox(
                               height: 10,
                             ),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            TrendingNews(title: "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.", date: "21 Feb 2023", imagePath: "assets/images/student_profile.jpeg"),
-                            
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
+                            TrendingNews(
+                                title:
+                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
+                                date: "21 Feb 2023",
+                                imagePath:
+                                    "assets/images/student_profile.jpeg"),
                           ],
                         ),
                       ),
@@ -193,7 +264,8 @@ class TrendingNews extends StatelessWidget {
   const TrendingNews({
     Key? key,
     required this.title,
-    required this.date, required this.imagePath,
+    required this.date,
+    required this.imagePath,
   }) : super(key: key);
 
   final String title;
@@ -215,8 +287,7 @@ class TrendingNews extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                      image: AssetImage(imagePath),
-                      fit: BoxFit.cover)),
+                      image: AssetImage(imagePath), fit: BoxFit.cover)),
             ),
             const SizedBox(
               height: 10,
@@ -280,26 +351,32 @@ class HeadPicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Stack(
-        children: const [
-          CircleAvatar(
-            maxRadius: 24,
-            minRadius: 24,
-            backgroundColor: bottomColor,
-            backgroundImage: AssetImage("assets/images/student_profile.jpeg"),
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: CircleAvatar(
-              minRadius: 7,
-              maxRadius: 7,
-              backgroundColor: Colors.red,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => UserProfilePage()));
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Stack(
+          children: const [
+            CircleAvatar(
+              maxRadius: 24,
+              minRadius: 24,
+              backgroundColor: bottomColor,
+              backgroundImage: AssetImage("assets/images/student_profile.jpeg"),
             ),
-          )
-        ],
+            Positioned(
+              right: 0,
+              top: 0,
+              child: CircleAvatar(
+                minRadius: 7,
+                maxRadius: 7,
+                backgroundColor: Colors.red,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

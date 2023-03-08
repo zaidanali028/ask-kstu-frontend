@@ -1,5 +1,4 @@
 import 'package:first_app/feature/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -10,8 +9,7 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final TextEditingController _cpasswordController = TextEditingController();
-  final TextEditingController _npasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
@@ -84,38 +82,58 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                       const SizedBox(
                                         height: 50,
                                       ),
-                                      InputFormFields(
-                                        prefixIcon: Icons.lock,
-                                        title: "Current Password",
-                                        controller: _cpasswordController,
-                                      ),
-                                      InputFormFields(
-                                        controller: _npasswordController,
-                                        prefixIcon: Icons.lock,
-                                        suffixIcon: Icons.visibility_off,
-                                        suffixIcon2: Icons.visibility,
-                                        title: "New Password",
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 18.0, vertical: 10),
+                                        child: TextFormField(
+                                          validator: ((value) {
+                                            if (value!.isEmpty) {
+                                              return "Email field is required";
+                                            }
+                                            return null;
+                                          }),
+                                          controller: _emailController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.all(10),
+                                            label: Text("Email"),
+                                            hintText: '',
+                                            prefixIcon: Icon(Icons.email),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 18.0),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              color: topColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: const Center(
-                                            child: Text(
-                                              "Forgot Password",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (formkey.currentState!
+                                              .validate()) {}
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0),
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                color: topColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: const Center(
+                                              child: Text(
+                                                "Forgot Password",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -127,54 +145,5 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         )
                       ])))),
         ));
-  }
-}
-
-class InputFormFields extends StatefulWidget {
-  const InputFormFields({
-    Key? key,
-    required this.prefixIcon,
-    this.suffixIcon,
-    required this.title,
-    this.suffixIcon2,
-    required this.controller,
-  }) : super(key: key);
-  final IconData prefixIcon;
-  final IconData? suffixIcon;
-  final IconData? suffixIcon2;
-  final String title;
-  final TextEditingController controller;
-
-  @override
-  State<InputFormFields> createState() => _InputFormFieldsState();
-}
-
-class _InputFormFieldsState extends State<InputFormFields> {
-  late bool isPassword = true;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
-      child: TextFormField(
-        controller: widget.controller,
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          label: Text(widget.title),
-          hintText: '',
-          prefixIcon: Icon(widget.prefixIcon),
-          suffixIcon: IconButton(
-            icon: Icon(isPassword ? widget.suffixIcon : widget.suffixIcon2),
-            onPressed: () {
-              setState(() {
-                isPassword = !isPassword;
-              });
-            },
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-      ),
-    );
   }
 }
