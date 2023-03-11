@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,37 +16,44 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool ispassword = true;
-  bool _loading = false;
+  bool loading = false;
 
-  void loginUser() async {
-    ApiResponse res =
-        await login(_emailController.text, _passwordController.text);
-    if (res.error == null) {
-      _saveAndRedirectToDashboard(res.data as User);
-      print(res.data);
+  void _loginUser() async {
+    ApiResponse response =
+        await login(emailController.text, passwordController.text);
+    if (response.error == null) {
+      _saveAndRedirectToDashboard(response.data as User);
     } else {
+      print(jsonEncode(response.data));
       setState(() {
-        _loading = false;
+        loading = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${res.error}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${response.error}"), backgroundColor: Color.fromARGB(255, 248, 18, 1),),
+      );
     }
   }
 
   void _saveAndRedirectToDashboard(User user) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('token', user.token ?? '');
-    await pref.setStringList('name', [user.name ?? '']);
-    await pref.setString('email', user.email ?? '');
-    await pref.setString('studentNumber', user.student_number ?? '');
-    await pref.setString('profileImage', user.profileImage ?? '');
-    await pref.setInt('userId', user.id ?? 0);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("token", user.token ?? '');
+    await prefs.setString("name", user.name ?? '');
+    await prefs.setInt("index", user.indexNo ?? 0);
+    await prefs.setString("gender", user.gender ?? '');
+    await prefs.setString("email", user.email ?? '');
+    await prefs.setString("image", user.image ?? '');
+    await prefs.setString("yrOfAdmission", user.yrOfAdmission ?? '');
+    await prefs.setString("yrOfCompletion", user.yrOfCompletion ?? '');
+    await prefs.setInt("userId", user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login Successfully!"), backgroundColor: topColor, ),
+      );
   }
 
   @override
@@ -133,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                                             }),
                                             keyboardType:
                                                 TextInputType.emailAddress,
-                                            controller: _emailController,
+                                            controller: emailController,
                                             decoration: InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.all(10),
@@ -159,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                                             }),
                                             keyboardType:
                                                 TextInputType.visiblePassword,
-                                            controller: _passwordController,
+                                            controller: passwordController,
                                             obscureText: ispassword,
                                             decoration: InputDecoration(
                                               contentPadding:
@@ -195,8 +203,8 @@ class _LoginPageState extends State<LoginPage> {
                                               if (formkey.currentState!
                                                   .validate()) {
                                                 setState(() {
-                                                  _loading = true;
-                                                  loginUser();
+                                                  loading = true;
+                                                  _loginUser();
                                                 });
                                               }
                                             },
@@ -209,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           10)),
                                               child: Center(
-                                                child: _loading
+                                                child: loading
                                                     ? Center(
                                                         child:
                                                             CircularProgressIndicator(

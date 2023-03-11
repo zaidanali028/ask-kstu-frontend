@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final user = userFromJson(jsonString);
+
 import 'dart:convert';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -5,56 +9,68 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
-  User({
-    this.id,
-    this.token,
-    this.email,
-    this.name,
-    this.password,
-    this.student_number,
-    this.profileImage,
-    this.birthDate,
-    this.department,
-    this.program,
-    this.telephone,
-  });
 
-  int? id;
-  String? token;
-  String? email;
-  String? name;
-  String? password;
-  String? student_number;
-  String? profileImage;
-  String? birthDate;
-  String? department;
-  String? program;
-  String? telephone;
+    String? name;
+    String? token;
+    String? email;
+    String? gender;
+    String? image;
+    int? facultyId;
+    int? indexNo;
+    int? deptId;
+    int? programId;
+    int? status;
+    String? yrOfAdmission;
+    String? yrOfCompletion;
+    int? id;
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        token: json["token"],
-        name: json["name"],
-        email: json["email"],
-        password: json["password"],
-        student_number: json["student_number"],
-        profileImage: json["profileImage"],
-        birthDate: json["birth_date"],
-        department: json["department"],
-        program: json["program"],
-        telephone: json["telephone"],
-      );
+    User({
+        this.name,
+        this.email,
+        this.gender,
+        this.facultyId,
+        this.indexNo,
+        this.deptId,
+        this.programId,
+        this.status,
+        this.yrOfAdmission,
+        this.yrOfCompletion,
+        this.id,
+        this.token,
+        this.image
+    });
 
-  Map<String, dynamic> toJson() => {
+    factory User.fromJson(Map<String, dynamic> json){
+      return User(
+        name: json['user']['name'],
+        email: json['user']['email'],
+        image: json['user']['user_img'],
+        gender: json['user']['gender'],
+        facultyId: json['user']['faculty_id'],
+        indexNo: json['user']['index_no'],
+        deptId: json['user']['dept_id'],
+        programId: json['user']['program_id'],
+        status: json['user']['status'],
+        yrOfAdmission: json['user']['yr_of_admission'],
+        yrOfCompletion: json['user']['yr_of_completion'],
+        id: json['user']['id'],
+        token: json['authorisation']['token'],
+    );
+    }
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "email": email,
+        "user_img": image,
+        "gender": gender,
+        "faculty_id": facultyId,
+        "index_no": indexNo,
+        "dept_id": deptId,
+        "program_id": programId,
+        "status": status,
+        "yr_of_admission": yrOfAdmission,
+        "yr_of_completion": yrOfCompletion,
         "id": id,
         "token": token,
-        "email": email,
-        "password": password,
-        "student_number": student_number,
-        "profileImage": profileImage,
-        "birth_date": birthDate,
-        "department": department,
-        "program": program,
-        "telephone": telephone,
-      };
+    };
 }

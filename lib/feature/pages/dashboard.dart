@@ -1,13 +1,7 @@
-import 'dart:io';
-
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
-import 'package:first_app/models/user.dart';
-import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,19 +12,15 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  var user;
-  var email;
-  var profileImage;
-  var studentNumber;
-  // File? _imageFile;
-  // final _picker = ImagePicker();
-
+  var name;
+  var index;
+  var image;
   void getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() async {
-      user = await prefs.getString("name");
-      studentNumber = await prefs.getString("studentNumber");
-      profileImage = await prefs.getString("profileImage");
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      name = localStorage.getString('name');
+      index = localStorage.getInt('index');
+      image = localStorage.getString('image');
     });
   }
 
@@ -88,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
                                                     DashboardDrawer()));
                                       },
                                       icon: const Icon(
-                                        Icons.dashboard_rounded,
+                                        Icons.menu,
                                         color: bottomColor,
                                         size: 40,
                                       )),
@@ -104,14 +94,14 @@ class _DashboardState extends State<Dashboard> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "${user}",
+                                        "${name}",
                                         style: TextStyle(
                                           color: bottomColor,
                                           fontSize: 20,
                                         ),
                                       ),
                                       Text(
-                                        "${studentNumber}",
+                                        "${index}",
                                         style: TextStyle(
                                             color: Colors.grey, fontSize: 15),
                                       )
@@ -119,7 +109,46 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ],
                               ),
-                              const HeadPicture()
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              UserProfilePage()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Stack(
+                                    children: [
+                                      image != ''
+                                          ? CircleAvatar(
+                                              maxRadius: 24,
+                                              minRadius: 24,
+                                              backgroundColor: bottomColor,
+                                              backgroundImage: NetworkImage(
+                                                  "${image}"),
+                                            )
+                                          : CircleAvatar(
+                                              maxRadius: 24,
+                                              minRadius: 24,
+                                              backgroundColor: bottomColor,
+                                              backgroundImage: AssetImage(
+                                                  "assets/images/emptyprofile.png"),
+                                            ),
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: CircleAvatar(
+                                          minRadius: 7,
+                                          maxRadius: 7,
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -382,67 +411,67 @@ class HeadPicture extends StatelessWidget {
   }
 }
 
-class HomeworkCard extends StatelessWidget {
-  const HomeworkCard({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-    required this.icons,
-  }) : super(key: key);
-  final String title;
-  final String subtitle;
-  final IconData icons;
+// class HomeworkCard extends StatelessWidget {
+//   const HomeworkCard({
+//     Key? key,
+//     required this.title,
+//     required this.subtitle,
+//     required this.icons,
+//   }) : super(key: key);
+//   final String title;
+//   final String subtitle;
+//   final IconData icons;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 70,
-            decoration: BoxDecoration(
-                color: Colors.amber.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(10)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(
-                    icons,
-                    size: 40,
-                    color: Colors.grey,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // const SizedBox(height: 10,),
-                      Text(
-                        title,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 20),
-                      ),
-                      Text(
-                        subtitle,
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 15),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 18.0),
+//       child: Column(
+//         children: [
+//           Container(
+//             width: double.infinity,
+//             height: 70,
+//             decoration: BoxDecoration(
+//                 color: Colors.amber.withOpacity(0.3),
+//                 borderRadius: BorderRadius.circular(10)),
+//             child: Padding(
+//               padding: const EdgeInsets.all(8.0),
+//               child: Row(
+//                 children: [
+//                   Icon(
+//                     icons,
+//                     size: 40,
+//                     color: Colors.grey,
+//                   ),
+//                   const SizedBox(
+//                     width: 10,
+//                   ),
+//                   Column(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       // const SizedBox(height: 10,),
+//                       Text(
+//                         title,
+//                         style:
+//                             const TextStyle(color: Colors.black, fontSize: 20),
+//                       ),
+//                       Text(
+//                         subtitle,
+//                         style:
+//                             const TextStyle(color: Colors.grey, fontSize: 15),
+//                       )
+//                     ],
+//                   )
+//                 ],
+//               ),
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class Noticebordcard extends StatelessWidget {
   const Noticebordcard({

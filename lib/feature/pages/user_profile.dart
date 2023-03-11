@@ -1,6 +1,7 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -10,6 +11,32 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
+  var name;
+  var index;
+  var yearOfCompletion;
+  var yearOfAdmission;
+  var email;
+  var gender;
+  var image;
+  void getUser() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      name = localStorage.getString('name');
+      email = localStorage.getString('email');
+      yearOfCompletion = localStorage.getString('yrOfCompletion');
+      yearOfAdmission = localStorage.getString('yrOfAdmission');
+      gender = localStorage.getString('gender');
+      image = localStorage.getString('image');
+      index = localStorage.getInt('index');
+    });
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,12 +78,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Dashboard()));
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Dashboard()),
+                                                (route) => false);
                                       },
                                       icon: const Icon(
                                         Icons.arrow_back,
@@ -75,19 +102,27 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   height: 15,
                                 ),
                                 Column(
-                                  children: const [
-                                    CircleAvatar(
-                                      minRadius: 60,
-                                      maxRadius: 60,
-                                      backgroundColor: bottomColor,
-                                      backgroundImage: AssetImage(
-                                          "assets/images/student_profile.jpeg"),
-                                    ),
+                                  children: [
+                                    image == ''
+                                        ? CircleAvatar(
+                                            maxRadius: 60,
+                                            minRadius: 60,
+                                            backgroundColor: bottomColor,
+                                            backgroundImage: AssetImage(
+                                                "assets/images/emptyprofile.png"),
+                                          )
+                                        : CircleAvatar(
+                                            maxRadius: 60,
+                                            minRadius: 60,
+                                            backgroundColor: bottomColor,
+                                            backgroundImage:
+                                                NetworkImage("${image}"),
+                                          ),
                                     SizedBox(
                                       height: 8,
                                     ),
                                     Text(
-                                      "Saani Iddi",
+                                      "${name}",
                                       style: TextStyle(
                                           color: bottomColor, fontSize: 30),
                                     ),
@@ -95,7 +130,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       height: 8,
                                     ),
                                     Text(
-                                      "Class BTC 3",
+                                      "${yearOfAdmission} - ${yearOfCompletion}",
                                       style: TextStyle(
                                           color: Colors.grey, fontSize: 15),
                                     ),
@@ -119,13 +154,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 horizontal: 18.0, vertical: 10),
                             child: Column(
                               children: [
-                                const ProfileDetails(
-                                  subtitle: "052141350070",
+                                ProfileDetails(
+                                  subtitle: "${index}",
                                   title: "Student Number",
                                 ),
-                                const ProfileDetails(
-                                  subtitle: "21/02/2023",
-                                  title: "Date of Birth",
+                                ProfileDetails(
+                                  subtitle: "${gender}",
+                                  title: "Gender",
                                 ),
                                 const ProfileDetails(
                                   subtitle: "0554139989",
@@ -135,28 +170,28 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   subtitle: "052141350070",
                                   title: "Student Number",
                                 ),
-                                const ProfileDetails(
-                                  subtitle: "iddishani1@gmail.com",
+                                ProfileDetails(
+                                  subtitle: "${email}",
                                   title: "Email Address",
                                 ),
                                 const Spacer(),
                                 GestureDetector(
                                   onTap: () {},
-                                  child:  Container(
-                                      width: double.infinity,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color: kpink,
-                                          borderRadius:
-                                              BorderRadius.circular(25)),
-                                      child: const Center(
-                                          child: Text(
-                                        "Ask for Update",
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 20),
-                                      )),
-                                    ),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: kpink,
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                    child: const Center(
+                                        child: Text(
+                                      "Ask for Update",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    )),
                                   ),
+                                ),
                               ],
                             ),
                           ),

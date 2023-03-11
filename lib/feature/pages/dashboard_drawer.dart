@@ -1,12 +1,40 @@
 import 'package:first_app/feature/colors.dart';
+import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
+import 'package:first_app/feature/pages/notice_board.dart';
+import 'package:first_app/feature/pages/trending_news.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class DashboardDrawer extends StatelessWidget {
+class DashboardDrawer extends StatefulWidget {
   const DashboardDrawer({super.key});
+
+  @override
+  State<DashboardDrawer> createState() => _DashboardDrawerState();
+}
+
+class _DashboardDrawerState extends State<DashboardDrawer> {
+  var name;
+  var index;
+  var image;
+
+  void getUser() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      name = localStorage.getString('name');
+      image = localStorage.getString('image');
+      index = localStorage.getInt('index');
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +54,36 @@ class DashboardDrawer extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const CircleAvatar(
-                        maxRadius: 24,
-                        minRadius: 24,
-                        backgroundColor: bottomColor,
-                        backgroundImage:
-                            AssetImage("assets/images/student_profile.jpeg"),
-                      ),
+                      image != ''
+                          ? CircleAvatar(
+                              maxRadius: 24,
+                              minRadius: 24,
+                              backgroundColor: bottomColor,
+                              backgroundImage: NetworkImage("${image}"),
+                            )
+                          : CircleAvatar(
+                              maxRadius: 24,
+                              minRadius: 24,
+                              backgroundColor: bottomColor,
+                              backgroundImage:
+                                  AssetImage("assets/images/emptyprofile.png"),
+                            ),
                       const SizedBox(
                         width: 12,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
-                            "Saani Iddi",
+                            "${name}",
                             style: TextStyle(
                               color: bottomColor,
                               fontSize: 20,
                             ),
                           ),
                           Text(
-                            "Class BTC 3",
+                            "${index}",
                             style: TextStyle(color: Colors.grey, fontSize: 15),
                           )
                         ],
@@ -66,54 +101,33 @@ class DashboardDrawer extends StatelessWidget {
                       )),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 55,),
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DashboardIcons(
-                      callback: () {},
+                      callback: () {
+                        Navigator.of(context).pop();
+                      },
                       icons: Icons.home,
                       title: "Dashboard",
                     ),
                     DashboardIcons(
                       callback: () {},
-                      icons: Icons.book,
-                      title: "HomeWork",
-                    ),
-                    DashboardIcons(
-                      callback: () {},
-                      icons: Icons.home,
-                      title: "Attendance",
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    DashboardIcons(
-                      callback: () {},
-                      icons: Icons.home,
-                      title: "Fee Details",
-                    ),
-                    DashboardIcons(
-                      callback: () {},
-                      icons: Icons.home,
+                      icons: Icons.earbuds,
                       title: "Examination",
                     ),
                     DashboardIcons(
-                      callback: () {},
-                      icons: Icons.home,
-                      title: "Report Cards",
+                      callback: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TrendingNewsPage()));
+                      },
+                      icons: Icons.newspaper,
+                      title: "Trending",
                     ),
                   ],
                 ),
@@ -132,8 +146,13 @@ class DashboardDrawer extends StatelessWidget {
                       title: "Calendar",
                     ),
                     DashboardIcons(
-                      callback: () {},
-                      icons: Icons.home,
+                      callback: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NoticeBoardPage()));
+                      },
+                      icons: Icons.border_all,
                       title: "Notice Board",
                     ),
                     DashboardIcons(

@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
+import 'package:first_app/models/api_response.dart';
+import 'package:first_app/models/constant.dart';
+import 'package:first_app/models/user.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +21,17 @@ class _LoadingPageState extends State<LoadingPage> {
   void _loadUserInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var token = localStorage.getString('token');
+    var name = localStorage.getString('name');
     if (token != null) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Dashboard()),
           (route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Welcome Back $name"),
+          backgroundColor: topColor,
+        ),
+      );
     } else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
@@ -32,15 +43,20 @@ class _LoadingPageState extends State<LoadingPage> {
     //       MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
     //       (route) => false);
     // } else {
-    //   Future<User>? _fetchUser = getUserDetail();
-    //   if (_fetchUser == null) {
+    //   ApiResponse response = await getUserDetail();
+    //   if (response.error == null) {
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //         MaterialPageRoute(builder: (context) => Dashboard()),
+    //         (route) => false);
+    //   } else if (response.error == unauthorized) {
     //     Navigator.of(context).pushAndRemoveUntil(
     //         MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
     //         (route) => false);
     //   } else {
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //         MaterialPageRoute(builder: (context) => Dashboard()),
-    //         (route) => false);
+    //     print(response.data);
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text("${response.error}")),
+    //     );
     //   }
     // }
   }
