@@ -1,5 +1,4 @@
 import 'package:first_app/feature/colors.dart';
-import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';
 import 'package:first_app/feature/pages/trending_news.dart';
@@ -141,7 +140,12 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DashboardIcons(
-                      callback: () {},
+                      callback: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => MyCalenderPage()));
+                                },
                       icons: Icons.calendar_month,
                       title: "Calendar",
                     ),

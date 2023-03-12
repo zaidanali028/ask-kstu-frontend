@@ -89,11 +89,11 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                 children: [
                                   Container(
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
                                                 const Color.fromARGB(255, 21, 237, 9)
@@ -106,8 +106,8 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                           ),
                                         ),
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
                                                 Color.fromARGB(255, 53, 62, 37)
@@ -128,22 +128,22 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
-                                                Color.fromARGB(255, 53, 62, 37)
+                                                const Color.fromARGB(255, 21, 237, 9)
                                                     .withOpacity(0.2),
                                             imagepath:
-                                                "assets/images/f.png",
+                                                "assets/images/student_profile.jpeg",
                                             date: "02 march 2022",
                                             title:
                                                 "The school is going for vacation in next month",
                                           ),
                                         ),
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
                                                 const Color.fromARGB(255, 21, 237, 9)
@@ -164,8 +164,8 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
                                                 const Color.fromARGB(255, 21, 237, 9)
@@ -178,8 +178,8 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                           ),
                                         ),
                                         Container(
-                                          height: 200,
-                                          width: 180,
+                                          height: 220,
+                                          width: 160,
                                           child: Noticebordcard(
                                             background:
                                                 Color.fromARGB(255, 53, 62, 37)
@@ -224,7 +224,7 @@ class Noticebordcard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
+      width: 160,
       height: 200,
       decoration: BoxDecoration(
           color: background, borderRadius: BorderRadius.circular(10)),

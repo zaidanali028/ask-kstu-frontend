@@ -41,12 +41,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   # flutter_native_splash: ^2.2.17
   get: ^4.6.5
-  glassmorphism: ^3.0.0
   http: ^0.13.5
   image_picker: ^0.8.6+2
   shared_preferences: ^2.0.17
-  flutter_secure_storage: ^8.0.0
-  provider: ^6.0.5
+  table_calendar: ^3.0.9
+  syncfusion_flutter_calendar: ^20.4.53
 
 dev_dependencies:
   flutter_test:
