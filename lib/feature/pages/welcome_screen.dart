@@ -43,9 +43,14 @@ class WelcomeScreenPage extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          "assets/images/f.png",
-                                          fit: BoxFit.cover,
+                                        Container(
+                                          width: 240,
+                                          height: 240,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: AssetImage(
+                                                      "assets/images/f.png"),
+                                                  fit: BoxFit.contain)),
                                         ),
                                         const SizedBox(
                                           height: 25,

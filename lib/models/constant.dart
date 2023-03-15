@@ -1,4 +1,4 @@
-const buildUrl = 'http://192.168.3.128:8000/api/v1';
+const buildUrl = 'http://192.168.7.128:8000/api/v1';
 const loginUrl =buildUrl + '/login';
 const registerUrl = buildUrl + '/register';
 const logoutUrl = buildUrl + '/logout';

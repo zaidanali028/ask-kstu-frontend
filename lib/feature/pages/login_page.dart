@@ -22,6 +22,13 @@ class _LoginPageState extends State<LoginPage> {
   bool ispassword = true;
   bool loading = false;
 
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   void _loginUser() async {
     ApiResponse response =
         await login(emailController.text, passwordController.text);
@@ -33,7 +40,10 @@ class _LoginPageState extends State<LoginPage> {
         loading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${response.error}"), backgroundColor: Color.fromARGB(255, 248, 18, 1),),
+        SnackBar(
+          content: Text("${response.error}"),
+          backgroundColor: Color.fromARGB(255, 248, 18, 1),
+        ),
       );
     }
   }
@@ -51,9 +61,12 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setInt("userId", user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login Successfully!"), backgroundColor: topColor, ),
-      );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Login Successfully!"),
+        backgroundColor: topColor,
+      ),
+    );
   }
 
   @override

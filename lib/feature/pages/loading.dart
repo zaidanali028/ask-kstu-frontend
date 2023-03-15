@@ -3,10 +3,6 @@ import 'dart:async';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
-import 'package:first_app/models/api_response.dart';
-import 'package:first_app/models/constant.dart';
-import 'package:first_app/models/user.dart';
-import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,8 +81,8 @@ class _LoadingPageState extends State<LoadingPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 270,
-                    height: 270,
+                    width: 240,
+                    height: 240,
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("assets/images/f.png"),
@@ -94,14 +90,6 @@ class _LoadingPageState extends State<LoadingPage> {
                   ),
                   const SizedBox(
                     height: 20,
-                  ),
-                  const Text(
-                    "Academic Students Knowledgebase App",
-                    style: TextStyle(
-                        color: bottomColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

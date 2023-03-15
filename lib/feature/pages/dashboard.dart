@@ -178,7 +178,7 @@ class _DashboardState extends State<Dashboard> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Container(
-                                height: 200,
+                                height: 243,
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
@@ -411,68 +411,6 @@ class HeadPicture extends StatelessWidget {
   }
 }
 
-// class HomeworkCard extends StatelessWidget {
-//   const HomeworkCard({
-//     Key? key,
-//     required this.title,
-//     required this.subtitle,
-//     required this.icons,
-//   }) : super(key: key);
-//   final String title;
-//   final String subtitle;
-//   final IconData icons;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 18.0),
-//       child: Column(
-//         children: [
-//           Container(
-//             width: double.infinity,
-//             height: 70,
-//             decoration: BoxDecoration(
-//                 color: Colors.amber.withOpacity(0.3),
-//                 borderRadius: BorderRadius.circular(10)),
-//             child: Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: Row(
-//                 children: [
-//                   Icon(
-//                     icons,
-//                     size: 40,
-//                     color: Colors.grey,
-//                   ),
-//                   const SizedBox(
-//                     width: 10,
-//                   ),
-//                   Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       // const SizedBox(height: 10,),
-//                       Text(
-//                         title,
-//                         style:
-//                             const TextStyle(color: Colors.black, fontSize: 20),
-//                       ),
-//                       Text(
-//                         subtitle,
-//                         style:
-//                             const TextStyle(color: Colors.grey, fontSize: 15),
-//                       )
-//                     ],
-//                   )
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class Noticebordcard extends StatelessWidget {
   const Noticebordcard({
     Key? key,
@@ -490,7 +428,7 @@ class Noticebordcard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 160,
-      height: 100,
+      height: 150,
       decoration: BoxDecoration(
           color: background, borderRadius: BorderRadius.circular(10)),
       child: Padding(
@@ -501,7 +439,7 @@ class Noticebordcard extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 80,
+              height: 120,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(imagepath), fit: BoxFit.fill),
@@ -516,7 +454,7 @@ class Noticebordcard extends StatelessWidget {
               style: const TextStyle(color: Colors.black, fontSize: 15),
             ),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             Text(
               date,
