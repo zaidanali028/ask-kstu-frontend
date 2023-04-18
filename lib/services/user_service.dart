@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
@@ -19,7 +20,7 @@ Future<ApiResponse> login(String email, String password) async {
         final errors = json.decode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
         break;
-      case 403:
+      case 401:
         apiResponse.error = jsonDecode(response.body)['message'];
         break;
       default:
@@ -70,7 +71,7 @@ Future<ApiResponse> register(String email, String password, String name,
   return apiResponse;
 }
 
-Future<ApiResponse> getUserDetail() async {
+Future<ApiResponse> getUserDetails() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -78,7 +79,6 @@ Future<ApiResponse> getUserDetail() async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
-
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
@@ -91,8 +91,9 @@ Future<ApiResponse> getUserDetail() async {
         break;
     }
   } catch (e) {
-    apiResponse.error = serverError;
+    // apiResponse.error = serverError;
   }
+
   return apiResponse;
 }
 
@@ -109,4 +110,9 @@ Future<int> getUserId() async {
 Future<bool> logout() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   return await pref.remove('token');
+}
+
+String? getStringImage(File? file) {
+  if (file == null) return null;
+  return base64Encode(file.readAsBytesSync());
 }

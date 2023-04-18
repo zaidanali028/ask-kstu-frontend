@@ -1,8 +1,14 @@
-const buildUrl = 'http://192.168.7.128:8000/api/v1';
-const loginUrl =buildUrl + '/login';
+const buildUrl = 'http://192.168.198.128:8000/api/v1';
+
+const loginUrl = buildUrl + '/login';
 const registerUrl = buildUrl + '/register';
 const logoutUrl = buildUrl + '/logout';
 const userUrl = buildUrl + '/me';
+
+const noticeUrl = buildUrl + '/announcements/notice-board';
+const announcementUrl = buildUrl + '/announcements/trending-news';
+const announcementDetailUrl = buildUrl + '/announcement';
+const likesUrl = buildUrl + '/post-interact/announcements';
 
 const serverError = "Server Error";
 const unauthorized = "Unauthorized";

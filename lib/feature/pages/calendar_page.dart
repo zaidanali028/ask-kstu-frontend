@@ -66,7 +66,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 Column(
                   children: [
                     Expanded(
-                        flex: 1,
+                        flex: 2,
                         child: Container(
                           height: MediaQuery.of(context).size.height / 2,
                           decoration: const BoxDecoration(
@@ -88,7 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                           (route) => false);
                                     },
                                     icon: const Icon(
-                                      Icons.arrow_back,
+                                      Icons.arrow_back_ios,
                                       color: bottomColor,
                                       size: 25,
                                     ),
@@ -96,7 +96,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                   const Text(
                                     "Calendar",
                                     style: TextStyle(
-                                        color: bottomColor, fontSize: 25),
+                                        color: bottomColor, fontSize: 25, fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
@@ -104,7 +104,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           ),
                         )),
                     Expanded(
-                        flex: 7,
+                        flex: 6,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -175,45 +175,46 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       )),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Add Event"),
-                  content: TextFormField(
-                    controller: _eventController,
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("Cancel")),
-                    TextButton(
-                        onPressed: () {
-                          if (_eventController.text.isEmpty) {
-                            Navigator.pop(context);
-                            return;
-                          } else {
-                            if (selectedEvents[DateTime.now()] != null) {
-                              selectedEvents[DateTime.now()]
-                                  ?.add(Event(title: _eventController.text));
-                            } else {
-                              selectedEvents[DateTime.now()] = [
-                                Event(title: _eventController.text)
-                              ];
-                              Navigator.pop(context);
-                              _eventController.clear();
-                              return;
-                            }
-                          }
-                        },
-                        child: Text("Ok")),
-                  ],
-                )),
-        label: Text("Add Event"),
-        icon: Icon(Icons.send),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => showDialog(
+      //       context: context,
+      //       builder: (context) => AlertDialog(
+      //             title: Text("Add Event"),
+      //             content: TextFormField(
+      //               controller: _eventController,
+      //             ),
+      //             actions: [
+      //               TextButton(
+      //                   onPressed: () {
+      //                     Navigator.pop(context);
+      //                   },
+      //                   child: Text("Cancel")),
+      //               TextButton(
+      //                   onPressed: () {
+      //                     if (_eventController.text.isEmpty) {
+      //                       Navigator.pop(context);
+      //                       return;
+      //                     } else {
+      //                       if (selectedEvents[DateTime.now()] != null) {
+      //                         selectedEvents[DateTime.now()]
+      //                             ?.add(Event(title: _eventController.text));
+      //                       } else {
+      //                         selectedEvents[DateTime.now()] = [
+      //                           Event(title: _eventController.text)
+      //                         ];
+      //                         Navigator.pop(context);
+      //                         _eventController.clear();
+      //                         return;
+      //                       }
+      //                     }
+      //                   },
+      //                   child: Text("Ok")),
+      //             ],
+      //           )),
+      //   label: Text("Add Event"),
+      //   icon: Icon(Icons.send),
+      // ),
+    
     );
   }
 }

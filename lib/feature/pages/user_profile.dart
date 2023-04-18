@@ -1,5 +1,6 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,6 +42,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: topColor,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return UpdateProfilePage();
+            }));
+          },
+          child: Icon(Icons.edit, color: Colors.white),
+          backgroundColor: topColor),
       body: SafeArea(
           child: Center(
         child: Padding(
@@ -86,7 +95,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                 (route) => false);
                                       },
                                       icon: const Icon(
-                                        Icons.arrow_back,
+                                        Icons.arrow_back_ios,
                                         color: bottomColor,
                                         size: 25,
                                       ),
@@ -94,7 +103,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     const Text(
                                       "Profile",
                                       style: TextStyle(
-                                          color: bottomColor, fontSize: 25),
+                                          color: bottomColor,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
@@ -103,21 +114,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                                 Column(
                                   children: [
-                                    image == ''
-                                        ? CircleAvatar(
-                                            maxRadius: 60,
-                                            minRadius: 60,
-                                            backgroundColor: bottomColor,
-                                            backgroundImage: AssetImage(
-                                                "assets/images/emptyprofile.png"),
-                                          )
-                                        : CircleAvatar(
-                                            maxRadius: 60,
-                                            minRadius: 60,
-                                            backgroundColor: bottomColor,
-                                            backgroundImage:
-                                                NetworkImage("${image}"),
-                                          ),
+                                    CircleAvatar(
+                                      maxRadius: 60,
+                                      minRadius: 60,
+                                      backgroundColor: bottomColor,
+                                      backgroundImage: NetworkImage("${image}"),
+                                    ),
                                     SizedBox(
                                       height: 8,
                                     ),
@@ -152,7 +154,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 10),
-                            child: Column(
+                            child: ListView(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
                               children: [
                                 ProfileDetails(
                                   subtitle: "${index}",
@@ -162,36 +166,33 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   subtitle: "${gender}",
                                   title: "Gender",
                                 ),
-                                const ProfileDetails(
-                                  subtitle: "0554139989",
-                                  title: "Emergency Contact",
-                                ),
-                                const ProfileDetails(
-                                  subtitle: "052141350070",
-                                  title: "Student Number",
-                                ),
                                 ProfileDetails(
                                   subtitle: "${email}",
-                                  title: "Email Address",
+                                  title: "Email",
                                 ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: kpink,
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: const Center(
-                                        child: Text(
-                                      "Ask for Update",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    )),
-                                  ),
+                                const ProfileDetails(
+                                  subtitle: "0554139989",
+                                  title: "Faculty",
                                 ),
+                                const ProfileDetails(
+                                  subtitle: "0554139989",
+                                  title: "Department",
+                                ),
+                                const ProfileDetails(
+                                  subtitle: "0554139989",
+                                  title: "Program",
+                                ),
+                                const ProfileDetails(
+                                  subtitle: "First Semester",
+                                  title: "Semester",
+                                ),
+                                const ProfileDetails(
+                                  subtitle: "200",
+                                  title: "Level",
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                )
                               ],
                             ),
                           ),

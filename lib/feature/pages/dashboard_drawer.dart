@@ -54,20 +54,12 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                 children: [
                   Row(
                     children: [
-                      image != ''
-                          ? CircleAvatar(
-                              maxRadius: 24,
-                              minRadius: 24,
-                              backgroundColor: bottomColor,
-                              backgroundImage: NetworkImage("${image}"),
-                            )
-                          : CircleAvatar(
-                              maxRadius: 24,
-                              minRadius: 24,
-                              backgroundColor: bottomColor,
-                              backgroundImage:
-                                  AssetImage("assets/images/emptyprofile.png"),
-                            ),
+                      CircleAvatar(
+                        maxRadius: 24,
+                        minRadius: 24,
+                        backgroundColor: bottomColor,
+                        backgroundImage: NetworkImage("${image}"),
+                      ),
                       const SizedBox(
                         width: 12,
                       ),
@@ -78,9 +70,9 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                           Text(
                             "${name}",
                             style: TextStyle(
-                              color: bottomColor,
-                              fontSize: 20,
-                            ),
+                                color: bottomColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
                           Text(
                             "${index}",
@@ -101,7 +93,9 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                       )),
                 ],
               ),
-              const SizedBox(height: 55,),
+              const SizedBox(
+                height: 55,
+              ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Row(
@@ -116,8 +110,8 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                     ),
                     DashboardIcons(
                       callback: () {},
-                      icons: Icons.earbuds,
-                      title: "Examination",
+                      icons: Icons.settings,
+                      title: "Settings",
                     ),
                     DashboardIcons(
                       callback: () {
@@ -127,7 +121,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                                 builder: (context) => TrendingNewsPage()));
                       },
                       icons: Icons.newspaper,
-                      title: "Trending",
+                      title: "Trending ",
                     ),
                   ],
                 ),
@@ -141,12 +135,36 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DashboardIcons(
+                      callback: () {},
+                      icons: Icons.calendar_month,
+                      title: "PastCo",
+                    ),
+                    DashboardIcons(
+                      callback: () {},
+                      icons: Icons.border_all,
+                      title: "Kstu Portal",
+                    ),
+                    DashboardIcons(
+                      callback: () {},
+                      icons: Icons.person,
+                      title: "Kstu Site",
+                    ),
+                  ],
+                ),
+              ),
+              
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DashboardIcons(
                       callback: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => CalendarPage()));
-                                },
+                      },
                       icons: Icons.calendar_month,
                       title: "Calendar",
                     ),
@@ -155,7 +173,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => NoticeBoardPage()));
+                                builder: (context) => AllNoticeBoardPage()));
                       },
                       icons: Icons.border_all,
                       title: "Notice Board",
@@ -168,11 +186,12 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                                 builder: (context) => UserProfilePage()));
                       },
                       icons: Icons.person,
-                      title: "My Profile",
+                      title: "Profile",
                     ),
                   ],
                 ),
               ),
+              
               const Spacer(),
               GestureDetector(
                 onTap: () {
@@ -187,11 +206,15 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                      color: kpink, borderRadius: BorderRadius.circular(10)),
+                      color: bottomColor,
+                      borderRadius: BorderRadius.circular(10)),
                   child: const Center(
                       child: Text(
-                    "LogOut",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    "Log Out",
+                    style: TextStyle(
+                        color: topColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   )),
                 ),
               ),

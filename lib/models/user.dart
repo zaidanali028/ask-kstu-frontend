@@ -15,11 +15,13 @@ class User {
     String? email;
     String? gender;
     String? image;
-    int? facultyId;
-    int? indexNo;
-    int? deptId;
-    int? programId;
+    String? currentLevel;
+    String? currentSemester;
+    String? facultyId;
     int? status;
+    int? indexNo;
+    String? deptId;
+    String? programId;
     String? yrOfAdmission;
     String? yrOfCompletion;
     int? id;
@@ -37,19 +39,23 @@ class User {
         this.yrOfCompletion,
         this.id,
         this.token,
-        this.image
+        this.image,
+        this.currentLevel,
+        this.currentSemester
     });
 
     factory User.fromJson(Map<String, dynamic> json){
       return User(
         name: json['user']['name'],
         email: json['user']['email'],
-        image: json['user']['user_img'],
+        currentLevel: json['user']['current_level'],
+        currentSemester: json['user']['current_sem'],
+        image: json['user']['user_img'] ?? 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
         gender: json['user']['gender'],
-        facultyId: json['user']['faculty_id'],
+        facultyId: json['user']['faculty_name'],
         indexNo: json['user']['index_no'],
-        deptId: json['user']['dept_id'],
-        programId: json['user']['program_id'],
+        deptId: json['user']['dept_name'],
+        programId: json['user']['program_name'],
         status: json['user']['status'],
         yrOfAdmission: json['user']['yr_of_admission'],
         yrOfCompletion: json['user']['yr_of_completion'],
@@ -63,10 +69,10 @@ class User {
         "email": email,
         "user_img": image,
         "gender": gender,
-        "faculty_id": facultyId,
+        "faculty": facultyId,
         "index_no": indexNo,
-        "dept_id": deptId,
-        "program_id": programId,
+        "dept": deptId,
+        "program": programId,
         "status": status,
         "yr_of_admission": yrOfAdmission,
         "yr_of_completion": yrOfCompletion,

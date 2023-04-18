@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/models/api_response.dart';
@@ -7,7 +5,9 @@ import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity/connectivity.dart';
 
+// 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -30,21 +30,46 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginUser() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
     ApiResponse response =
         await login(emailController.text, passwordController.text);
     if (response.error == null) {
-      _saveAndRedirectToDashboard(response.data as User);
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        _saveAndRedirectToDashboard(response.data as User);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Please connect to the internet'),
+          backgroundColor: topColor,
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            label: 'Dismiss',
+            disabledTextColor: Colors.white,
+            textColor: Colors.yellow,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ));
+      }
     } else {
-      print(jsonEncode(response.data));
+      // print(jsonEncode(response.data));
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("${response.error}"),
-          backgroundColor: Color.fromARGB(255, 248, 18, 1),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+        backgroundColor: topColor,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
         ),
-      );
+      ));
     }
   }
 
@@ -54,6 +79,11 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString("name", user.name ?? '');
     await prefs.setInt("index", user.indexNo ?? 0);
     await prefs.setString("gender", user.gender ?? '');
+    await prefs.setString("level", user.currentLevel ?? '');
+    await prefs.setString("semester", user.currentSemester ?? '');
+    await prefs.setString("program", user.programId ?? '');
+    await prefs.setString("department", user.deptId ?? '');
+    await prefs.setString("faculty", user.facultyId ?? '');
     await prefs.setString("email", user.email ?? '');
     await prefs.setString("image", user.image ?? '');
     await prefs.setString("yrOfAdmission", user.yrOfAdmission ?? '');
@@ -61,12 +91,20 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setInt("userId", user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Login Successfully!"),
-        backgroundColor: topColor,
+    var name = await prefs.getString('name');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Welcome, ${name}'),
+      backgroundColor: topColor,
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: 'Dismiss',
+        disabledTextColor: Colors.white,
+        textColor: Colors.yellow,
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
       ),
-    );
+    ));
   }
 
   @override
@@ -240,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
                                                                     topColor),
                                                       )
                                                     : Text(
-                                                        "Login",
+                                                        "SIGN IN",
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 20,

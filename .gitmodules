@@ -1,3 +1,12 @@
 [submodule "backend/ask-kstu-backend"]
 	path = backend/ask-kstu-backend
 	url = https://github.com/zaidanali028/ask-kstu-backend
+[submodule "backend2/ask-kstu-backend"]
+	path = backend2/ask-kstu-backend
+	url = https://github.com/zaidanali028/ask-kstu-backend
+[submodule "lastpull/ask-kstu-backend"]
+	path = lastpull/ask-kstu-backend
+	url = https://github.com/zaidanali028/ask-kstu-backend
+[submodule "back/ask-kstu-backend"]
+	path = back/ask-kstu-backend
+	url = https://github.com/zaidanali028/ask-kstu-backend

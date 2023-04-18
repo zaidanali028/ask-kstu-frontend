@@ -1,18 +1,23 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/feature/pages/trending_shimmer.dart';
+import 'package:first_app/models/announcement.dart';
+import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class NoticeBoardPage extends StatefulWidget {
-  const NoticeBoardPage({super.key});
+class AllNoticeBoardPage extends StatefulWidget {
+  const AllNoticeBoardPage({super.key});
 
   @override
-  State<NoticeBoardPage> createState() => _NoticeBoardPageState();
+  State<AllNoticeBoardPage> createState() => _AllNoticeBoardPageState();
 }
 
-class _NoticeBoardPageState extends State<NoticeBoardPage> {
+class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
   @override
   Widget build(BuildContext context) {
+    final noticeboardProvider =
+        Provider.of<NoticeBoardProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: topColor,
       body: SafeArea(
@@ -58,7 +63,7 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                           (route) => false);
                                     },
                                     icon: const Icon(
-                                      Icons.arrow_back,
+                                      Icons.arrow_back_ios,
                                       color: bottomColor,
                                       size: 25,
                                     ),
@@ -66,7 +71,9 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                   const Text(
                                     "Notice Board",
                                     style: TextStyle(
-                                        color: bottomColor, fontSize: 25),
+                                        color: bottomColor,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
@@ -83,119 +90,129 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(30))),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 18.0),
-                              child: ListView(
-                                scrollDirection: Axis.vertical,
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                const Color.fromARGB(255, 21, 237, 9)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/student_profile.jpeg",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 18.0),
+                              child: FutureBuilder<List<Announcement>>(
+                                  future: noticeboardProvider.fetchNotice(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return ListView(
+                                        children: [
+                                          TrendingShimmer(),
+                                          TrendingShimmer(),
+                                          TrendingShimmer(),
+                                          TrendingShimmer(),
+                                        ],
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text('${snapshot.hasError}'),
+                                      );
+                                    } else {
+                                      final noticeboard = snapshot.data!;
+                                      return GridView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 1.5 / 2,
+                                          // crossAxisSpacing: 10
                                         ),
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                Color.fromARGB(255, 53, 62, 37)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/f.png",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                const Color.fromARGB(255, 21, 237, 9)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/student_profile.jpeg",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                const Color.fromARGB(255, 21, 237, 9)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/student_profile.jpeg",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                const Color.fromARGB(255, 21, 237, 9)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/student_profile.jpeg",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 220,
-                                          width: 160,
-                                          child: Noticebordcard(
-                                            background:
-                                                Color.fromARGB(255, 53, 62, 37)
-                                                    .withOpacity(0.2),
-                                            imagepath:
-                                                "assets/images/f.png",
-                                            date: "02 march 2022",
-                                            title:
-                                                "The school is going for vacation in next month",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                        itemCount: noticeboard.length,
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (context, index) {
+                                          return ListView(
+                                            children: [
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 15.0),
+                                                  child: Container(
+                                                    width: 160,
+                                                    height: 250,
+                                                    decoration: BoxDecoration(
+                                                        color: topColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        // mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 150,
+                                                            decoration: BoxDecoration(
+                                                                image: noticeboard[index]
+                                                                            .featuredImage !=
+                                                                        null
+                                                                    ? DecorationImage(
+                                                                        image: NetworkImage(
+                                                                            "${noticeboard[index].featuredImage}"),
+                                                                        fit: BoxFit
+                                                                            .fill)
+                                                                    : DecorationImage(
+                                                                        image: NetworkImage(
+                                                                            "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                                                        fit: BoxFit
+                                                                            .fill),
+                                                                color: topColor,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            "${noticeboard[index].title}",
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 17.5),
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            "${DateTime.parse(noticeboard[index].date)}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                fontSize: 15),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .fade,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }),
                             )))
                   ],
                 )
@@ -204,62 +221,6 @@ class _NoticeBoardPageState extends State<NoticeBoardPage> {
           ),
         ),
       )),
-    );
-  }
-}
-
-class Noticebordcard extends StatelessWidget {
-  const Noticebordcard({
-    Key? key,
-    required this.background,
-    required this.imagepath,
-    required this.title,
-    required this.date,
-  }) : super(key: key);
-  final Color background;
-  final String imagepath;
-  final String title;
-  final String date;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 200,
-      decoration: BoxDecoration(
-          color: background, borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 100,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(imagepath), fit: BoxFit.fill),
-                  color: topColor,
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              title,
-              style: const TextStyle(color: Colors.black, fontSize: 15),
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              date,
-              style: const TextStyle(color: Colors.grey, fontSize: 15),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

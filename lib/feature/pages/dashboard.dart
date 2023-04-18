@@ -1,8 +1,19 @@
+import 'dart:convert';
+
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
+import 'package:first_app/feature/pages/news_details.dart';
+import 'package:first_app/feature/pages/notice_board_shimmer.dart';
+import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/announcement.dart';
+import 'package:first_app/models/constant.dart';
+import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:first_app/services/trending_news.dart';
+import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -15,13 +26,57 @@ class _DashboardState extends State<Dashboard> {
   var name;
   var index;
   var image;
+  var id;
+
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
       name = localStorage.getString('name');
       index = localStorage.getInt('index');
       image = localStorage.getString('image');
+      id = localStorage.getInt('id');
     });
+  }
+
+  Future<void> likeAnnouncement(int category_id, int status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.post(
+        Uri.parse(likesUrl + '/' + '${category_id}' + '/' + '${status}'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${data['message']}"),
+        backgroundColor: topColor,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${jsonDecode(response.body)['message']}"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
   }
 
   @override
@@ -32,6 +87,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final noticeProvider =
+        Provider.of<NoticeBoardProvider>(context, listen: false);
+    final trendProvider =
+        Provider.of<TrendingNewsProvider>(context, listen: false);
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -96,9 +155,9 @@ class _DashboardState extends State<Dashboard> {
                                       Text(
                                         "${name}",
                                         style: TextStyle(
-                                          color: bottomColor,
-                                          fontSize: 20,
-                                        ),
+                                            color: bottomColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Text(
                                         "${index}",
@@ -121,21 +180,13 @@ class _DashboardState extends State<Dashboard> {
                                   padding: const EdgeInsets.only(top: 10),
                                   child: Stack(
                                     children: [
-                                      image != ''
-                                          ? CircleAvatar(
-                                              maxRadius: 24,
-                                              minRadius: 24,
-                                              backgroundColor: bottomColor,
-                                              backgroundImage: NetworkImage(
-                                                  "${image}"),
-                                            )
-                                          : CircleAvatar(
-                                              maxRadius: 24,
-                                              minRadius: 24,
-                                              backgroundColor: bottomColor,
-                                              backgroundImage: AssetImage(
-                                                  "assets/images/emptyprofile.png"),
-                                            ),
+                                      CircleAvatar(
+                                        maxRadius: 24,
+                                        minRadius: 24,
+                                        backgroundColor: bottomColor,
+                                        backgroundImage:
+                                            NetworkImage("${image}"),
+                                      ),
                                       Positioned(
                                         right: 0,
                                         top: 0,
@@ -164,6 +215,7 @@ class _DashboardState extends State<Dashboard> {
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(30))),
                         child: ListView(
+                          physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           children: [
                             const Padding(
@@ -171,111 +223,380 @@ class _DashboardState extends State<Dashboard> {
                                   horizontal: 10.0, vertical: 15.0),
                               child: Text(
                                 "Notice Board",
-                                style: TextStyle(color: topColor, fontSize: 25),
+                                style: TextStyle(
+                                    color: topColor,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Container(
-                                height: 243,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Noticebordcard(
-                                      background: const Color.fromARGB(
-                                              255, 96, 198, 249)
-                                          .withOpacity(0.2),
-                                      imagepath:
-                                          "assets/images/student_profile.jpeg",
-                                      date: "02 march 2022",
-                                      title:
-                                          "The school is going for vacation in next month",
+                            FutureBuilder<List<Announcement>>(
+                              future: noticeProvider.fetchNotice(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0),
+                                      child: Container(
+                                          height: 243,
+                                          child: ListView(
+                                              scrollDirection: Axis.horizontal,
+                                              children: [
+                                                NoticeBoardShimmer(),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                NoticeBoardShimmer(),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                NoticeBoardShimmer(),
+                                              ])));
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                    child: Text("${snapshot.error}"),
+                                  );
+                                } else {
+                                  final noticeboard = snapshot.data!;
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Container(
+                                      height: 243,
+                                      child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: noticeboard.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          DetailNews(
+                                                              title:
+                                                                  noticeboard[
+                                                                          index]
+                                                                      .id))));
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 15.0),
+                                              child: Container(
+                                                width: 160,
+                                                height: 150,
+                                                decoration: BoxDecoration(
+                                                    color: topColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 120,
+                                                        decoration: BoxDecoration(
+                                                            image: noticeboard[
+                                                                            index]
+                                                                        .featuredImage !=
+                                                                    null
+                                                                ? DecorationImage(
+                                                                    image: NetworkImage(
+                                                                        "${noticeboard[index].featuredImage}"),
+                                                                    fit: BoxFit
+                                                                        .fill)
+                                                                : DecorationImage(
+                                                                    image: NetworkImage(
+                                                                        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                                                    fit: BoxFit
+                                                                        .fill),
+                                                            color: topColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Text(
+                                                        "${noticeboard[index].title.trim()}",
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 17.5),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      Text(
+                                                        "${DateTime.parse(noticeboard[index].date)}",
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                            fontSize: 15),
+                                                        maxLines: 1,
+                                                        overflow:
+                                                            TextOverflow.fade,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Noticebordcard(
-                                      background:
-                                          const Color.fromARGB(255, 241, 91, 11)
-                                              .withOpacity(0.2),
-                                      imagepath: "assets/images/f.png",
-                                      date: "02 march 2022",
-                                      title:
-                                          "The school is going for vacation in next month",
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Noticebordcard(
-                                      background:
-                                          const Color.fromARGB(255, 21, 237, 9)
-                                              .withOpacity(0.2),
-                                      imagepath:
-                                          "assets/images/student_profile.jpeg",
-                                      date: "02 march 2022",
-                                      title:
-                                          "The school is going for vacation in next month",
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  );
+                                }
+                              },
                             ),
                             const SizedBox(
                               height: 18,
                             ),
                             const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 18.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 10.0),
                               child: Text(
                                 "What's trending?",
-                                style: TextStyle(color: topColor, fontSize: 25),
+                                style: TextStyle(
+                                    color: topColor,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
-                            TrendingNews(
-                                title:
-                                    "KSTU Vice-Chancellor Recievs Heartfelt Gifts from GhanaPost.",
-                                date: "21 Feb 2023",
-                                imagePath:
-                                    "assets/images/student_profile.jpeg"),
+                            FutureBuilder(
+                              future: trendProvider.fetchTrend(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container(
+                                    height: 300,
+                                    width: double.infinity,
+                                    child: ListView(
+                                      children: [
+                                        TrendingShimmer(),
+                                        TrendingShimmer(),
+                                      ],
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                    child: Text('${snapshot.error}'),
+                                  );
+                                } else {
+                                  final trend = snapshot.data!;
+                                  return Container(
+                                    height: 530,
+                                    width: double.infinity,
+                                    child: ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: trend.length,
+                                      itemBuilder: ((context, index) {
+                                        return Container(
+                                          width: double.infinity,
+                                          height: 320,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10.0),
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: ((context) =>
+                                                                DetailNews(
+                                                                    title: trend[
+                                                                            index]
+                                                                        .id))));
+                                                  },
+                                                  child: Container(
+                                                    width: double.infinity,
+                                                    height: 200,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        image: trend[index]
+                                                                    .featuredImage !=
+                                                                null
+                                                            ? DecorationImage(
+                                                                image: NetworkImage(
+                                                                    trend[index]
+                                                                        .featuredImage),
+                                                                fit: BoxFit
+                                                                    .cover)
+                                                            : null),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: ((context) =>
+                                                                DetailNews(
+                                                                    title: trend[
+                                                                            index]
+                                                                        .id))));
+                                                  },
+                                                  child: Text(
+                                                    trend[index].title.trim(),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 15),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.alarm,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Container(
+                                                            width: 80,
+                                                            child: Text(
+                                                              trend[index].date,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .fade,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        width: 58,
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          if (trend[index]
+                                                                  .authUserLikes ==
+                                                              true) {
+                                                            likeAnnouncement(
+                                                                trend[index].id,
+                                                                0);
+                                                          } else {
+                                                            likeAnnouncement(
+                                                                trend[index].id,
+                                                                1);
+                                                          }
+                                                        },
+                                                        child: Row(
+                                                          children: [
+                                                            trend[index].authUserLikes ==
+                                                                    true
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .favorite,
+                                                                    color:
+                                                                        topColor,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .favorite_outline,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                            const SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            Text(
+                                                              '${trend[index].likesCount}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            'Views',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 6,
+                                                          ),
+                                                          Text(
+                                                            '${trend[index].viewsCount}',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Divider(
+                                                  thickness: 1,
+                                                  color: Colors.grey,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  );
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -286,90 +607,6 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         )));
-  }
-}
-
-class TrendingNews extends StatelessWidget {
-  const TrendingNews({
-    Key? key,
-    required this.title,
-    required this.date,
-    required this.imagePath,
-  }) : super(key: key);
-
-  final String title;
-  final String date;
-  final String imagePath;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 320,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      image: AssetImage(imagePath), fit: BoxFit.cover)),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Icon(
-                  Icons.alarm,
-                  color: Colors.grey,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  date,
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
-                ),
-                Spacer(),
-                Text(
-                  "Views",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "23",
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Divider(
-              thickness: 1,
-              color: Colors.grey,
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -404,62 +641,6 @@ class HeadPicture extends StatelessWidget {
                 backgroundColor: Colors.red,
               ),
             )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Noticebordcard extends StatelessWidget {
-  const Noticebordcard({
-    Key? key,
-    required this.background,
-    required this.imagepath,
-    required this.title,
-    required this.date,
-  }) : super(key: key);
-  final Color background;
-  final String imagepath;
-  final String title;
-  final String date;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 150,
-      decoration: BoxDecoration(
-          color: background, borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              height: 120,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(imagepath), fit: BoxFit.fill),
-                  color: topColor,
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              title,
-              style: const TextStyle(color: Colors.black, fontSize: 15),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Text(
-              date,
-              style: const TextStyle(color: Colors.grey, fontSize: 15),
-            ),
           ],
         ),
       ),
