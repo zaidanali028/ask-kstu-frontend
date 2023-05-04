@@ -1,8 +1,10 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -106,9 +108,15 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                         ],
                                       );
                                     } else if (snapshot.hasError) {
-                                      return Center(
-                                        child: Text('${snapshot.hasError}'),
-                                      );
+                                      logout().then((value) => {
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginPage()),
+                                                    (route) => false)
+                                          });
+                                      return Center();
                                     } else {
                                       final noticeboard = snapshot.data!;
                                       return GridView.builder(

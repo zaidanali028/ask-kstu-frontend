@@ -40,12 +40,14 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Please connect to the internet'),
-          backgroundColor: topColor,
+          backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
+          elevation: 2.0,
           action: SnackBarAction(
             label: 'Dismiss',
             disabledTextColor: Colors.white,
             textColor: Colors.yellow,
+
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
@@ -59,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
-        backgroundColor: topColor,
+        backgroundColor: Colors.red.shade700,
+        elevation: 2.0,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: 'Dismiss',
@@ -298,5 +301,6 @@ class _LoginPageState extends State<LoginPage> {
                         ])))),
           )),
     );
+  
   }
 }

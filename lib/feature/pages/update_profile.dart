@@ -147,21 +147,34 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                           Stack(
                                             children: [
                                               pickimage == null
-                                                  ? CircleAvatar(
-                                                      maxRadius: 80,
-                                                      minRadius: 80,
-                                                      backgroundColor: topColor,
-                                                      backgroundImage:
-                                                          NetworkImage(image),
+                                                  ? Container(
+                                                      width: 200,
+                                                      height: 200,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          color: topColor,
+                                                          image: DecorationImage(
+                                                              image:
+                                                                  NetworkImage(
+                                                                      image),
+                                                              fit: BoxFit
+                                                                  .cover)),
                                                     )
-                                                  : CircleAvatar(
-                                                      maxRadius: 80,
-                                                      minRadius: 80,
-                                                      backgroundColor: topColor,
-                                                      child: Image.file(
-                                                        pickimage,
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                  : Container(
+                                                      width: 200,
+                                                      height: 200,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          color: topColor,
+                                                          image: DecorationImage(
+                                                              image: FileImage(
+                                                                  pickimage),
+                                                              fit: BoxFit
+                                                                  .cover)),
                                                     ),
                                               Positioned(
                                                   right: 10,
@@ -225,14 +238,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                         height: 15,
                                       ),
                                       TextFormFields(
-                                          title: Text(level),
+                                          title: Text('Level $level'),
                                           icons:
                                               Icon(Icons.leave_bags_at_home)),
                                       const SizedBox(
                                         height: 15,
                                       ),
                                       TextFormFields(
-                                          title: Text(semester),
+                                          title: Text('$semester'),
                                           icons: Icon(Icons.set_meal)),
                                       const SizedBox(
                                         height: 15,

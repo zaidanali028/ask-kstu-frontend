@@ -16,6 +16,7 @@ class Announcement {
   final int likesCount;
   final int viewsCount;
   final List users;
+  final List get_announcement_key_moments;
   final bool authUserLikes;
 
   Announcement(
@@ -29,6 +30,7 @@ class Announcement {
       required this.views,
       required this.id,
       required this.categoryId,
+      required this.get_announcement_key_moments,
       required this.date});
 
   factory Announcement.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class Announcement {
       viewsCount: json['views_count_formatted'],
       authUserLikes: json['liked_by_auth_user'],
       users: json['liked_users'] ?? [],
+      get_announcement_key_moments: json['get_announcement_key_moments'] ?? [],
       id: json['id'],
       date: json['created_at'],
     );
@@ -57,6 +60,7 @@ class Announcement {
         'likes_count_formatted': likesCount,
         'views_count_formatted': viewsCount,
         'liked_by_auth_user': authUserLikes,
+        'get_announcement_key_moments': get_announcement_key_moments,
         'liked_users': users,
         "created_at": date
       };

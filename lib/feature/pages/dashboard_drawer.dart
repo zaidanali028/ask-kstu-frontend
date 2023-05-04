@@ -2,11 +2,14 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/calendar_page.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';
+import 'package:first_app/feature/pages/past_questions.dart';
+import 'package:first_app/feature/pages/settings.dart';
 import 'package:first_app/feature/pages/trending_news.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardDrawer extends StatefulWidget {
   const DashboardDrawer({super.key});
@@ -34,6 +37,15 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
     // TODO: implement initState
     getUser();
     super.initState();
+  }
+
+  void mylauntcher(String url) async {
+    var uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
   }
 
   @override
@@ -109,7 +121,10 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                       title: "Dashboard",
                     ),
                     DashboardIcons(
-                      callback: () {},
+                      callback: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SettingsPage()));
+                      },
                       icons: Icons.settings,
                       title: "Settings",
                     ),
@@ -118,10 +133,10 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TrendingNewsPage()));
+                                builder: (context) => CalendarPage()));
                       },
-                      icons: Icons.newspaper,
-                      title: "Trending ",
+                      icons: Icons.calendar_today,
+                      title: "Calendar ",
                     ),
                   ],
                 ),
@@ -135,24 +150,30 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DashboardIcons(
-                      callback: () {},
-                      icons: Icons.calendar_month,
+                      callback: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => PastQuestionPage())),
+                      icons: Icons.question_answer,
                       title: "PastCo",
                     ),
                     DashboardIcons(
-                      callback: () {},
-                      icons: Icons.border_all,
+                      callback: () {
+                        mylauntcher(
+                            'https://portal.kstu.edu.gh/students/login');
+                      },
+                      icons: Icons.panorama_horizontal,
                       title: "Kstu Portal",
                     ),
                     DashboardIcons(
-                      callback: () {},
-                      icons: Icons.person,
+                      callback: () {
+                        mylauntcher('https://kstu.edu.gh');
+                      },
+                      icons: Icons.web,
                       title: "Kstu Site",
                     ),
                   ],
                 ),
               ),
-              
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Row(
@@ -163,10 +184,10 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CalendarPage()));
+                                builder: (context) => TrendingNewsPage()));
                       },
-                      icons: Icons.calendar_month,
-                      title: "Calendar",
+                      icons: Icons.newspaper,
+                      title: "Trending",
                     ),
                     DashboardIcons(
                       callback: () {
@@ -191,7 +212,6 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   ],
                 ),
               ),
-              
               const Spacer(),
               GestureDetector(
                 onTap: () {
@@ -251,7 +271,7 @@ class DashboardIcons extends StatelessWidget {
             backgroundColor: Colors.white,
             child: Icon(
               icons,
-              size: 50,
+              size: 45,
             ),
           ),
           const SizedBox(

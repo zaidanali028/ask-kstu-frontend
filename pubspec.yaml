@@ -50,6 +50,7 @@ dependencies:
   readmore: ^2.2.0
   connectivity: ^3.0.6
   google_maps_flutter: ^2.2.5
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:

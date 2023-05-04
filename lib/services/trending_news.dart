@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,6 +43,22 @@ class TrendingNewsProvider extends ChangeNotifier {
     });
     if (response.statusCode == 200) {
       return Announcement.fromJson(jsonDecode(response.body)['data']);
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized!');
+    } else {
+      throw Exception('Failed to fetch noticeboard!');
+    }
+  }
+  
+  Future<KeyMoments> fetchKeymoment(int trend_id) async {
+    String token = await getToken();
+    final response = await http
+        .get(Uri.parse(announcementDetailUrl + '/${trend_id}'), headers: {
+      "Accept": "application/json",
+      'Authorization': 'Bearer $token'
+    });
+    if (response.statusCode == 200) {
+      return KeyMoments.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 401) {
       throw Exception('Unauthorized!');
     } else {

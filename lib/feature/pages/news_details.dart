@@ -157,51 +157,58 @@ class _DetailNewsState extends State<DetailNews> {
                                   SizedBox(
                                     width: 58,
                                   ),
-                                  trend.categoryId == 2 ? GestureDetector(
-                                    onTap: () {
-                                      if (trend.authUserLikes == true) {
-                                        likeAnnouncement(trend.id, 0);
-                                      } else {
-                                        likeAnnouncement(trend.id, 1);
-                                      }
-                                    },
-                                    child:  Row(
-                                      children: [
-                                        trend.authUserLikes == true
-                                            ? Icon(
-                                                Icons.favorite,
-                                                color: topColor,
-                                              )
-                                            : Icon(
-                                                Icons.favorite_outline,
-                                                color: Colors.grey,
+                                  trend.categoryId == 2
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            if (trend.authUserLikes == true) {
+                                              likeAnnouncement(trend.id, 0);
+                                            } else {
+                                              likeAnnouncement(trend.id, 1);
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              trend.authUserLikes == true
+                                                  ? Icon(
+                                                      Icons.favorite,
+                                                      color: topColor,
+                                                    )
+                                                  : Icon(
+                                                      Icons.favorite_outline,
+                                                      color: Colors.grey,
+                                                    ),
+                                              const SizedBox(
+                                                width: 2,
                                               ),
-                                        const SizedBox(
-                                          width: 2,
-                                        ),
-                                        Text(
-                                          '${trend.likesCount}',
-                                          style: TextStyle(color: Colors.grey),
+                                              Text(
+                                                '${trend.likesCount}',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
                                         )
-                                      ],
-                                    ),
-                                  ) : Text(''),
+                                      : Text(''),
                                   Spacer(),
-                                  trend.categoryId == 2 ? Row(
-                                    children: [
-                                      Text(
-                                        'Views',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                      const SizedBox(
-                                        width: 6,
-                                      ),
-                                      Text(
-                                        '${trend.viewsCount}',
-                                        style: TextStyle(color: Colors.grey),
-                                      )
-                                    ],
-                                  ): Text('')
+                                  trend.categoryId == 2
+                                      ? Row(
+                                          children: [
+                                            Text(
+                                              'Views',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            Text(
+                                              '${trend.viewsCount}',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        )
+                                      : Text('')
                                 ],
                               ),
                               Divider(
@@ -210,6 +217,22 @@ class _DetailNewsState extends State<DetailNews> {
                               SizedBox(
                                 height: 20,
                               ),
+                              Container(
+                                  width: double.infinity,
+                                  height: 500,
+                                  child: FutureBuilder(
+                                      future: TrendingNewsProvider()
+                                          .fetchKeymoment(widget.title),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Center();
+                                        } else if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center();
+                                        } else {
+                                          return Center();
+                                        }
+                                      }))
                             ],
                           ),
                         ),
@@ -226,21 +249,20 @@ class _DetailNewsState extends State<DetailNews> {
                           borderRadius:
                               BorderRadius.only(topRight: Radius.circular(30))),
                       child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 18.0),
-                              child: ListView(
-                                        children: [
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                        ],
-                                      ),
-                              )
-                            );
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 18.0),
+                        child: ListView(
+                          children: [
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                            TrendingShimmer(),
+                          ],
+                        ),
+                      ));
                 } else {
                   return Center();
                 }

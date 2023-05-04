@@ -189,6 +189,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 const ProfileDetails(
                                   subtitle: "200",
                                   title: "Level",
+                                  isLast: true,
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -209,13 +210,15 @@ class _UserProfilePageState extends State<UserProfilePage> {
 }
 
 class ProfileDetails extends StatelessWidget {
-  const ProfileDetails({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-  }) : super(key: key);
+  const ProfileDetails(
+      {Key? key,
+      required this.title,
+      required this.subtitle,
+      this.isLast = false})
+      : super(key: key);
   final String title;
   final String subtitle;
+  final bool isLast;
 
   @override
   Widget build(BuildContext context) {
@@ -240,10 +243,12 @@ class ProfileDetails extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        const Divider(
-          thickness: 1,
-          color: Colors.grey,
-        )
+        isLast
+            ? Center()
+            : const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              )
       ],
     );
   }

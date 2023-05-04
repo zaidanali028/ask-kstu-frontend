@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -8,6 +9,7 @@ import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:provider/provider.dart';
@@ -253,9 +255,15 @@ class _DashboardState extends State<Dashboard> {
                                                 NoticeBoardShimmer(),
                                               ])));
                                 } else if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text("${snapshot.error}"),
-                                  );
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Text('');
                                 } else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
@@ -393,13 +401,21 @@ class _DashboardState extends State<Dashboard> {
                                       children: [
                                         TrendingShimmer(),
                                         TrendingShimmer(),
+                                        TrendingShimmer(),
+                                        TrendingShimmer(),
                                       ],
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('${snapshot.error}'),
-                                  );
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Center();
                                 } else {
                                   final trend = snapshot.data!;
                                   return Container(

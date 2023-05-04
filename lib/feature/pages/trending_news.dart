@@ -1,9 +1,11 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/services/trending_news.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -107,13 +109,19 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                         ],
                                       );
                                     } else if (snapshot.hasError) {
-                                      return Center(
-                                        child: Text('${snapshot.hasError}'),
-                                      );
+                                      logout().then((value) => {
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginPage()),
+                                                    (route) => false)
+                                          });
+                                      return Center();
                                     } else {
                                       final trend = snapshot.data!;
                                       return ListView.builder(
-                                      physics: BouncingScrollPhysics(),
+                                        physics: BouncingScrollPhysics(),
                                         itemCount: trend.length,
                                         scrollDirection: Axis.vertical,
                                         itemBuilder: (context, index) {

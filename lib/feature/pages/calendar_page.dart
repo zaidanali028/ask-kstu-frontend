@@ -43,7 +43,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: topColor,
       body: SafeArea(
           child: Center(
@@ -96,7 +96,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                   const Text(
                                     "Calendar",
                                     style: TextStyle(
-                                        color: bottomColor, fontSize: 25, fontWeight: FontWeight.bold),
+                                        color: bottomColor,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
                                   )
                                 ],
                               ),
@@ -165,7 +167,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                         onDaySelected: _onDaySelected,
                                         selectedDayPredicate: (day) =>
                                             isSameDay(day, today)),
-                                            // ..._getEventFromDay(DateTime.now()).map((e) => selectedEvents);
+                                    ..._getEventFromDay(DateTime.now())
+                                        .map((Event event) => ListTile(
+                                              title: Text(event.title),
+                                            ))
                                   ],
                                 ))))
                   ],
@@ -192,8 +197,7 @@ class _CalendarPageState extends State<CalendarPage> {
       //               TextButton(
       //                   onPressed: () {
       //                     if (_eventController.text.isEmpty) {
-      //                       Navigator.pop(context);
-      //                       return;
+                            
       //                     } else {
       //                       if (selectedEvents[DateTime.now()] != null) {
       //                         selectedEvents[DateTime.now()]
@@ -202,11 +206,14 @@ class _CalendarPageState extends State<CalendarPage> {
       //                         selectedEvents[DateTime.now()] = [
       //                           Event(title: _eventController.text)
       //                         ];
-      //                         Navigator.pop(context);
-      //                         _eventController.clear();
-      //                         return;
       //                       }
       //                     }
+      //                     Navigator.pop(context);
+      //                     _eventController.clear();
+      //                     setState(() {
+                            
+      //                     });
+      //                     return;
       //                   },
       //                   child: Text("Ok")),
       //             ],
