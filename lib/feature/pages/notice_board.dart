@@ -43,16 +43,16 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                 Column(
                   children: [
                     Expanded(
-                        // flex: 1,
+                        flex: 1,
                         child: Container(
-                          height: 20,
+                          height: MediaQuery.of(context).size.height / 2,
                           decoration: const BoxDecoration(
                               color: topColor,
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 10),
+                                horizontal: 10.0, vertical: 15),
                             child: Column(children: [
                               Row(
                                 children: [
@@ -83,7 +83,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                           ),
                         )),
                     Expanded(
-                        flex: 10,
+                        flex: 7,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -107,7 +107,8 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                           TrendingShimmer(),
                                         ],
                                       );
-                                    } else if (snapshot.hasError) {
+                                    } 
+                                    else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
@@ -117,7 +118,8 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                     (route) => false)
                                           });
                                       return Center();
-                                    } else {
+                                    } 
+                                    else {
                                       final noticeboard = snapshot.data!;
                                       return GridView.builder(
                                         physics: BouncingScrollPhysics(),
@@ -161,11 +163,11 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                             height: 150,
                                                             decoration: BoxDecoration(
                                                                 image: noticeboard[index]
-                                                                            .featuredImage !=
+                                                                            .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
                                                                         image: NetworkImage(
-                                                                            "${noticeboard[index].featuredImage}"),
+                                                                            "${noticeboard[index].featured_image}"),
                                                                         fit: BoxFit
                                                                             .fill)
                                                                     : DecorationImage(
@@ -200,7 +202,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                             height: 10,
                                                           ),
                                                           Text(
-                                                            "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                            "${DateTime.parse(noticeboard[index].created_at)}",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .grey

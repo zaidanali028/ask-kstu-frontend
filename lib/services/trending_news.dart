@@ -15,7 +15,7 @@ class TrendingNewsProvider extends ChangeNotifier {
 
   Future<List<Announcement>> fetchTrend() async {
     String token = await getToken();
-    final response = await http.get(Uri.parse(announcementUrl), headers: {
+    final response = await http.get(Uri.parse(trendingUrl), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token'
     });

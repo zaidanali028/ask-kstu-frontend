@@ -80,7 +80,7 @@ class _DetailNewsState extends State<DetailNews> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: NetworkImage(trend.featuredImage),
+                                image: NetworkImage(   "${announcement_imgUri}${trend.featured_image}"),
                                 fit: BoxFit.cover)),
                         child: Stack(
                           children: [
@@ -144,7 +144,7 @@ class _DetailNewsState extends State<DetailNews> {
                                       Container(
                                         width: 80,
                                         child: Text(
-                                          trend.createdAt,
+                                          trend.created_at,
                                           maxLines: 1,
                                           overflow: TextOverflow.fade,
                                           style: TextStyle(
@@ -157,10 +157,10 @@ class _DetailNewsState extends State<DetailNews> {
                                   SizedBox(
                                     width: 58,
                                   ),
-                                  trend.categoryId == 2
+                                  trend.category_id == 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            if (trend.likedByAuthUser == true) {
+                                            if (trend.liked_by_auth_user == true) {
                                               likeAnnouncement(trend.id, 0);
                                             } else {
                                               likeAnnouncement(trend.id, 1);
@@ -168,7 +168,7 @@ class _DetailNewsState extends State<DetailNews> {
                                           },
                                           child: Row(
                                             children: [
-                                              trend.likedByAuthUser == true
+                                              trend.liked_by_auth_user == true
                                                   ? Icon(
                                                       Icons.favorite,
                                                       color: topColor,
@@ -181,7 +181,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                 width: 2,
                                               ),
                                               Text(
-                                                '${trend.likesCountFormatted}',
+                                                '${trend.likes_count}',
                                                 style: TextStyle(
                                                     color: Colors.grey),
                                               )
@@ -190,7 +190,7 @@ class _DetailNewsState extends State<DetailNews> {
                                         )
                                       : Text(''),
                                   Spacer(),
-                                  trend.categoryId == 2
+                                  trend.category_id == 2
                                       ? Row(
                                           children: [
                                             Text(
@@ -202,7 +202,7 @@ class _DetailNewsState extends State<DetailNews> {
                                               width: 6,
                                             ),
                                             Text(
-                                              '${trend.viewsCountFormatted}',
+                                              '${trend.views}',
                                               style:
                                                   TextStyle(color: Colors.grey),
                                             )
@@ -264,7 +264,7 @@ class _DetailNewsState extends State<DetailNews> {
                         ),
                       ));
                 } else {
-                  return Text("${snapshot.error}");
+                  return Center();
                 }
               }),
         ));

@@ -1,18 +1,14 @@
-import 'dart:convert';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
-import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:first_app/models/constant.dart';
 class TrendingNewsPage extends StatefulWidget {
   const TrendingNewsPage({super.key});
 
@@ -20,50 +16,7 @@ class TrendingNewsPage extends StatefulWidget {
   State<TrendingNewsPage> createState() => _TrendingNewsPageState();
 }
 
-
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
-  
-  Future<void> likeAnnouncement(int category_id, int status) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    final response = await http.post(
-        Uri.parse(likesUrl + '/' + '${category_id}' + '/' + '${status}'),
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token"
-        });
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${data['message']}"),
-        backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${jsonDecode(response.body)['message']}"),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final trendProvider =
@@ -91,16 +44,16 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                 Column(
                   children: [
                     Expanded(
-                        // flex: 1,
+                        flex: 1,
                         child: Container(
-                          height: 20,
+                          height: MediaQuery.of(context).size.height / 2,
                           decoration: const BoxDecoration(
                               color: topColor,
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 10),
+                                horizontal: 10.0, vertical: 15),
                             child: Column(children: [
                               Row(
                                 children: [
@@ -131,7 +84,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                           ),
                         )),
                     Expanded(
-                        flex: 10,
+                        flex: 7,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -155,7 +108,8 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                           TrendingShimmer(),
                                         ],
                                       );
-                                    } else if (snapshot.hasError) {
+                                    }
+                                     else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
@@ -200,12 +154,12 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               BorderRadius
                                                                   .circular(10),
                                                           image: trend[index]
-                                                                      .featuredImage !=
+                                                                      .featured_image !=
                                                                   null
                                                               ? DecorationImage(
                                                                   image: NetworkImage(
                                                                       trend[index]
-                                                                          .featuredImage),
+                                                                          .featured_image),
                                                                   fit: BoxFit
                                                                       .cover)
                                                               : null),
@@ -263,7 +217,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               width: 80,
                                                               child: Text(
                                                                 trend[index]
-                                                                    .createdAt,
+                                                                    .created_at,
                                                                 maxLines: 1,
                                                                 overflow:
                                                                     TextOverflow
@@ -281,49 +235,28 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                         SizedBox(
                                                           width: 58,
                                                         ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          if (trend[index]
-                                                                  .likedByAuthUser ==
-                                                              true) {
-                                                            likeAnnouncement(
-                                                                trend[index].id,
-                                                                0);
-                                                          } else {
-                                                            likeAnnouncement(
-                                                                trend[index].id,
-                                                                1);
-                                                          }
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            trend[index].likedByAuthUser ==
-                                                                    true
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .favorite,
-                                                                    color:
-                                                                        topColor,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .favorite_outline,
+                                                        GestureDetector(
+                                                          onTap: () {},
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .favorite_outline,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 2,
+                                                              ),
+                                                              Text(
+                                                                '${trend[index].likes_count}',
+                                                                style: TextStyle(
                                                                     color: Colors
-                                                                        .grey,
-                                                                  ),
-                                                            const SizedBox(
-                                                              width: 2,
-                                                            ),
-                                                            Text(
-                                                              '${trend[index].likesCountFormatted}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                            )
-                                                          ],
+                                                                        .grey),
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                      
                                                         Spacer(),
                                                         Row(
                                                           children: [
@@ -335,7 +268,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               width: 2,
                                                             ),
                                                             Text(
-                                                              '${trend[index].viewsCountFormatted}',
+                                                              '${trend[index].views}',
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .grey),

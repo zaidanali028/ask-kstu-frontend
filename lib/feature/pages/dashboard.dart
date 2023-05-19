@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -8,6 +9,7 @@ import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:provider/provider.dart';
@@ -252,18 +254,19 @@ class _DashboardState extends State<Dashboard> {
                                                 ),
                                                 NoticeBoardShimmer(),
                                               ])));
-                                } else if (snapshot.hasError) {
-                                  // logout().then((value) => {
-                                  //       Navigator.of(context)
-                                  //           .pushAndRemoveUntil(
-                                  //               MaterialPageRoute(
-                                  //                   builder: (context) =>
-                                  //                       LoginPage()),
-                                  //               (route) => false)
-                                  //     });
-                                  print(snapshot.error);
-                                  return Text('${snapshot.error}');
-                                } else {
+                                } 
+                                else if (snapshot.hasError) {
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Text('');
+                                } 
+                                else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -313,11 +316,11 @@ class _DashboardState extends State<Dashboard> {
                                                         decoration: BoxDecoration(
                                                             image: noticeboard[
                                                                             index]
-                                                                        .featuredImage !=
+                                                                        .featured_image !=
                                                                     null
                                                                 ? DecorationImage(
                                                                     image: NetworkImage(
-                                                                        "${noticeboard[index].featuredImage}"),
+                                                                        "${announcement_imgUri}${noticeboard[index].featured_image}"),
                                                                     fit: BoxFit
                                                                         .fill)
                                                                 : DecorationImage(
@@ -349,7 +352,7 @@ class _DashboardState extends State<Dashboard> {
                                                         height: 20,
                                                       ),
                                                       Text(
-                                                        "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                        "${DateTime.parse(noticeboard[index].created_at)}",
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .grey.shade300,
@@ -405,17 +408,19 @@ class _DashboardState extends State<Dashboard> {
                                       ],
                                     ),
                                   );
-                                } else if (snapshot.hasError) {
-                                  // logout().then((value) => {
-                                  //       Navigator.of(context)
-                                  //           .pushAndRemoveUntil(
-                                  //               MaterialPageRoute(
-                                  //                   builder: (context) =>
-                                  //                       LoginPage()),
-                                  //               (route) => false)
-                                  //     });
-                                  return Text('${snapshot.error}');
-                                } else {
+                                } 
+                                else if (snapshot.hasError) {
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Center();
+                                }
+                                 else {
                                   final trend = snapshot.data!;
                                   return Container(
                                     height: 530,
@@ -451,12 +456,11 @@ class _DashboardState extends State<Dashboard> {
                                                             BorderRadius
                                                                 .circular(10),
                                                         image: trend[index]
-                                                                    .featuredImage !=
+                                                                    .featured_image !=
                                                                 null
                                                             ? DecorationImage(
                                                                 image: NetworkImage(
-                                                                    trend[index]
-                                                                        .featuredImage),
+                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : null),
@@ -512,8 +516,7 @@ class _DashboardState extends State<Dashboard> {
                                                           Container(
                                                             width: 80,
                                                             child: Text(
-                                                              trend[index]
-                                                                  .createdAt,
+                                                              trend[index].created_at,
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow
@@ -534,7 +537,7 @@ class _DashboardState extends State<Dashboard> {
                                                       GestureDetector(
                                                         onTap: () {
                                                           if (trend[index]
-                                                                  .likedByAuthUser ==
+                                                                  .liked_by_auth_user ==
                                                               true) {
                                                             likeAnnouncement(
                                                                 trend[index].id,
@@ -547,7 +550,7 @@ class _DashboardState extends State<Dashboard> {
                                                         },
                                                         child: Row(
                                                           children: [
-                                                            trend[index].likedByAuthUser ==
+                                                            trend[index].liked_by_auth_user ==
                                                                     true
                                                                 ? Icon(
                                                                     Icons
@@ -565,7 +568,7 @@ class _DashboardState extends State<Dashboard> {
                                                               width: 2,
                                                             ),
                                                             Text(
-                                                              '${trend[index].likesCountFormatted}',
+                                                              '${trend[index].likes_count}',
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .grey),
@@ -586,7 +589,7 @@ class _DashboardState extends State<Dashboard> {
                                                             width: 6,
                                                           ),
                                                           Text(
-                                                            '${trend[index].viewsCountFormatted}',
+                                                            '${trend[index].views}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .grey),

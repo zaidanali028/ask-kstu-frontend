@@ -1,4 +1,15 @@
-const buildUrl = 'http://192.168.137.170:8000/api/v1';
+// production urls
+// const buildUrl = 'http://16.16.192.97/api/v1';
+// const asset_base_url = 'http://16.16.192.97';
+
+// // universal(for all emulators)
+const buildUrl = 'http://10.0.2.2:8000/api/v1';
+const asset_base_url = 'http://10.0.2.2:8000';
+
+
+// xamani's ip
+// const buildUrl = 'http://192.168.91.128:800/api/v1';
+// const asset_base_url = 'http://192.168.91.128:8000';
 
 const loginUrl = buildUrl + '/login';
 const registerUrl = buildUrl + '/register';
@@ -6,9 +17,13 @@ const logoutUrl = buildUrl + '/logout';
 const userUrl = buildUrl + '/me';
 
 const noticeUrl = buildUrl + '/announcements/notice-board';
-const announcementUrl = buildUrl + '/announcements/trending-news';
+const trendingUrl = buildUrl + '/announcements/trending-news';
 const announcementDetailUrl = buildUrl + '/announcement';
 const likesUrl = buildUrl + '/post-interact/announcements';
+
+
+// image-paths
+const announcement_imgUri=asset_base_url+'/storage/announcement_imgs/';
 
 const serverError = "Server Error";
 const unauthorized = "Unauthorized";

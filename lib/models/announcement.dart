@@ -1,73 +1,70 @@
-// To parse this JSON data, do
-//
-//     final announcement = announcementFromJson(jsonString);
-
 import 'dart:convert';
 
-Announcement announcementFromJson(String str) => Announcement.fromJson(json.decode(str));
+Announcement userFromJson(String str) =>
+    Announcement.fromJson(json.decode(str));
 
-String announcementToJson(Announcement data) => json.encode(data.toJson());
+// String anouncementToJson(Announcement data) => json.encode(data.toJson());
 
 class Announcement {
-    int id;
-    String featuredImage;
-    String title;
-    int status;
-    int views;
-    int categoryId;
-    dynamic createdAt;
-    dynamic updatedAt;
-    int likesCount;
-    int likesCountFormatted;
-    int viewsCountFormatted;
-    bool likedByAuthUser;
-    List<dynamic> likedUsers;
+  final int id;
+  final String featured_image;
+  final String title;
+  final int status;
+  final int views;
+  final int category_id;
+  final String created_at;
+  final String updated_at;
+  final bool liked_by_auth_user;
+  final int likes_count;
+  final int likes_count_formatted;
+  final int views_count_formatted;
+  final List get_announcement_key_moments;
 
-    Announcement({
-        required this.id,
-        required this.featuredImage,
-        required this.title,
-        required this.status,
-        required this.views,
-        required this.categoryId,
-        this.createdAt,
-        this.updatedAt,
-        required this.likesCount,
-        required this.likesCountFormatted,
-        required this.viewsCountFormatted,
-        required this.likedByAuthUser,
-        required this.likedUsers,
-    });
+  Announcement({
+    required this.title,
+    required this.id,
+    required this.featured_image,
+    required this.status,
+    required this.views,
+    required this.category_id,
+    required this.created_at,
+    required this.updated_at,
+    required this.liked_by_auth_user,
+    required this.likes_count,
+    required this.likes_count_formatted,
+    required this.views_count_formatted,
+    required this.get_announcement_key_moments,
+  });
 
-    factory Announcement.fromJson(Map<String, dynamic> json) => Announcement(
-        id: json["id"],
-        featuredImage: json["featured_image"],
-        title: json["title"],
-        status: json["status"],
-        views: json["views"],
-        categoryId: json["category_id"],
-        createdAt: json["created_at"] ?? "",
-        updatedAt: json["updated_at"],
-        likesCount: json["likes_count"],
-        likesCountFormatted: json["likes_count_formatted"],
-        viewsCountFormatted: json["views_count_formatted"],
-        likedByAuthUser: json["liked_by_auth_user"],
-        likedUsers: List<dynamic>.from(json["liked_users"].map((x) => x)),
+  factory Announcement.fromJson(Map<String, dynamic> json) {
+    return Announcement(
+      title: json['title'],
+      id: json['id'],
+      featured_image: json['featured_image'],
+      status: json['status'],
+      views: json['views'],
+      category_id: json['category_id'],
+      created_at: json['created_at'],
+      updated_at: json['updated_at'],
+      liked_by_auth_user: json['liked_by_auth_user']??false,
+      likes_count: json['likes_count'],
+      likes_count_formatted: json['likes_count_formatted'],
+      views_count_formatted: json['views_count_formatted'],
+      get_announcement_key_moments: json['get_announcement_key_moments'] ?? [],
     );
+  }
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "featured_image": featuredImage,
-        "title": title,
-        "status": status,
-        "views": views,
-        "category_id": categoryId,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "likes_count": likesCount,
-        "likes_count_formatted": likesCountFormatted,
-        "views_count_formatted": viewsCountFormatted,
-        "liked_by_auth_user": likedByAuthUser,
-        "liked_users": List<dynamic>.from(likedUsers.map((x) => x)),
-    };
+  // Map<String, dynamic> toJson() => {
+  //       "title": title,
+  //       "featured_image": featured_image,
+  //       "status": status,
+  //       "category_id": category_id,
+  //       "views": views,
+  //       "id": id,  //       'likes_count_formatted': likesCount,
+  //       'views_count_formatted': viewsCount,
+  //       'liked_by_auth_user': authUserLikes,
+  //       'get_announcement_key_moments': get_announcement_key_moments,
+  //       'liked_users': users,
+  //       "created_at": date
+  //     };
 }
