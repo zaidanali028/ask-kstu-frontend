@@ -36,7 +36,7 @@ class _PastQuestionPageState extends State<PastQuestionPage> {
                 Column(
                   children: [
                     Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Container(
                           height: MediaQuery.of(context).size.height / 2,
                           decoration: const BoxDecoration(
@@ -72,9 +72,9 @@ class _PastQuestionPageState extends State<PastQuestionPage> {
                                   )
                                 ],
                               ),
-                              Container(
-                                width: 400,
-                                height: 100,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
                                 child: Form(
                                   child: TextFormField(
                                     textCapitalization:
@@ -82,15 +82,34 @@ class _PastQuestionPageState extends State<PastQuestionPage> {
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                              BorderRadius.circular(30),
+                                              BorderRadius.circular(20),
                                         ),
-                                        contentPadding: EdgeInsets.all(20),
+                                        contentPadding: EdgeInsets.all(10),
                                         fillColor: Colors.grey,
                                         filled: true,
-                                        label: Text('Search.....'),
+                                        focusColor: Colors.grey,
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        hintText: 'Search.....',
+                                        hintStyle:
+                                            TextStyle(color: bottomColor),
                                         suffixIcon: IconButton(
                                             onPressed: () {},
-                                            icon: Icon(Icons.search))),
+                                            icon: Icon(
+                                              Icons.search,
+                                              color: bottomColor,
+                                              size: 25,
+                                            ))),
                                   ),
                                 ),
                               )
@@ -98,7 +117,7 @@ class _PastQuestionPageState extends State<PastQuestionPage> {
                           ),
                         )),
                     Expanded(
-                        flex: 6,
+                        flex: 7,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -108,45 +127,78 @@ class _PastQuestionPageState extends State<PastQuestionPage> {
                                     topRight: Radius.circular(30))),
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 2.0, vertical: 18.0),
+                                    horizontal: 15.0, vertical: 18.0),
                                 child: ListView(
                                   children: [
                                     Container(
                                       width: double.infinity,
-                                      height: 200,
-                                      child: Column(
+                                      height: 130,
+                                      decoration: BoxDecoration(
+                                          color: topColor,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
+                                          Container(
+                                            width: 120,
+                                            height: 130,
+                                            decoration: BoxDecoration(
+                                                color: bottomColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                          ),
+                                          // SizedBox(width: 30,),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    2,
-                                                height: 200,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
+                                              Text(
+                                                "2024 data analysis",
+                                                style: TextStyle(
+                                                    color: bottomColor,
+                                                    fontSize: 20),
                                               ),
-                                              Column(
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text("2020 Data Sceince"),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      ElevatedButton(
-                                                          onPressed: () {},
-                                                          child:
-                                                              Text('Preview')),
-                                                      ElevatedButton(
-                                                          onPressed: () {},
-                                                          child:
-                                                              Text('Download')),
-                                                    ],
+                                                  ElevatedButton(
+                                                      onPressed: () {},
+                                                      child: Text('Preview')),
+                                                  const SizedBox(
+                                                    width: 35,
+                                                  ),
+                                                  ElevatedButton(
+                                                      onPressed: () {},
+                                                      child: Text('Download')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width: 90,
+                                                    height: 1,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Text(
+                                                    '23rd April, 2022',
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
                                                   )
                                                 ],
                                               )

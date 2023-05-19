@@ -154,7 +154,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                           MaterialPageRoute(
                               builder: (context) => PastQuestionPage())),
                       icons: Icons.question_answer,
-                      title: "PastCo",
+                      title: "Notifications",
                     ),
                     DashboardIcons(
                       callback: () {

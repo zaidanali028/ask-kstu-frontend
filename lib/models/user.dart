@@ -17,11 +17,11 @@ class User {
     String? image;
     String? currentLevel;
     String? currentSemester;
-    String? facultyId;
+    int? facultyId;
     int? status;
     int? indexNo;
-    String? deptId;
-    String? programId;
+    int? deptId;
+    int? programId;
     String? yrOfAdmission;
     String? yrOfCompletion;
     int? id;
@@ -52,10 +52,10 @@ class User {
         currentSemester: json['user']['current_sem'],
         image: json['user']['user_img'] ?? 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
         gender: json['user']['gender'],
-        facultyId: json['user']['faculty_name'],
+        facultyId: json['user']['faculty_id'],
         indexNo: json['user']['index_no'],
-        deptId: json['user']['dept_name'],
-        programId: json['user']['program_name'],
+        deptId: json['user']['dept_id'],
+        programId: json['user']['program_id'],
         status: json['user']['status'],
         yrOfAdmission: json['user']['yr_of_admission'],
         yrOfCompletion: json['user']['yr_of_completion'],
@@ -69,10 +69,10 @@ class User {
         "email": email,
         "user_img": image,
         "gender": gender,
-        "faculty": facultyId,
+        "faculty_id": facultyId,
         "index_no": indexNo,
-        "dept": deptId,
-        "program": programId,
+        "dept_id": deptId,
+        "program_id": programId,
         "status": status,
         "yr_of_admission": yrOfAdmission,
         "yr_of_completion": yrOfCompletion,

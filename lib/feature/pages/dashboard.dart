@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
-import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -9,7 +8,6 @@ import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
-import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:provider/provider.dart';
@@ -255,15 +253,16 @@ class _DashboardState extends State<Dashboard> {
                                                 NoticeBoardShimmer(),
                                               ])));
                                 } else if (snapshot.hasError) {
-                                  logout().then((value) => {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage()),
-                                                (route) => false)
-                                      });
-                                  return Text('');
+                                  // logout().then((value) => {
+                                  //       Navigator.of(context)
+                                  //           .pushAndRemoveUntil(
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       LoginPage()),
+                                  //               (route) => false)
+                                  //     });
+                                  print(snapshot.error);
+                                  return Text('${snapshot.error}');
                                 } else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
@@ -350,7 +349,7 @@ class _DashboardState extends State<Dashboard> {
                                                         height: 20,
                                                       ),
                                                       Text(
-                                                        "${DateTime.parse(noticeboard[index].date)}",
+                                                        "${DateTime.parse(noticeboard[index].createdAt)}",
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .grey.shade300,
@@ -407,15 +406,15 @@ class _DashboardState extends State<Dashboard> {
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  logout().then((value) => {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage()),
-                                                (route) => false)
-                                      });
-                                  return Center();
+                                  // logout().then((value) => {
+                                  //       Navigator.of(context)
+                                  //           .pushAndRemoveUntil(
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       LoginPage()),
+                                  //               (route) => false)
+                                  //     });
+                                  return Text('${snapshot.error}');
                                 } else {
                                   final trend = snapshot.data!;
                                   return Container(
@@ -513,7 +512,8 @@ class _DashboardState extends State<Dashboard> {
                                                           Container(
                                                             width: 80,
                                                             child: Text(
-                                                              trend[index].date,
+                                                              trend[index]
+                                                                  .createdAt,
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow
@@ -534,7 +534,7 @@ class _DashboardState extends State<Dashboard> {
                                                       GestureDetector(
                                                         onTap: () {
                                                           if (trend[index]
-                                                                  .authUserLikes ==
+                                                                  .likedByAuthUser ==
                                                               true) {
                                                             likeAnnouncement(
                                                                 trend[index].id,
@@ -547,7 +547,7 @@ class _DashboardState extends State<Dashboard> {
                                                         },
                                                         child: Row(
                                                           children: [
-                                                            trend[index].authUserLikes ==
+                                                            trend[index].likedByAuthUser ==
                                                                     true
                                                                 ? Icon(
                                                                     Icons
@@ -565,7 +565,7 @@ class _DashboardState extends State<Dashboard> {
                                                               width: 2,
                                                             ),
                                                             Text(
-                                                              '${trend[index].likesCount}',
+                                                              '${trend[index].likesCountFormatted}',
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .grey),
@@ -586,7 +586,7 @@ class _DashboardState extends State<Dashboard> {
                                                             width: 6,
                                                           ),
                                                           Text(
-                                                            '${trend[index].viewsCount}',
+                                                            '${trend[index].viewsCountFormatted}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .grey),

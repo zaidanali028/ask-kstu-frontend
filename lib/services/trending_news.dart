@@ -42,6 +42,7 @@ class TrendingNewsProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token'
     });
     if (response.statusCode == 200) {
+      print(response.body);
       return Announcement.fromJson(jsonDecode(response.body)['data']);
     } else if (response.statusCode == 401) {
       throw Exception('Unauthorized!');
@@ -49,7 +50,7 @@ class TrendingNewsProvider extends ChangeNotifier {
       throw Exception('Failed to fetch noticeboard!');
     }
   }
-  
+
   Future<KeyMoments> fetchKeymoment(int trend_id) async {
     String token = await getToken();
     final response = await http

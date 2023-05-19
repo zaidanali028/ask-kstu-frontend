@@ -1,7 +1,11 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/notice_board_shimmer.dart';
+import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/events.dart';
+import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -42,6 +46,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final noticeProvider =
+        Provider.of<NoticeBoardProvider>(context, listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: topColor,
@@ -66,47 +72,46 @@ class _CalendarPageState extends State<CalendarPage> {
                 Column(
                   children: [
                     Expanded(
-                        flex: 2,
+                        // flex: 1,
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          decoration: const BoxDecoration(
-                              color: topColor,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 15),
-                            child: Column(children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Dashboard()),
-                                          (route) => false);
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: bottomColor,
-                                      size: 25,
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Calendar",
-                                    style: TextStyle(
-                                        color: bottomColor,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
+                      height: 20,
+                      decoration: const BoxDecoration(
+                          color: topColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5.0, vertical: 10),
+                        child: Column(children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: bottomColor,
+                                  size: 25,
+                                ),
                               ),
-                            ]),
+                              const Text(
+                                "Calendar",
+                                style: TextStyle(
+                                    color: bottomColor,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
                           ),
-                        )),
+                        ]),
+                      ),
+                    )),
                     Expanded(
-                        flex: 6,
+                        flex: 10,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -116,7 +121,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                     topRight: Radius.circular(30))),
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 18.0),
+                                    horizontal: 10.0, vertical: 10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -167,10 +172,183 @@ class _CalendarPageState extends State<CalendarPage> {
                                         onDaySelected: _onDaySelected,
                                         selectedDayPredicate: (day) =>
                                             isSameDay(day, today)),
-                                    ..._getEventFromDay(DateTime.now())
-                                        .map((Event event) => ListTile(
-                                              title: Text(event.title),
-                                            ))
+                                    // ..._getEventFromDay(DateTime.now())
+                                    //     .map((Event event) => ListTile(
+                                    //           title: Text(event.title),
+                                    //         )),
+                                    // SizedBox(height: 20,),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                                  2 -
+                                              18,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          color: topColor,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10))),
+                                      child: FutureBuilder<List<Announcement>>(
+                                        future: noticeProvider.fetchNotice(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: Container(
+                                                    height: 243,
+                                                    child: ListView(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        children: [
+                                                          NoticeBoardShimmer(),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          NoticeBoardShimmer(),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          NoticeBoardShimmer(),
+                                                        ])));
+                                          } else if (snapshot.hasError) {
+                                            return Text('${snapshot.error}');
+                                          } else {
+                                            final noticeboard = snapshot.data!;
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Container(
+                                                height: 243,
+                                                child: ListView.builder(
+                                                  physics:
+                                                      BouncingScrollPhysics(),
+                                                  itemCount: noticeboard.length,
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 12.0),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        height: 120,
+                                                        decoration: BoxDecoration(
+                                                            color: bottomColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 150,
+                                                              height: double
+                                                                  .infinity,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius: BorderRadius.only(
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            10),
+                                                                    topLeft: Radius
+                                                                        .circular(
+                                                                            10)),
+                                                                image: noticeboard[index]
+                                                                            .featuredImage !=
+                                                                        null
+                                                                    ? DecorationImage(
+                                                                        image: NetworkImage(
+                                                                            "${noticeboard[index].featuredImage}"),
+                                                                        fit: BoxFit
+                                                                            .fill)
+                                                                    : DecorationImage(
+                                                                        image: NetworkImage(
+                                                                            "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                                                        fit: BoxFit
+                                                                            .fill),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              width: 194,
+                                                              height: double
+                                                                  .infinity,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.only(
+                                                                      topRight:
+                                                                          Radius.circular(
+                                                                              10),
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              10))),
+                                                              child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 8.0,
+                                                                      right:
+                                                                          8.0),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "${noticeboard[index].title}",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              20,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                        maxLines:
+                                                                            3,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                      ),
+                                                                      Spacer(),
+                                                                      Container(
+                                                                        width:
+                                                                            150,
+                                                                        height:
+                                                                            20,
+                                                                        child:
+                                                                            Text(
+                                                                          "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                                          style: TextStyle(
+                                                                              color: Colors.grey.shade500,
+                                                                              fontSize: 15),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.fade,
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  )),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    )
                                   ],
                                 ))))
                   ],
@@ -197,7 +375,7 @@ class _CalendarPageState extends State<CalendarPage> {
       //               TextButton(
       //                   onPressed: () {
       //                     if (_eventController.text.isEmpty) {
-                            
+
       //                     } else {
       //                       if (selectedEvents[DateTime.now()] != null) {
       //                         selectedEvents[DateTime.now()]
@@ -211,7 +389,7 @@ class _CalendarPageState extends State<CalendarPage> {
       //                     Navigator.pop(context);
       //                     _eventController.clear();
       //                     setState(() {
-                            
+
       //                     });
       //                     return;
       //                   },
@@ -221,7 +399,6 @@ class _CalendarPageState extends State<CalendarPage> {
       //   label: Text("Add Event"),
       //   icon: Icon(Icons.send),
       // ),
-    
     );
   }
 }

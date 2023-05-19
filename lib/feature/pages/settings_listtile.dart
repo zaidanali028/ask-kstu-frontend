@@ -1,3 +1,4 @@
+import 'package:first_app/feature/colors.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -25,7 +26,7 @@ class SettingsListTile extends StatelessWidget {
                 fontWeight: FontWeight.w300,
                 fontSize: 20),
           ),
-          trailing: IconButton(
+          trailing: isLast ? null : IconButton(
               onPressed: () {},
               icon: Icon(
                 trailingIcon,
@@ -34,8 +35,8 @@ class SettingsListTile extends StatelessWidget {
               )),
           leading: Icon(
             leadingIcon,
-            size: 20,
-            color: Colors.grey,
+            size: 25,
+            color: isLast ? topColor : Colors.grey,
           ),
         ),
         isLast

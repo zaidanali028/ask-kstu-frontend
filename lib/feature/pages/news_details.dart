@@ -144,7 +144,7 @@ class _DetailNewsState extends State<DetailNews> {
                                       Container(
                                         width: 80,
                                         child: Text(
-                                          trend.date,
+                                          trend.createdAt,
                                           maxLines: 1,
                                           overflow: TextOverflow.fade,
                                           style: TextStyle(
@@ -160,7 +160,7 @@ class _DetailNewsState extends State<DetailNews> {
                                   trend.categoryId == 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            if (trend.authUserLikes == true) {
+                                            if (trend.likedByAuthUser == true) {
                                               likeAnnouncement(trend.id, 0);
                                             } else {
                                               likeAnnouncement(trend.id, 1);
@@ -168,7 +168,7 @@ class _DetailNewsState extends State<DetailNews> {
                                           },
                                           child: Row(
                                             children: [
-                                              trend.authUserLikes == true
+                                              trend.likedByAuthUser == true
                                                   ? Icon(
                                                       Icons.favorite,
                                                       color: topColor,
@@ -181,7 +181,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                 width: 2,
                                               ),
                                               Text(
-                                                '${trend.likesCount}',
+                                                '${trend.likesCountFormatted}',
                                                 style: TextStyle(
                                                     color: Colors.grey),
                                               )
@@ -202,7 +202,7 @@ class _DetailNewsState extends State<DetailNews> {
                                               width: 6,
                                             ),
                                             Text(
-                                              '${trend.viewsCount}',
+                                              '${trend.viewsCountFormatted}',
                                               style:
                                                   TextStyle(color: Colors.grey),
                                             )
@@ -264,7 +264,7 @@ class _DetailNewsState extends State<DetailNews> {
                         ),
                       ));
                 } else {
-                  return Center();
+                  return Text("${snapshot.error}");
                 }
               }),
         ));

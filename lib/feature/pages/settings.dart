@@ -37,16 +37,16 @@ class SettingsPage extends StatelessWidget {
                 Column(
                   children: [
                     Expanded(
-                        flex: 1,
+                        // flex: 1,
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 2,
+                          height: 20,
                           decoration: const BoxDecoration(
                               color: topColor,
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10.0),
+                                horizontal: 5.0, vertical: 10),
                             child: Column(children: [
                               Row(
                                 children: [
@@ -77,7 +77,7 @@ class SettingsPage extends StatelessWidget {
                           ),
                         )),
                     Expanded(
-                        flex: 8,
+                        flex: 10,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,
@@ -173,6 +173,7 @@ class SettingsPage extends StatelessWidget {
 
                                       },
                                       child: SettingsListTile(
+                                        isLast: true,
                                           title: 'About the app',
                                           trailingIcon: Icons.arrow_forward_ios,
                                           leadingIcon: Icons.favorite),

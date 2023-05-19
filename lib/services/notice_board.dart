@@ -19,10 +19,12 @@ class NoticeBoardProvider extends ChangeNotifier {
     });
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonData = json.decode(response.body)['announcements'];
+      Map<String, dynamic> jsonData =
+          json.decode(response.body)['announcements'];
       final List<dynamic> data = jsonData['data'];
       _notice = data.map((e) => Announcement.fromJson(e)).toList();
       notifyListeners();
+      print(jsonDecode(response.body));
       return _notice;
     } else if (response.statusCode == 401) {
       throw Exception('Unauthorized!');

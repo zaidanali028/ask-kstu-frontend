@@ -1,67 +1,73 @@
+// To parse this JSON data, do
+//
+//     final announcement = announcementFromJson(jsonString);
+
 import 'dart:convert';
 
-Announcement userFromJson(String str) =>
-    Announcement.fromJson(json.decode(str));
+Announcement announcementFromJson(String str) => Announcement.fromJson(json.decode(str));
 
-String anouncementToJson(Announcement data) => json.encode(data.toJson());
+String announcementToJson(Announcement data) => json.encode(data.toJson());
 
 class Announcement {
-  final String title;
-  final String featuredImage;
-  final int status;
-  final int id;
-  final int views;
-  final int categoryId;
-  final String date;
-  final int likesCount;
-  final int viewsCount;
-  final List users;
-  final List get_announcement_key_moments;
-  final bool authUserLikes;
+    int id;
+    String featuredImage;
+    String title;
+    int status;
+    int views;
+    int categoryId;
+    dynamic createdAt;
+    dynamic updatedAt;
+    int likesCount;
+    int likesCountFormatted;
+    int viewsCountFormatted;
+    bool likedByAuthUser;
+    List<dynamic> likedUsers;
 
-  Announcement(
-      {required this.title,
-      required this.likesCount,
-      required this.viewsCount,
-      required this.users,
-      required this.authUserLikes,
-      required this.featuredImage,
-      required this.status,
-      required this.views,
-      required this.id,
-      required this.categoryId,
-      required this.get_announcement_key_moments,
-      required this.date});
+    Announcement({
+        required this.id,
+        required this.featuredImage,
+        required this.title,
+        required this.status,
+        required this.views,
+        required this.categoryId,
+        this.createdAt,
+        this.updatedAt,
+        required this.likesCount,
+        required this.likesCountFormatted,
+        required this.viewsCountFormatted,
+        required this.likedByAuthUser,
+        required this.likedUsers,
+    });
 
-  factory Announcement.fromJson(Map<String, dynamic> json) {
-    return Announcement(
-      title: json['title'],
-      featuredImage: json['featured_image'],
-      status: json['status'],
-      views: json['views'],
-      categoryId: json['category_id'],
-      likesCount: json['likes_count_formatted'],
-      viewsCount: json['views_count_formatted'],
-      authUserLikes: json['liked_by_auth_user'],
-      users: json['liked_users'] ?? [],
-      get_announcement_key_moments: json['get_announcement_key_moments'] ?? [],
-      id: json['id'],
-      date: json['created_at'],
+    factory Announcement.fromJson(Map<String, dynamic> json) => Announcement(
+        id: json["id"],
+        featuredImage: json["featured_image"],
+        title: json["title"],
+        status: json["status"],
+        views: json["views"],
+        categoryId: json["category_id"],
+        createdAt: json["created_at"] ?? "",
+        updatedAt: json["updated_at"],
+        likesCount: json["likes_count"],
+        likesCountFormatted: json["likes_count_formatted"],
+        viewsCountFormatted: json["views_count_formatted"],
+        likedByAuthUser: json["liked_by_auth_user"],
+        likedUsers: List<dynamic>.from(json["liked_users"].map((x) => x)),
     );
-  }
 
-  Map<String, dynamic> toJson() => {
-        "title": title,
-        "featured_image": featuredImage,
-        "status": status,
-        "category_id": categoryId,
-        "views": views,
+    Map<String, dynamic> toJson() => {
         "id": id,
-        'likes_count_formatted': likesCount,
-        'views_count_formatted': viewsCount,
-        'liked_by_auth_user': authUserLikes,
-        'get_announcement_key_moments': get_announcement_key_moments,
-        'liked_users': users,
-        "created_at": date
-      };
+        "featured_image": featuredImage,
+        "title": title,
+        "status": status,
+        "views": views,
+        "category_id": categoryId,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
+        "likes_count": likesCount,
+        "likes_count_formatted": likesCountFormatted,
+        "views_count_formatted": viewsCountFormatted,
+        "liked_by_auth_user": likedByAuthUser,
+        "liked_users": List<dynamic>.from(likedUsers.map((x) => x)),
+    };
 }
