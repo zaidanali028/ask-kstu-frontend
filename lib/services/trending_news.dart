@@ -25,6 +25,7 @@ class TrendingNewsProvider extends ChangeNotifier {
           json.decode(response.body)['announcements'];
       final List<dynamic> data = jsonData['data'];
       _trend = data.map((e) => Announcement.fromJson(e)).toList();
+      // print(_trend);
       notifyListeners();
       return _trend;
     } else if (response.statusCode == 401) {
