@@ -16,7 +16,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 
+import 'package:notification_permissions/notification_permissions.dart';
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -24,12 +28,23 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
+
 class _DashboardState extends State<Dashboard> {
   var name;
   var index;
   var image;
   var id;
+  @override
+  void initState() {
+      // requestNotificationPermission_();
+    print('invokedRR');
+    getUser();
 
+  
+        super.initState();
+
+    
+  }
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -39,6 +54,97 @@ class _DashboardState extends State<Dashboard> {
       id = localStorage.getInt('id');
     });
   }
+
+  showAlertDialog(BuildContext context,Function() runthis) {
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: runthis,
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Receive notification alerts"),
+    content: Text('This app would like to send you push notifications when there is any activity on your account'),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+
+
+  void  requestNotificationPermission_()async {
+print('invoked 3');
+  // open prompt for user to enable notification
+    PermissionStatus permissionStatus = await NotificationPermissions.getNotificationPermissionStatus();
+    // if(permissionStatus == PermissionStatus.denied) {
+    //   // if user explicitly denied notifications, we don't want to show them again
+    //   return;
+    // }
+
+    if(permissionStatus != PermissionStatus.granted){
+
+      if(!mounted) return;
+
+      // showConfirmDialog(context, title: 'Receive notification alerts',
+      //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
+      //   onConfirmTapped: () async {
+      //     }
+      //   },
+      // );
+showAlertDialog(context,()async{
+       final requestResponse =  await NotificationPermissions.requestNotificationPermissions();
+          if(requestResponse == PermissionStatus.granted){
+            // user granted permission
+            registerUserForPushNotification();
+            return;
+     
+
+}});
+     }else {
+      registerUserForPushNotification();
+    }
+
+}
+
+void registerUserForPushNotification()async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+     var user_id = localStorage.getInt('id');
+     print("here!: ${user_id}");
+
+  
+  var myCustomUniqueUserId = "${user_id}";
+    //await OneSignal.shared.removeExternalUserId();
+    final setExtPushIdResponse = await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+    debugPrint("setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+
+    if (setExtPushIdResponse['push']['success'] != null) {
+      if (setExtPushIdResponse['push']['success'] is bool) {
+        final status = setExtPushIdResponse['push']['success'] as bool;
+        // if (status) {
+        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+        // }
+      } else if (setExtPushIdResponse['push']['success'] is int) {
+        final status = setExtPushIdResponse['push']['success'] as int;
+        // if (status == 1) {
+        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+        // }
+      }
+      debugPrint("registered for push: ${setExtPushIdResponse['push']['success']}");
+    }
+  
+}
 
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -81,11 +187,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  @override
-  void initState() {
-    getUser();
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -186,11 +288,8 @@ class _DashboardState extends State<Dashboard> {
                                         maxRadius: 24,
                                         minRadius: 24,
                                         backgroundColor: bottomColor,
-                                        backgroundImage: image != null
-                                            ? NetworkImage(
-                                                "${user_img_uri}${image}")
-                                            : NetworkImage(
-                                                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                        backgroundImage:
+                                            NetworkImage("${image}"),
                                       ),
                                       Positioned(
                                         right: 0,
@@ -257,17 +356,19 @@ class _DashboardState extends State<Dashboard> {
                                                 ),
                                                 NoticeBoardShimmer(),
                                               ])));
-                                } else if (snapshot.hasError) {
-                                  // logout().then((value) => {
-                                  //       Navigator.of(context)
-                                  //           .pushAndRemoveUntil(
-                                  //               MaterialPageRoute(
-                                  //                   builder: (context) =>
-                                  //                       LoginPage()),
-                                  //               (route) => false)
-                                  //     });
-                                  return Text('${snapshot.error}');
-                                } else {
+                                } 
+                                else if (snapshot.hasError) {
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Text('');
+                                } 
+                                else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -353,7 +454,7 @@ class _DashboardState extends State<Dashboard> {
                                                         height: 20,
                                                       ),
                                                       Text(
-                                                        "${DateTime.parse(noticeboard[index].created_at)}",
+                                                        "${Jiffy.parseFromDateTime(DateTime.parse(noticeboard[index].created_at)).yMMMMd}",
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .grey.shade300,
@@ -409,17 +510,19 @@ class _DashboardState extends State<Dashboard> {
                                       ],
                                     ),
                                   );
-                                } else if (snapshot.hasError) {
-                                  // logout().then((value) => {
-                                  //       Navigator.of(context)
-                                  //           .pushAndRemoveUntil(
-                                  //               MaterialPageRoute(
-                                  //                   builder: (context) =>
-                                  //                       LoginPage()),
-                                  //               (route) => false)
-                                  //     });
-                                  return Text("${snapshot.error}");
-                                } else {
+                                } 
+                                else if (snapshot.hasError) {
+                                  logout().then((value) => {
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginPage()),
+                                                (route) => false)
+                                      });
+                                  return Center();
+                                }
+                                 else {
                                   final trend = snapshot.data!;
                                   return Container(
                                     height: 530,
@@ -435,8 +538,6 @@ class _DashboardState extends State<Dashboard> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 10.0),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
@@ -461,7 +562,7 @@ class _DashboardState extends State<Dashboard> {
                                                                 null
                                                             ? DecorationImage(
                                                                 image: NetworkImage(
-                                                                    "${announcement_imgUri}${trend[index].featured_image}"),
+                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : null),
@@ -506,9 +607,9 @@ class _DashboardState extends State<Dashboard> {
                                                             .spaceBetween,
                                                     children: [
                                                       Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                         children: [
-                                                          Icon(
-                                                            Icons.alarm,
+                                                          FaIcon(FontAwesomeIcons.clock,
                                                             color: Colors.grey,
                                                           ),
                                                           const SizedBox(
@@ -517,8 +618,7 @@ class _DashboardState extends State<Dashboard> {
                                                           Container(
                                                             width: 80,
                                                             child: Text(
-                                                              trend[index]
-                                                                  .created_at,
+                                                              '${Jiffy.parseFromDateTime(DateTime.parse(trend[index].created_at)).yMMMMEEEEd}',
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow
@@ -533,10 +633,15 @@ class _DashboardState extends State<Dashboard> {
                                                           )
                                                         ],
                                                       ),
-                                                      SizedBox(
-                                                        width: 58,
-                                                      ),
-                                                      GestureDetector(
+                                                      // SizedBox(
+                                                      //   width: 58,
+                                                      // ),
+                                                     
+                                                      Spacer(),
+                                                      Row(
+                                                       
+                                                        children: [
+                                                           GestureDetector(
                                                         onTap: () {
                                                           if (trend[index]
                                                                   .liked_by_auth_user ==
@@ -570,7 +675,7 @@ class _DashboardState extends State<Dashboard> {
                                                               width: 2,
                                                             ),
                                                             Text(
-                                                              '${trend[index].likes_count}',
+                                                              '${trend[index].likes_count_formatted}',
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .grey),
@@ -578,20 +683,14 @@ class _DashboardState extends State<Dashboard> {
                                                           ],
                                                         ),
                                                       ),
-                                                      Spacer(),
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            'Views',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
+                                                      SizedBox(width: 12),
+                                                                                                                    FaIcon(FontAwesomeIcons.eye,color:Colors.grey),
+
                                                           const SizedBox(
                                                             width: 6,
                                                           ),
                                                           Text(
-                                                            '${trend[index].views}',
+                                                            '${trend[index].views_count_formatted}',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .grey),
