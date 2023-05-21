@@ -1,6 +1,7 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/update_profile.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   var email;
   var gender;
   var image;
+  var level;
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -28,6 +30,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
       image = localStorage.getString('image');
+      level = localStorage.getString('level');
       index = localStorage.getInt('index');
     });
   }
@@ -118,7 +121,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       maxRadius: 60,
                                       minRadius: 60,
                                       backgroundColor: bottomColor,
-                                      backgroundImage: NetworkImage("${image}"),
+                                      backgroundImage: image != null
+                                          ? NetworkImage(
+                                              "${user_img_uri}${image}")
+                                          : NetworkImage(
+                                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -170,24 +177,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   subtitle: "${email}",
                                   title: "Email",
                                 ),
-                                const ProfileDetails(
-                                  subtitle: "0554139989",
-                                  title: "Faculty",
-                                ),
-                                const ProfileDetails(
-                                  subtitle: "0554139989",
-                                  title: "Department",
-                                ),
-                                const ProfileDetails(
-                                  subtitle: "0554139989",
-                                  title: "Program",
-                                ),
-                                const ProfileDetails(
-                                  subtitle: "First Semester",
-                                  title: "Semester",
-                                ),
-                                const ProfileDetails(
-                                  subtitle: "200",
+                                // const ProfileDetails(
+                                //   subtitle: "0554139989",
+                                //   title: "Faculty",
+                                // ),
+                                // const ProfileDetails(
+                                //   subtitle: "0554139989",
+                                //   title: "Department",
+                                // ),
+                                // const ProfileDetails(
+                                //   subtitle: "0554139989",
+                                //   title: "Program",
+                                // ),
+                                // const ProfileDetails(
+                                //   subtitle: "First Semester",
+                                //   title: "Semester",
+                                // ),
+                                ProfileDetails(
+                                  subtitle: "${level}",
                                   title: "Level",
                                   isLast: true,
                                 ),

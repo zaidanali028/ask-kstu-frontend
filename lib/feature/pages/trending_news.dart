@@ -9,6 +9,7 @@ import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:first_app/models/constant.dart';
+
 class TrendingNewsPage extends StatefulWidget {
   const TrendingNewsPage({super.key});
 
@@ -108,8 +109,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                           TrendingShimmer(),
                                         ],
                                       );
-                                    }
-                                     else if (snapshot.hasError) {
+                                    } else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
@@ -158,8 +158,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                                   null
                                                               ? DecorationImage(
                                                                   image: NetworkImage(
-                                                                      trend[index]
-                                                                          .featured_image),
+                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
                                                                   fit: BoxFit
                                                                       .cover)
                                                               : null),

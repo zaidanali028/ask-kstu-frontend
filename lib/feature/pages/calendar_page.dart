@@ -2,6 +2,7 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/events.dart';
 import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
@@ -260,13 +261,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                         .circular(
                                                                             10)),
                                                                 image: noticeboard[index]
-                                                                            .featuredImage !=
+                                                                            .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
-                                                                        image: NetworkImage(
-                                                                            "${noticeboard[index].featuredImage}"),
-                                                                        fit: BoxFit
-                                                                            .fill)
+                                                                image: NetworkImage(
+                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                fit: BoxFit
+                                                                    .cover)
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
@@ -324,7 +325,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                             20,
                                                                         child:
                                                                             Text(
-                                                                          "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                                          "${DateTime.parse(noticeboard[index].created_at)}",
                                                                           style: TextStyle(
                                                                               color: Colors.grey.shade500,
                                                                               fontSize: 15),

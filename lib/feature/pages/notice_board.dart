@@ -3,6 +3,7 @@ import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -166,10 +167,10 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                                             .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
-                                                                        image: NetworkImage(
-                                                                            "${noticeboard[index].featured_image}"),
-                                                                        fit: BoxFit
-                                                                            .fill)
+                                                                image: NetworkImage(
+                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                fit: BoxFit
+                                                                    .cover)
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),

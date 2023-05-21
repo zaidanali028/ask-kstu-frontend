@@ -186,8 +186,11 @@ class _DashboardState extends State<Dashboard> {
                                         maxRadius: 24,
                                         minRadius: 24,
                                         backgroundColor: bottomColor,
-                                        backgroundImage:
-                                            NetworkImage("${image}"),
+                                        backgroundImage: image != null
+                                            ? NetworkImage(
+                                                "${user_img_uri}${image}")
+                                            : NetworkImage(
+                                                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                       ),
                                       Positioned(
                                         right: 0,
@@ -254,19 +257,17 @@ class _DashboardState extends State<Dashboard> {
                                                 ),
                                                 NoticeBoardShimmer(),
                                               ])));
-                                } 
-                                else if (snapshot.hasError) {
-                                  logout().then((value) => {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage()),
-                                                (route) => false)
-                                      });
-                                  return Text('');
-                                } 
-                                else {
+                                } else if (snapshot.hasError) {
+                                  // logout().then((value) => {
+                                  //       Navigator.of(context)
+                                  //           .pushAndRemoveUntil(
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       LoginPage()),
+                                  //               (route) => false)
+                                  //     });
+                                  return Text('${snapshot.error}');
+                                } else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -408,19 +409,17 @@ class _DashboardState extends State<Dashboard> {
                                       ],
                                     ),
                                   );
-                                } 
-                                else if (snapshot.hasError) {
-                                  logout().then((value) => {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginPage()),
-                                                (route) => false)
-                                      });
-                                  return Center();
-                                }
-                                 else {
+                                } else if (snapshot.hasError) {
+                                  // logout().then((value) => {
+                                  //       Navigator.of(context)
+                                  //           .pushAndRemoveUntil(
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) =>
+                                  //                       LoginPage()),
+                                  //               (route) => false)
+                                  //     });
+                                  return Text("${snapshot.error}");
+                                } else {
                                   final trend = snapshot.data!;
                                   return Container(
                                     height: 530,
@@ -436,6 +435,8 @@ class _DashboardState extends State<Dashboard> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 10.0),
                                             child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
@@ -460,7 +461,7 @@ class _DashboardState extends State<Dashboard> {
                                                                 null
                                                             ? DecorationImage(
                                                                 image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
+                                                                    "${announcement_imgUri}${trend[index].featured_image}"),
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : null),
@@ -516,7 +517,8 @@ class _DashboardState extends State<Dashboard> {
                                                           Container(
                                                             width: 80,
                                                             child: Text(
-                                                              trend[index].created_at,
+                                                              trend[index]
+                                                                  .created_at,
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow

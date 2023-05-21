@@ -25,7 +25,7 @@ class TrendingNewsProvider extends ChangeNotifier {
           json.decode(response.body)['announcements'];
       final List<dynamic> data = jsonData['data'];
       _trend = data.map((e) => Announcement.fromJson(e)).toList();
-      // print(_trend);
+
       notifyListeners();
       return _trend;
     } else if (response.statusCode == 401) {
@@ -43,24 +43,7 @@ class TrendingNewsProvider extends ChangeNotifier {
       'Authorization': 'Bearer $token'
     });
     if (response.statusCode == 200) {
-      print(response.body);
       return Announcement.fromJson(jsonDecode(response.body)['data']);
-    } else if (response.statusCode == 401) {
-      throw Exception('Unauthorized!');
-    } else {
-      throw Exception('Failed to fetch noticeboard!');
-    }
-  }
-
-  Future<KeyMoments> fetchKeymoment(int trend_id) async {
-    String token = await getToken();
-    final response = await http
-        .get(Uri.parse(announcementDetailUrl + '/${trend_id}'), headers: {
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token'
-    });
-    if (response.statusCode == 200) {
-      return KeyMoments.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 401) {
       throw Exception('Unauthorized!');
     } else {

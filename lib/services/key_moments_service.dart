@@ -1,39 +1,40 @@
 import 'dart:convert';
 
-import 'package:first_app/models/announcement.dart';
+import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NoticeBoardProvider extends ChangeNotifier {
-  List<Announcement> _notice = [];
+class KeyMomentProvider extends ChangeNotifier {
+  
+  List<AnnouncementKeyMoments> _key = [];
 
-  List<Announcement> get notice => _notice;
-
-  Future<List<Announcement>> fetchNotice() async {
+  List<AnnouncementKeyMoments> get key => _key;
+  
+  Future<List<AnnouncementKeyMoments>> fetchKeymoment(int trend_id) async {
     String token = await getToken();
-    final response = await http.get(Uri.parse(noticeUrl), headers: {
+    final response = await http
+        .get(Uri.parse(keyMomentsUrl + '/${trend_id}'), headers: {
       "Accept": "application/json",
       'Authorization': 'Bearer $token'
     });
-
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonData =
-          json.decode(response.body)['announcements'];
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
       final List<dynamic> data = jsonData['data'];
-      _notice = data.map((e) => Announcement.fromJson(e)).toList();
+      _key = data.map((e) => AnnouncementKeyMoments.fromJson(e)).toList();
       notifyListeners();
-      return _notice;
+      return _key;
     } else if (response.statusCode == 401) {
       throw Exception('Unauthorized!');
     } else {
       throw Exception('Failed to fetch noticeboard!');
     }
   }
-
+  
   Future<String> getToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getString("token") ?? '';
   }
+
 }

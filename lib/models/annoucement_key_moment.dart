@@ -1,10 +1,14 @@
+// To parse this JSON data, do
+//
+//     final announcementKeyMoments = announcementKeyMomentsFromJson(jsonString);
+
 import 'dart:convert';
 
-KeyMoments keyMomentsFromJson(String str) => KeyMoments.fromJson(json.decode(str));
+AnnouncementKeyMoments announcementKeyMomentsFromJson(String str) => AnnouncementKeyMoments.fromJson(json.decode(str));
 
-String keyMomentsToJson(KeyMoments data) => json.encode(data.toJson());
+String announcementKeyMomentsToJson(AnnouncementKeyMoments data) => json.encode(data.toJson());
 
-class KeyMoments {
+class AnnouncementKeyMoments {
     int id;
     int announcementId;
     String imageSubTitle;
@@ -13,7 +17,7 @@ class KeyMoments {
     DateTime createdAt;
     DateTime updatedAt;
 
-    KeyMoments({
+    AnnouncementKeyMoments({
         required this.id,
         required this.announcementId,
         required this.imageSubTitle,
@@ -23,7 +27,7 @@ class KeyMoments {
         required this.updatedAt,
     });
 
-    factory KeyMoments.fromJson(Map<String, dynamic> json) => KeyMoments(
+    factory AnnouncementKeyMoments.fromJson(Map<String, dynamic> json) => AnnouncementKeyMoments(
         id: json["id"],
         announcementId: json["announcement_id"],
         imageSubTitle: json["image_sub_title"],

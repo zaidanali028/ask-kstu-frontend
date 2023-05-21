@@ -50,7 +50,7 @@ class User {
         email: json['user']['email'],
         currentLevel: json['user']['current_level'],
         currentSemester: json['user']['current_sem'],
-        image: json['user']['user_img'] ?? 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+        image: json['user']['user_img'] ?? null,
         gender: json['user']['gender'],
         facultyId: json['user']['faculty_id'],
         indexNo: json['user']['index_no'],

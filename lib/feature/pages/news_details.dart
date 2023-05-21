@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:first_app/feature/colors.dart';
+import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
+import 'package:first_app/services/key_moments_service.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,11 +67,13 @@ class _DetailNewsState extends State<DetailNews> {
 
   @override
   Widget build(BuildContext context) {
+    final trending =
+        Provider.of<TrendingNewsProvider>(context, listen: false);
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
-          child: FutureBuilder<Announcement>(
-              future: TrendingNewsProvider().fetchTrendDetails(widget.title),
+          child: FutureBuilder(
+              future: trending.fetchTrendDetails(widget.title),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final trend = snapshot.data!;
@@ -80,8 +85,10 @@ class _DetailNewsState extends State<DetailNews> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: NetworkImage(   "${announcement_imgUri}${trend.featured_image}"),
-                                fit: BoxFit.cover)),
+                                image: NetworkImage(
+                                    "${announcement_imgUri}${trend.featured_image}"),
+                                fit: BoxFit.cover)
+                                ),
                         child: Stack(
                           children: [
                             Positioned(
@@ -160,7 +167,8 @@ class _DetailNewsState extends State<DetailNews> {
                                   trend.category_id == 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            if (trend.liked_by_auth_user == true) {
+                                            if (trend.liked_by_auth_user ==
+                                                true) {
                                               likeAnnouncement(trend.id, 0);
                                             } else {
                                               likeAnnouncement(trend.id, 1);
@@ -215,24 +223,19 @@ class _DetailNewsState extends State<DetailNews> {
                                 color: Color.fromARGB(255, 91, 89, 89),
                               ),
                               SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                trend.title,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              SizedBox(
                                 height: 20,
                               ),
-                              Container(
-                                  width: double.infinity,
-                                  height: 500,
-                                  child: FutureBuilder(
-                                      future: TrendingNewsProvider()
-                                          .fetchKeymoment(widget.title),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Center();
-                                        } else if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center();
-                                        } else {
-                                          return Center();
-                                        }
-                                      }))
+                              KeyMomentContainer(title: widget.title)
                             ],
                           ),
                         ),

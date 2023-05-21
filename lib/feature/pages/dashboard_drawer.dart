@@ -6,6 +6,7 @@ import 'package:first_app/feature/pages/past_questions.dart';
 import 'package:first_app/feature/pages/settings.dart';
 import 'package:first_app/feature/pages/trending_news.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,7 +71,10 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                         maxRadius: 24,
                         minRadius: 24,
                         backgroundColor: bottomColor,
-                        backgroundImage: NetworkImage("${image}"),
+                        backgroundImage: image != null
+                            ? NetworkImage("${user_img_uri}${image}")
+                            : NetworkImage(
+                                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                       ),
                       const SizedBox(
                         width: 12,
