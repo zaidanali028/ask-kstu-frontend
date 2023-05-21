@@ -51,6 +51,11 @@ dependencies:
   connectivity: ^3.0.6
   google_maps_flutter: ^2.2.5
   url_launcher: ^6.1.10
+  onesignal_flutter: ^3.5.0
+  notification_permissions: ^0.6.1
+  font_awesome_flutter: ^10.4.0
+  jiffy: ^6.1.0
+  
 
 dev_dependencies:
   flutter_test:
