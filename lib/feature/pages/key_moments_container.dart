@@ -37,7 +37,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         children: [
                           Text(
                             "${keymoments[index].imageDescription}",
-                            style: TextStyle(fontSize: 25, color: Colors.black),
+                            style: TextStyle(fontSize: 22, color: Colors.black),
                           ),
                           SizedBox(
                             height: 20,
@@ -67,7 +67,10 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                                   style: TextStyle(fontSize: 20),
                                   textAlign: TextAlign.start,
                                 ),
-                              )
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
                             ],
                           )
                         ],

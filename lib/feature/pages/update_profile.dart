@@ -40,7 +40,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       gender = localStorage.getString('gender');
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
-      semester = localStorage.getInt('semester');
+      semester = localStorage.getString('semester');
       department = localStorage.getInt('department');
       program = localStorage.getInt('program');
       faculty = localStorage.getInt('faculty');
