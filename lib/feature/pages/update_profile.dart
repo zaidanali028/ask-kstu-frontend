@@ -1,7 +1,4 @@
-// ignore_for_file: must_be_immutable
-
 import 'dart:io';
-
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +38,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
       semester = localStorage.getString('semester');
-      department = localStorage.getInt('department');
-      program = localStorage.getInt('program');
-      faculty = localStorage.getInt('faculty');
       level = localStorage.getString('level');
     });
   }
@@ -154,11 +148,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(20),
-                                                          color: topColor,
+                                                          color: bottomColor,
                                                           image: DecorationImage(
-                                                              image:
-                                                                  NetworkImage(
-                                                                      image),
+                                                              image: image !=
+                                                                      '1'
+                                                                  ? NetworkImage(
+                                                                      image)
+                                                                  : NetworkImage(
+                                                                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                                               fit: BoxFit
                                                                   .cover)),
                                                     )
@@ -169,7 +166,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(20),
-                                                          color: topColor,
+                                                          color: bottomColor,
                                                           image: DecorationImage(
                                                               image: FileImage(
                                                                   pickimage),
@@ -177,7 +174,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                                   .cover)),
                                                     ),
                                               Positioned(
-                                                  right: 10,
+                                                  right: 5,
                                                   bottom: 10,
                                                   child: IconButton(
                                                       onPressed: () {
@@ -185,8 +182,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                       },
                                                       icon: Icon(
                                                         Icons.camera_alt,
-                                                        color: topColor,
-                                                        size: 45,
+                                                        color: Colors.black87,
+                                                        size: 50,
                                                       )))
                                             ],
                                           ),
@@ -216,24 +213,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       TextFormFields(
                                           title: Text(gender),
                                           icons: Icon(Icons.generating_tokens)),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      TextFormFields(
-                                          title: Text(department),
-                                          icons: Icon(Icons.scale)),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      TextFormFields(
-                                          title: Text(program),
-                                          icons: Icon(Icons.propane)),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      TextFormFields(
-                                          title: Text(faculty),
-                                          icons: Icon(Icons.face_sharp)),
                                       const SizedBox(
                                         height: 15,
                                       ),

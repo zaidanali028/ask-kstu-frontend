@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
@@ -18,16 +17,15 @@ import 'package:first_app/services/trending_news.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:jiffy/jiffy.dart';
-
 import 'package:notification_permissions/notification_permissions.dart';
+// import 'package:jiffy/jiffy.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
-
 
 class _DashboardState extends State<Dashboard> {
   var name;
@@ -36,15 +34,13 @@ class _DashboardState extends State<Dashboard> {
   var id;
   @override
   void initState() {
-      // requestNotificationPermission_();
+    // requestNotificationPermission_();
     print('invokedRR');
     getUser();
 
-  
-        super.initState();
-
-    
+    super.initState();
   }
+
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -55,46 +51,44 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  showAlertDialog(BuildContext context,Function() runthis) {
+  showAlertDialog(BuildContext context, Function() runthis) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: runthis,
+    );
 
-  // set up the button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: runthis,
-  );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Receive notification alerts"),
+      content: Text(
+          'This app would like to send you push notifications when there is any activity on your account'),
+      actions: [
+        okButton,
+      ],
+    );
 
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Receive notification alerts"),
-    content: Text('This app would like to send you push notifications when there is any activity on your account'),
-    actions: [
-      okButton,
-    ],
-  );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-
-
-  void  requestNotificationPermission_()async {
-print('invoked 3');
-  // open prompt for user to enable notification
-    PermissionStatus permissionStatus = await NotificationPermissions.getNotificationPermissionStatus();
+  void requestNotificationPermission_() async {
+    print('invoked 3');
+    // open prompt for user to enable notification
+    PermissionStatus permissionStatus =
+        await NotificationPermissions.getNotificationPermissionStatus();
     // if(permissionStatus == PermissionStatus.denied) {
     //   // if user explicitly denied notifications, we don't want to show them again
     //   return;
     // }
 
-    if(permissionStatus != PermissionStatus.granted){
-
-      if(!mounted) return;
+    if (permissionStatus != PermissionStatus.granted) {
+      if (!mounted) return;
 
       // showConfirmDialog(context, title: 'Receive notification alerts',
       //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
@@ -102,32 +96,32 @@ print('invoked 3');
       //     }
       //   },
       // );
-showAlertDialog(context,()async{
-       final requestResponse =  await NotificationPermissions.requestNotificationPermissions();
-          if(requestResponse == PermissionStatus.granted){
-            // user granted permission
-            registerUserForPushNotification();
-            return;
-     
-
-}});
-     }else {
+      showAlertDialog(context, () async {
+        final requestResponse =
+            await NotificationPermissions.requestNotificationPermissions();
+        if (requestResponse == PermissionStatus.granted) {
+          // user granted permission
+          registerUserForPushNotification();
+          return;
+        }
+      });
+    } else {
       registerUserForPushNotification();
     }
+  }
 
-}
-
-void registerUserForPushNotification()async {
+  void registerUserForPushNotification() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
 
-     var user_id = localStorage.getInt('id');
-     print("here!: ${user_id}");
+    var user_id = localStorage.getInt('id');
+    print("here!: ${user_id}");
 
-  
-  var myCustomUniqueUserId = "${user_id}";
+    var myCustomUniqueUserId = "${user_id}";
     //await OneSignal.shared.removeExternalUserId();
-    final setExtPushIdResponse = await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-    debugPrint("setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+    final setExtPushIdResponse =
+        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+    debugPrint(
+        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
 
     if (setExtPushIdResponse['push']['success'] != null) {
       if (setExtPushIdResponse['push']['success'] is bool) {
@@ -141,10 +135,10 @@ void registerUserForPushNotification()async {
         //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
         // }
       }
-      debugPrint("registered for push: ${setExtPushIdResponse['push']['success']}");
+      debugPrint(
+          "registered for push: ${setExtPushIdResponse['push']['success']}");
     }
-  
-}
+  }
 
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -187,8 +181,6 @@ void registerUserForPushNotification()async {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final noticeProvider =
@@ -218,9 +210,9 @@ void registerUserForPushNotification()async {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: 1,
+                      // flex: 1,
                       child: Container(
-                        height: 40,
+                        height: 20,
                         decoration: const BoxDecoration(
                             color: topColor,
                             borderRadius: BorderRadius.only(
@@ -231,6 +223,7 @@ void registerUserForPushNotification()async {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   IconButton(
                                       onPressed: () {
@@ -251,7 +244,7 @@ void registerUserForPushNotification()async {
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       SizedBox(
                                         height: 10,
@@ -281,15 +274,17 @@ void registerUserForPushNotification()async {
                                               UserProfilePage()));
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(top: 0.0),
                                   child: Stack(
                                     children: [
                                       CircleAvatar(
                                         maxRadius: 24,
                                         minRadius: 24,
                                         backgroundColor: bottomColor,
-                                        backgroundImage:
-                                            NetworkImage("${image}"),
+                                        backgroundImage: image == '1'
+                                            ? NetworkImage(
+                                                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")
+                                            : NetworkImage("${image}"),
                                       ),
                                       Positioned(
                                         right: 0,
@@ -310,7 +305,7 @@ void registerUserForPushNotification()async {
                       ),
                     ),
                     Expanded(
-                      flex: 7,
+                      flex: 9,
                       child: Container(
                         width: double.infinity,
                         height: MediaQuery.of(context).size.height - 50,
@@ -356,8 +351,7 @@ void registerUserForPushNotification()async {
                                                 ),
                                                 NoticeBoardShimmer(),
                                               ])));
-                                } 
-                                else if (snapshot.hasError) {
+                                } else if (snapshot.hasError) {
                                   logout().then((value) => {
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
@@ -367,8 +361,7 @@ void registerUserForPushNotification()async {
                                                 (route) => false)
                                       });
                                   return Text('');
-                                } 
-                                else {
+                                } else {
                                   final noticeboard = snapshot.data!;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -454,7 +447,7 @@ void registerUserForPushNotification()async {
                                                         height: 20,
                                                       ),
                                                       Text(
-                                                        "${Jiffy.parseFromDateTime(DateTime.parse(noticeboard[index].created_at)).yMMMMd}",
+                                                        "${DateTime.parse(noticeboard[index].created_at)}",
                                                         style: TextStyle(
                                                             color: Colors
                                                                 .grey.shade300,
@@ -510,8 +503,7 @@ void registerUserForPushNotification()async {
                                       ],
                                     ),
                                   );
-                                } 
-                                else if (snapshot.hasError) {
+                                } else if (snapshot.hasError) {
                                   logout().then((value) => {
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
@@ -521,8 +513,7 @@ void registerUserForPushNotification()async {
                                                 (route) => false)
                                       });
                                   return Center();
-                                }
-                                 else {
+                                } else {
                                   final trend = snapshot.data!;
                                   return Container(
                                     height: 530,
@@ -562,7 +553,7 @@ void registerUserForPushNotification()async {
                                                                 null
                                                             ? DecorationImage(
                                                                 image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
+                                                                    "${announcement_imgUri}${trend[index].featured_image}"),
                                                                 fit: BoxFit
                                                                     .cover)
                                                             : null),
@@ -607,9 +598,13 @@ void registerUserForPushNotification()async {
                                                             .spaceBetween,
                                                     children: [
                                                       Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
                                                         children: [
-                                                          FaIcon(FontAwesomeIcons.clock,
+                                                          FaIcon(
+                                                            FontAwesomeIcons
+                                                                .clock,
                                                             color: Colors.grey,
                                                           ),
                                                           const SizedBox(
@@ -618,7 +613,7 @@ void registerUserForPushNotification()async {
                                                           Container(
                                                             width: 80,
                                                             child: Text(
-                                                              '${Jiffy.parseFromDateTime(DateTime.parse(trend[index].created_at)).yMMMMEEEEd}',
+                                                              '${DateTime.parse(trend[index].created_at)}',
                                                               maxLines: 1,
                                                               overflow:
                                                                   TextOverflow
@@ -636,56 +631,62 @@ void registerUserForPushNotification()async {
                                                       // SizedBox(
                                                       //   width: 58,
                                                       // ),
-                                                     
+
                                                       Spacer(),
                                                       Row(
-                                                       
                                                         children: [
-                                                           GestureDetector(
-                                                        onTap: () {
-                                                          if (trend[index]
-                                                                  .liked_by_auth_user ==
-                                                              true) {
-                                                            likeAnnouncement(
-                                                                trend[index].id,
-                                                                0);
-                                                          } else {
-                                                            likeAnnouncement(
-                                                                trend[index].id,
-                                                                1);
-                                                          }
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            trend[index].liked_by_auth_user ==
-                                                                    true
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .favorite,
-                                                                    color:
-                                                                        topColor,
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .favorite_outline,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  ),
-                                                            const SizedBox(
-                                                              width: 2,
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              
+                                                              if (trend[index]
+                                                                      .liked_by_auth_user ==
+                                                                  true) {
+                                                                likeAnnouncement(
+                                                                    trend[index]
+                                                                        .id,
+                                                                    0);
+                                                              } else {
+                                                                likeAnnouncement(
+                                                                    trend[index]
+                                                                        .id,
+                                                                    1);
+                                                              }
+                                                            },
+                                                            child: Row(
+                                                              children: [
+                                                                trend[index].liked_by_auth_user ==
+                                                                        true
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .thumb_up,
+                                                                        color:
+                                                                            topColor,
+                                                                      )
+                                                                    : Icon(
+                                                                        Icons
+                                                                            .thumb_up_outlined,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      ),
+                                                                const SizedBox(
+                                                                  width: 2,
+                                                                ),
+                                                                Text(
+                                                                  '${trend[index].likes_count_formatted}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey),
+                                                                )
+                                                              ],
                                                             ),
-                                                            Text(
-                                                              '${trend[index].likes_count_formatted}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 12),
-                                                                                                                    FaIcon(FontAwesomeIcons.eye,color:Colors.grey),
-
+                                                          ),
+                                                          
+                                                          SizedBox(width: 12),
+                                                          FaIcon(
+                                                              FontAwesomeIcons
+                                                                  .eye,
+                                                              color:
+                                                                  Colors.grey),
                                                           const SizedBox(
                                                             width: 6,
                                                           ),
@@ -700,6 +701,7 @@ void registerUserForPushNotification()async {
                                                     ],
                                                   ),
                                                 ),
+                                                
                                                 const SizedBox(
                                                   height: 10,
                                                 ),

@@ -71,7 +71,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                         maxRadius: 24,
                         minRadius: 24,
                         backgroundColor: bottomColor,
-                        backgroundImage: image != null
+                        backgroundImage: image != '1'
                             ? NetworkImage("${user_img_uri}${image}")
                             : NetworkImage(
                                 "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
@@ -158,7 +158,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                           MaterialPageRoute(
                               builder: (context) => PastQuestionPage())),
                       icons: Icons.question_answer,
-                      title: "Notifications",
+                      title: "Blocks",
                     ),
                     DashboardIcons(
                       callback: () {

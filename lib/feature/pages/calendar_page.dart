@@ -194,26 +194,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                         builder: (context, snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {
-                                            return Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
-                                                child: Container(
-                                                    height: 243,
-                                                    child: ListView(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        children: [
-                                                          NoticeBoardShimmer(),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          NoticeBoardShimmer(),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
-                                                          NoticeBoardShimmer(),
-                                                        ])));
+                                            return Center();
+                                            
                                           } else if (snapshot.hasError) {
                                             return Text('${snapshot.error}');
                                           } else {
@@ -264,10 +246,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                             .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
-                                                                image: NetworkImage(
-                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
-                                                                fit: BoxFit
-                                                                    .cover)
+                                                                        image: NetworkImage(
+                                                                            "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                        fit: BoxFit
+                                                                            .cover)
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),

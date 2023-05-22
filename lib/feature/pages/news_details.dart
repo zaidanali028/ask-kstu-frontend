@@ -135,6 +135,7 @@ class _DetailNewsState extends State<DetailNews> {
                               Divider(
                                 color: Color.fromARGB(255, 91, 89, 89),
                               ),
+                              SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -151,7 +152,7 @@ class _DetailNewsState extends State<DetailNews> {
                                       Container(
                                         width: 80,
                                         child: Text(
-                                          trend.created_at,
+                                          "${trend.created_at}",
                                           maxLines: 1,
                                           overflow: TextOverflow.fade,
                                           style: TextStyle(
@@ -178,11 +179,11 @@ class _DetailNewsState extends State<DetailNews> {
                                             children: [
                                               trend.liked_by_auth_user == true
                                                   ? Icon(
-                                                      Icons.favorite,
+                                                      Icons.thumb_up,
                                                       color: topColor,
                                                     )
                                                   : Icon(
-                                                      Icons.favorite_outline,
+                                                      Icons.thumb_up_outlined,
                                                       color: Colors.grey,
                                                     ),
                                               const SizedBox(
@@ -219,18 +220,10 @@ class _DetailNewsState extends State<DetailNews> {
                                       : Text('')
                                 ],
                               ),
+                              
+                              SizedBox(height: 10),
                               Divider(
                                 color: Color.fromARGB(255, 91, 89, 89),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                trend.title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w300),
                               ),
                               SizedBox(
                                 height: 20,

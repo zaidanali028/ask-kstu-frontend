@@ -44,16 +44,16 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                 Column(
                   children: [
                     Expanded(
-                        flex: 1,
+                        // flex: 1,
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 2,
+                          height: 20,
                           decoration: const BoxDecoration(
                               color: topColor,
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(30))),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 15),
+                                horizontal: 5.0, vertical: 10),
                             child: Column(children: [
                               Row(
                                 children: [
@@ -84,7 +84,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                           ),
                         )),
                     Expanded(
-                        flex: 7,
+                        flex: 10,
                         child: Container(
                             height: MediaQuery.of(context).size.height / 2,
                             width: double.infinity,

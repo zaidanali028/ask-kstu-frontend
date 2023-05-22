@@ -121,7 +121,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       maxRadius: 60,
                                       minRadius: 60,
                                       backgroundColor: bottomColor,
-                                      backgroundImage: image != null
+                                      backgroundImage: image != "1"
                                           ? NetworkImage(
                                               "${user_img_uri}${image}")
                                           : NetworkImage(
@@ -167,6 +167,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               children: [
                                 ProfileDetails(
                                   subtitle: "${index}",
+                                  title: "Full Name",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${index}",
                                   title: "Student Number",
                                 ),
                                 ProfileDetails(
@@ -176,6 +180,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ProfileDetails(
                                   subtitle: "${email}",
                                   title: "Email",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${email}",
+                                  title: "Level",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${email}",
+                                  title: "Semester",
                                 ),
                                 // const ProfileDetails(
                                 //   subtitle: "0554139989",

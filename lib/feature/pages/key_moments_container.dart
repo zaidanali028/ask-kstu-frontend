@@ -1,9 +1,6 @@
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/key_moments_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 
 class KeyMomentContainer extends StatefulWidget {
@@ -31,6 +28,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
               } else {
                 final keymoments = snapshot.data!;
                 return ListView.builder(
+                  physics: BouncingScrollPhysics(),
                     itemCount: keymoments.length,
                     itemBuilder: (context, index) {
                       return Column(
