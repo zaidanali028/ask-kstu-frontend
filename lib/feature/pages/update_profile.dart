@@ -229,6 +229,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       const SizedBox(
                                         height: 15,
                                       ),
+                                      TextFormFields(
+                                          title: Text('$yearOfAdmission'),
+                                          icons: Icon(Icons.youtube_searched_for)),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      TextFormFields(
+                                          title: Text('$yearOfCompletion'),
+                                          icons: Icon(Icons.currency_yen_sharp)),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
                                     ],
                                   ),
                                 ))))

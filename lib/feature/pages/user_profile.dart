@@ -19,8 +19,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   var yearOfAdmission;
   var email;
   var gender;
-  var image;
+  var semester;
   var level;
+  var image;
+  var faculty;
+  var department;
+  var program;
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -30,8 +34,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
       image = localStorage.getString('image');
-      level = localStorage.getString('level');
       index = localStorage.getInt('index');
+      semester = localStorage.getString('semester');
+      level = localStorage.getString('level');
     });
   }
 
@@ -45,14 +50,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: topColor,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: topColor,
+          icon: Icon(Icons.send),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return UpdateProfilePage();
-            }));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => UpdateProfilePage()));
           },
-          child: Icon(Icons.edit, color: Colors.white),
-          backgroundColor: topColor),
+          label: Text('Edit Profile')),
       body: SafeArea(
           child: Center(
         child: Padding(
@@ -166,7 +171,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               scrollDirection: Axis.vertical,
                               children: [
                                 ProfileDetails(
-                                  subtitle: "${index}",
+                                  subtitle: "${name}",
                                   title: "Full Name",
                                 ),
                                 ProfileDetails(
@@ -182,37 +187,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   title: "Email",
                                 ),
                                 ProfileDetails(
-                                  subtitle: "${email}",
-                                  title: "Level",
-                                ),
-                                ProfileDetails(
-                                  subtitle: "${email}",
-                                  title: "Semester",
-                                ),
-                                // const ProfileDetails(
-                                //   subtitle: "0554139989",
-                                //   title: "Faculty",
-                                // ),
-                                // const ProfileDetails(
-                                //   subtitle: "0554139989",
-                                //   title: "Department",
-                                // ),
-                                // const ProfileDetails(
-                                //   subtitle: "0554139989",
-                                //   title: "Program",
-                                // ),
-                                // const ProfileDetails(
-                                //   subtitle: "First Semester",
-                                //   title: "Semester",
-                                // ),
-                                ProfileDetails(
                                   subtitle: "${level}",
                                   title: "Level",
-                                  isLast: true,
                                 ),
-                                const SizedBox(
-                                  height: 20,
-                                )
+                                ProfileDetails(
+                                  subtitle: '${semester}',
+                                  title: "Semester",
+                                ),
+                                ProfileDetails(
+                                  subtitle: '${yearOfAdmission}',
+                                  title: "Year Of Admission",
+                                ),
+                                ProfileDetails(
+                                  subtitle: '${yearOfCompletion}',
+                                  title: "Year Of Completion",
+                                ),
                               ],
                             ),
                           ),
