@@ -54,8 +54,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           backgroundColor: topColor,
           icon: Icon(Icons.send),
           onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => UpdateProfilePage()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UpdateProfilePage()));
           },
           label: Text('Edit Profile')),
       body: SafeArea(
