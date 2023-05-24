@@ -10,7 +10,6 @@ import 'package:first_app/models/announcement.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:first_app/models/constant.dart';
@@ -65,12 +64,6 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
       ));
     }
   }
-
-  Future<void> playSound() async {
-    await AudioPlayer().play(AssetSource(
-        "assets/audio/my_audio.mp3")); // Replace with your sound file
-  }
-
   @override
   Widget build(BuildContext context) {
     final trendProvider =
@@ -293,7 +286,9 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                           children: [
                                                             GestureDetector(
                                                               onTap: () {
-                                                                playSound();
+                                                                AudioPlayer().play(
+                                                                    AssetSource(
+                                                                        "audio/my_audio.mp3"));
                                                                 if (trend[index]
                                                                         .liked_by_auth_user ==
                                                                     true) {

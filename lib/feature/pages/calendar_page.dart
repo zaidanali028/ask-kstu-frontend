@@ -123,8 +123,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0, vertical: 10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: ListView(
                                   children: [
                                     TableCalendar(
                                         eventLoader: _getEventFromDay,
@@ -173,11 +172,6 @@ class _CalendarPageState extends State<CalendarPage> {
                                         onDaySelected: _onDaySelected,
                                         selectedDayPredicate: (day) =>
                                             isSameDay(day, today)),
-                                    // ..._getEventFromDay(DateTime.now())
-                                    //     .map((Event event) => ListTile(
-                                    //           title: Text(event.title),
-                                    //         )),
-                                    // SizedBox(height: 20,),
                                     Container(
                                       height:
                                           MediaQuery.of(context).size.height /
@@ -341,47 +335,6 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       )),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () => showDialog(
-      //       context: context,
-      //       builder: (context) => AlertDialog(
-      //             title: Text("Add Event"),
-      //             content: TextFormField(
-      //               controller: _eventController,
-      //             ),
-      //             actions: [
-      //               TextButton(
-      //                   onPressed: () {
-      //                     Navigator.pop(context);
-      //                   },
-      //                   child: Text("Cancel")),
-      //               TextButton(
-      //                   onPressed: () {
-      //                     if (_eventController.text.isEmpty) {
-
-      //                     } else {
-      //                       if (selectedEvents[DateTime.now()] != null) {
-      //                         selectedEvents[DateTime.now()]
-      //                             ?.add(Event(title: _eventController.text));
-      //                       } else {
-      //                         selectedEvents[DateTime.now()] = [
-      //                           Event(title: _eventController.text)
-      //                         ];
-      //                       }
-      //                     }
-      //                     Navigator.pop(context);
-      //                     _eventController.clear();
-      //                     setState(() {
-
-      //                     });
-      //                     return;
-      //                   },
-      //                   child: Text("Ok")),
-      //             ],
-      //           )),
-      //   label: Text("Add Event"),
-      //   icon: Icon(Icons.send),
-      // ),
     );
   }
 }

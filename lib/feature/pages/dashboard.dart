@@ -41,11 +41,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-  Future<void> playSound() async {
-    await AudioPlayer().play(AssetSource(
-        "assets/audio/my_audio.mp3")); // Replace with your sound file
-  }
-
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -642,7 +637,9 @@ class _DashboardState extends State<Dashboard> {
                                                         children: [
                                                           GestureDetector(
                                                             onTap: () {
-                                                              playSound();
+                                                              AudioPlayer().play(
+                                                                  AssetSource(
+                                                                      "audio/my_audio.mp3"));
                                                               if (trend[index]
                                                                       .liked_by_auth_user ==
                                                                   true) {

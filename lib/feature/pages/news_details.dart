@@ -65,12 +65,7 @@ class _DetailNewsState extends State<DetailNews> {
       ));
     }
   }
-
-  Future<void> playSound() async {
-    await AudioPlayer().play(AssetSource(
-        "assets/audio/my_audio.mp3")); // Replace with your sound file
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     final trending = Provider.of<TrendingNewsProvider>(context, listen: false);
@@ -172,7 +167,8 @@ class _DetailNewsState extends State<DetailNews> {
                                   trend.category_id == 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            playSound();
+                                              AudioPlayer()
+                                                  .play(AssetSource("audio/my_audio.mp3"));
                                             if (trend.liked_by_auth_user ==
                                                 true) {
                                               likeAnnouncement(trend.id, 0);

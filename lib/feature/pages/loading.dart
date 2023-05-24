@@ -204,6 +204,7 @@ class _LoadingPageState extends State<LoadingPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Spacer(),
                   Container(
                     width: 240,
                     height: 240,
@@ -212,15 +213,13 @@ class _LoadingPageState extends State<LoadingPage> {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  Spacer(),
                   const Text(
                     "Academic Student Knowledge Base",
                     style: TextStyle(
                         color: bottomColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 21),
                   ),
                 ],
               ),
