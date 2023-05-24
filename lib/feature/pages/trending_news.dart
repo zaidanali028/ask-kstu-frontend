@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
@@ -24,7 +25,6 @@ class TrendingNewsPage extends StatefulWidget {
 }
 
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
-  
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -64,6 +64,11 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
         ),
       ));
     }
+  }
+
+  Future<void> playSound() async {
+    await AudioPlayer().play(AssetSource(
+        "assets/audio/my_audio.mp3")); // Replace with your sound file
   }
 
   @override
@@ -242,122 +247,115 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                   const SizedBox(
                                                     height: 10,
                                                   ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 15),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          FaIcon(
-                                                            FontAwesomeIcons
-                                                                .clock,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          Container(
-                                                            width: 80,
-                                                            child: Text(
-                                                              '${DateTime.parse(trend[index].created_at)}',
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .fade,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      // SizedBox(
-                                                      //   width: 58,
-                                                      // ),
-
-                                                      Spacer(),
-                                                      Row(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              SystemSound.play(
-                                                                  SystemSoundType
-                                                                      .click);
-                                                              if (trend[index]
-                                                                      .liked_by_auth_user ==
-                                                                  true) {
-                                                                likeAnnouncement(
-                                                                    trend[index]
-                                                                        .id,
-                                                                    0);
-                                                              } else {
-                                                                likeAnnouncement(
-                                                                    trend[index]
-                                                                        .id,
-                                                                    1);
-                                                              }
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                trend[index].liked_by_auth_user ==
-                                                                        true
-                                                                    ? Icon(
-                                                                        Icons
-                                                                            .thumb_up,
-                                                                        color:
-                                                                            topColor,
-                                                                      )
-                                                                    : Icon(
-                                                                        Icons
-                                                                            .thumb_up_outlined,
-                                                                        color: Colors
-                                                                            .grey,
-                                                                      ),
-                                                                const SizedBox(
-                                                                  width: 2,
-                                                                ),
-                                                                Text(
-                                                                  '${trend[index].likes_count_formatted}',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .grey),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          
-                                                          SizedBox(width: 12),
-                                                          FaIcon(
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 15),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            FaIcon(
                                                               FontAwesomeIcons
-                                                                  .eye,
+                                                                  .clock,
                                                               color:
-                                                                  Colors.grey),
-                                                          const SizedBox(
-                                                            width: 6,
-                                                          ),
-                                                          Text(
-                                                            '${trend[index].views_count_formatted}',
-                                                            style: TextStyle(
+                                                                  Colors.grey,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Container(
+                                                              width: 80,
+                                                              child: Text(
+                                                                '${DateTime.parse(trend[index].created_at)}',
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .fade,
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        Spacer(),
+                                                        Row(
+                                                          children: [
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                playSound();
+                                                                if (trend[index]
+                                                                        .liked_by_auth_user ==
+                                                                    true) {
+                                                                  likeAnnouncement(
+                                                                      trend[index]
+                                                                          .id,
+                                                                      0);
+                                                                } else {
+                                                                  likeAnnouncement(
+                                                                      trend[index]
+                                                                          .id,
+                                                                      1);
+                                                                }
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  trend[index].liked_by_auth_user ==
+                                                                          true
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .thumb_up,
+                                                                          color:
+                                                                              topColor,
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .thumb_up_outlined,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                  const SizedBox(
+                                                                    width: 2,
+                                                                  ),
+                                                                  Text(
+                                                                    '${trend[index].likes_count_formatted}',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .grey),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 12),
+                                                            FaIcon(
+                                                                FontAwesomeIcons
+                                                                    .eye,
                                                                 color: Colors
                                                                     .grey),
-                                                          )
-                                                        ],
-                                                      )
-                                                    ],
+                                                            const SizedBox(
+                                                              width: 6,
+                                                            ),
+                                                            Text(
+                                                              '${trend[index].views_count_formatted}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey),
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                
                                                   const SizedBox(
                                                     height: 10,
                                                   ),

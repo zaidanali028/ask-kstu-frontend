@@ -15,6 +15,7 @@ const loginUrl = buildUrl + '/login';
 const registerUrl = buildUrl + '/register';
 const logoutUrl = buildUrl + '/logout';
 const userUrl = buildUrl + '/me';
+const updateDpUrl = buildUrl + '/me/update-dp';
 
 const noticeUrl = buildUrl + '/announcements/notice-board';
 const trendingUrl = buildUrl + '/announcements/trending-news';

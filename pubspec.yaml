@@ -51,6 +51,9 @@ dependencies:
   notification_permissions: ^0.6.1
   font_awesome_flutter: ^10.4.0
   audioplayers: ^4.0.1
+  convert: ^3.1.1
+  path: ^1.8.2
+  jiffy: ^6.1.0
   
 
 dev_dependencies:

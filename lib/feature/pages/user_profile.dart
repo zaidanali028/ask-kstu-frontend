@@ -52,9 +52,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
       backgroundColor: topColor,
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
-          icon: Icon(Icons.send),
+          icon: Icon(Icons.edit_location),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> UpdateProfilePage()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => UpdateProfilePage()));
           },
           label: Text('Edit Profile')),
       body: SafeArea(
@@ -137,7 +138,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     Text(
                                       "${name}",
                                       style: TextStyle(
-                                          color: bottomColor, fontSize: 30),
+                                          color: bottomColor,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
                                       height: 8,

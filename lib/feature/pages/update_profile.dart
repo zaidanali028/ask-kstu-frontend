@@ -1,9 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity/connectivity.dart';
+import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/user.dart';
+import 'package:first_app/services/user_service.dart';
+import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/api_response.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({super.key});
@@ -26,7 +34,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   var department;
   var program;
   final picker = ImagePicker();
-  var pickimage;
+  File? pickimage;
+  String? imageConvert;
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -50,9 +59,77 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   void pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      pickimage = File(pickedFile!.path);
-    });
+    if (pickedFile != null) {
+      String extension = path.basename(pickedFile.path);
+      setState(() {
+        pickimage = File(pickedFile.path);
+        imageConvert = extension;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('No image picked'),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+        elevation: 2.0,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
+  }
+
+  bool loading = false;
+
+  void updateUserProfiles() async {
+    ApiResponse response = await updateUserProfile(imageConvert);
+    if (response.error == null) {
+      _saveupdatedProfile(response.data as User);
+    } else {
+      print(jsonEncode(response.data));
+      setState(() {
+        loading = !loading;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+        backgroundColor: Colors.red.shade700,
+        elevation: 2.0,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
+  }
+
+  void _saveupdatedProfile(User user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("user_img", user.image ?? '');
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => UserProfilePage()),
+        (route) => false);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Profile Successfully Updated'),
+      backgroundColor: topColor,
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: 'Dismiss',
+        disabledTextColor: Colors.white,
+        textColor: Colors.yellow,
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),
+    ));
   }
 
   @override
@@ -82,43 +159,42 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   children: [
                     Expanded(
                         child: Container(
-                          height: 20,
-                          decoration: const BoxDecoration(
-                              color: topColor,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 10),
-                            child: Column(children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Dashboard()),
-                                          (route) => false);
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: bottomColor,
-                                      size: 25,
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Update Profile",
-                                    style: TextStyle(
-                                        color: bottomColor,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
+                      height: 20,
+                      decoration: const BoxDecoration(
+                          color: topColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 10),
+                        child: Column(children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: bottomColor,
+                                  size: 25,
+                                ),
                               ),
-                            ]),
+                              const Text(
+                                "Update Profile",
+                                style: TextStyle(
+                                    color: bottomColor,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
                           ),
-                        )),
+                        ]),
+                      ),
+                    )),
                     Expanded(
                         flex: 10,
                         child: Container(
@@ -168,7 +244,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                           color: bottomColor,
                                                           image: DecorationImage(
                                                               image: FileImage(
-                                                                  pickimage),
+                                                                  pickimage!),
                                                               fit: BoxFit
                                                                   .cover)),
                                                     ),
@@ -230,13 +306,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       ),
                                       TextFormFields(
                                           title: Text('$yearOfAdmission'),
-                                          icons: Icon(Icons.youtube_searched_for)),
+                                          icons:
+                                              Icon(Icons.youtube_searched_for)),
                                       const SizedBox(
                                         height: 15,
                                       ),
                                       TextFormFields(
                                           title: Text('$yearOfCompletion'),
-                                          icons: Icon(Icons.currency_yen_sharp)),
+                                          icons:
+                                              Icon(Icons.currency_yen_sharp)),
                                       const SizedBox(
                                         height: 15,
                                       ),
@@ -253,14 +331,20 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
           icon: Icon(Icons.send),
-          onPressed: () {
+          onPressed: () async {
+            setState(() {
+              loading = !loading;
+              updateUserProfiles();
+            });
+            print('Image string: $imageConvert');
             print('Hello Wordl');
           },
-          label: Text('Update')),
+          label: loading ? CircularProgressIndicator() : Text('Update')),
     );
   }
 }
 
+// ignore: must_be_immutable
 class TextFormFields extends StatelessWidget {
   TextFormFields({super.key, required this.title, required this.icons});
   Text title;

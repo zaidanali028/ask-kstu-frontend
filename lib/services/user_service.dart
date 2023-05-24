@@ -116,3 +116,32 @@ String? getStringImage(File? file) {
   if (file == null) return null;
   return base64Encode(file.readAsBytesSync());
 }
+
+Future<ApiResponse> updateUserProfile(String? imageString) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.post(Uri.parse(updateDpUrl),
+        headers: {'Accept': 'application/json'},
+        body: {'user_img': imageString});
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        print(jsonDecode(response.body));
+        break;
+      case 422:
+        final errors = json.decode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        print(jsonDecode(response.body)['messag']);
+        break;
+      default:
+        apiResponse.error = somethingWentwrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}

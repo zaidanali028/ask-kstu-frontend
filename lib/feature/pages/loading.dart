@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:notification_permissions/notification_permissions.dart';
+
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
 
@@ -67,8 +68,7 @@ class _LoadingPageState extends State<LoadingPage> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => LoginPage()),
             (route) => false);
-      ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("You have been logged out"),
           backgroundColor: topColor,
           behavior: SnackBarBehavior.floating,
@@ -80,8 +80,7 @@ class _LoadingPageState extends State<LoadingPage> {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
-        )
-    );
+        ));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("${response.error}")));
@@ -90,47 +89,44 @@ class _LoadingPageState extends State<LoadingPage> {
     }
   }
 
+  showAlertDialog(BuildContext context, Function() runthis) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: runthis,
+    );
 
-  showAlertDialog(BuildContext context,Function() runthis) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Receive notification alerts"),
+      content: Text(
+          'This app would like to send you push notifications when there is any activity on your account'),
+      actions: [
+        okButton,
+      ],
+    );
 
-  // set up the button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: runthis,
-  );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Receive notification alerts"),
-    content: Text('This app would like to send you push notifications when there is any activity on your account'),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-
-
-  void  requestNotificationPermission_()async {
-print('invoked 2');
-  // open prompt for user to enable notification
-    PermissionStatus permissionStatus = await NotificationPermissions.getNotificationPermissionStatus();
+  void requestNotificationPermission_() async {
+    print('invoked 2');
+    // open prompt for user to enable notification
+    PermissionStatus permissionStatus =
+        await NotificationPermissions.getNotificationPermissionStatus();
     // if(permissionStatus == PermissionStatus.denied) {
     //   // if user explicitly denied notifications, we don't want to show them again
     //   return;
     // }
 
-    if(permissionStatus != PermissionStatus.granted){
-
-      if(!mounted) return;
+    if (permissionStatus != PermissionStatus.granted) {
+      if (!mounted) return;
 
       // showConfirmDialog(context, title: 'Receive notification alerts',
       //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
@@ -138,32 +134,32 @@ print('invoked 2');
       //     }
       //   },
       // );
-showAlertDialog(context,()async{
-       final requestResponse =  await NotificationPermissions.requestNotificationPermissions();
-          if(requestResponse == PermissionStatus.granted){
-            // user granted permission
-            registerUserForPushNotification();
-            return;
-     
-
-}});
-     }else {
+      showAlertDialog(context, () async {
+        final requestResponse =
+            await NotificationPermissions.requestNotificationPermissions();
+        if (requestResponse == PermissionStatus.granted) {
+          // user granted permission
+          registerUserForPushNotification();
+          return;
+        }
+      });
+    } else {
       registerUserForPushNotification();
     }
+  }
 
-}
-
-void registerUserForPushNotification()async {
+  void registerUserForPushNotification() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
 
-     var user_id = localStorage.getInt('id');
-     print("here!: ${user_id}");
+    var user_id = localStorage.getInt('id');
+    print("here!: ${user_id}");
 
-  
-  var myCustomUniqueUserId = "${user_id}";
+    var myCustomUniqueUserId = "${user_id}";
     //await OneSignal.shared.removeExternalUserId();
-    final setExtPushIdResponse = await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-    debugPrint("setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+    final setExtPushIdResponse =
+        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+    debugPrint(
+        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
 
     if (setExtPushIdResponse['push']['success'] != null) {
       if (setExtPushIdResponse['push']['success'] is bool) {
@@ -177,10 +173,10 @@ void registerUserForPushNotification()async {
         //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
         // }
       }
-      debugPrint("registered for push: ${setExtPushIdResponse['push']['success']}");
+      debugPrint(
+          "registered for push: ${setExtPushIdResponse['push']['success']}");
     }
-  
-}
+  }
 
   @override
   void initState() {
@@ -217,7 +213,14 @@ void registerUserForPushNotification()async {
                             fit: BoxFit.contain)),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 25,
+                  ),
+                  const Text(
+                    "Academic Student Knowledge Base",
+                    style: TextStyle(
+                        color: bottomColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
                   ),
                 ],
               ),

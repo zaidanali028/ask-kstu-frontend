@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -65,10 +66,14 @@ class _DetailNewsState extends State<DetailNews> {
     }
   }
 
+  Future<void> playSound() async {
+    await AudioPlayer().play(AssetSource(
+        "assets/audio/my_audio.mp3")); // Replace with your sound file
+  }
+
   @override
   Widget build(BuildContext context) {
-    final trending =
-        Provider.of<TrendingNewsProvider>(context, listen: false);
+    final trending = Provider.of<TrendingNewsProvider>(context, listen: false);
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -87,8 +92,7 @@ class _DetailNewsState extends State<DetailNews> {
                             image: DecorationImage(
                                 image: NetworkImage(
                                     "${announcement_imgUri}${trend.featured_image}"),
-                                fit: BoxFit.cover)
-                                ),
+                                fit: BoxFit.cover)),
                         child: Stack(
                           children: [
                             Positioned(
@@ -168,6 +172,7 @@ class _DetailNewsState extends State<DetailNews> {
                                   trend.category_id == 2
                                       ? GestureDetector(
                                           onTap: () {
+                                            playSound();
                                             if (trend.liked_by_auth_user ==
                                                 true) {
                                               likeAnnouncement(trend.id, 0);
@@ -220,7 +225,6 @@ class _DetailNewsState extends State<DetailNews> {
                                       : Text('')
                                 ],
                               ),
-                              
                               SizedBox(height: 10),
                               Divider(
                                 color: Color.fromARGB(255, 91, 89, 89),

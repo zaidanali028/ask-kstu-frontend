@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification_permissions/notification_permissions.dart';
-// import 'package:jiffy/jiffy.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -39,6 +39,11 @@ class _DashboardState extends State<Dashboard> {
     getUser();
 
     super.initState();
+  }
+
+  Future<void> playSound() async {
+    await AudioPlayer().play(AssetSource(
+        "assets/audio/my_audio.mp3")); // Replace with your sound file
   }
 
   void getUser() async {
@@ -637,7 +642,7 @@ class _DashboardState extends State<Dashboard> {
                                                         children: [
                                                           GestureDetector(
                                                             onTap: () {
-                                                              
+                                                              playSound();
                                                               if (trend[index]
                                                                       .liked_by_auth_user ==
                                                                   true) {
@@ -680,7 +685,6 @@ class _DashboardState extends State<Dashboard> {
                                                               ],
                                                             ),
                                                           ),
-                                                          
                                                           SizedBox(width: 12),
                                                           FaIcon(
                                                               FontAwesomeIcons
@@ -701,7 +705,6 @@ class _DashboardState extends State<Dashboard> {
                                                     ],
                                                   ),
                                                 ),
-                                                
                                                 const SizedBox(
                                                   height: 10,
                                                 ),
