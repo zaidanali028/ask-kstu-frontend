@@ -189,7 +189,17 @@ class _CalendarPageState extends State<CalendarPage> {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {
                                             return Center();
-                                            
+                                          } else if (!snapshot.hasData) {
+                                            return Center(
+                                              child: Text(
+                                                "No Data Added Yet",
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            );
                                           } else if (snapshot.hasError) {
                                             return Text('${snapshot.error}');
                                           } else {

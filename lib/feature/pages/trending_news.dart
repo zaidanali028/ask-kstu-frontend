@@ -64,6 +64,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
       ));
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final trendProvider =
@@ -153,6 +154,16 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                           TrendingShimmer(),
                                           TrendingShimmer(),
                                         ],
+                                      );
+                                    } else if (!snapshot.hasData) {
+                                      return Center(
+                                        child: Text(
+                                          "No Data Added Yet",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       );
                                     } else if (snapshot.hasError) {
                                       logout().then((value) => {

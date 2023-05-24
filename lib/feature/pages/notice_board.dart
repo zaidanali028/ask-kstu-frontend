@@ -46,43 +46,42 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                     Expanded(
                         // flex: 1,
                         child: Container(
-                          height: 20,
-                          decoration: const BoxDecoration(
-                              color: topColor,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 10),
-                            child: Column(children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Dashboard()),
-                                          (route) => false);
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: bottomColor,
-                                      size: 25,
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Notice Board",
-                                    style: TextStyle(
-                                        color: bottomColor,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
+                      height: 20,
+                      decoration: const BoxDecoration(
+                          color: topColor,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5.0, vertical: 10),
+                        child: Column(children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: bottomColor,
+                                  size: 25,
+                                ),
                               ),
-                            ]),
+                              const Text(
+                                "Notice Board",
+                                style: TextStyle(
+                                    color: bottomColor,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
                           ),
-                        )),
+                        ]),
+                      ),
+                    )),
                     Expanded(
                         flex: 10,
                         child: Container(
@@ -108,8 +107,17 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                           TrendingShimmer(),
                                         ],
                                       );
-                                    } 
-                                    else if (snapshot.hasError) {
+                                    } else if (!snapshot.hasData) {
+                                      return Center(
+                                        child: Text(
+                                          "No Data Added Yet",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
@@ -119,8 +127,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                     (route) => false)
                                           });
                                       return Center();
-                                    } 
-                                    else {
+                                    } else {
                                       final noticeboard = snapshot.data!;
                                       return GridView.builder(
                                         physics: BouncingScrollPhysics(),
@@ -167,10 +174,10 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                                             .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
-                                                                image: NetworkImage(
-                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
-                                                                fit: BoxFit
-                                                                    .cover)
+                                                                        image: NetworkImage(
+                                                                            "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                        fit: BoxFit
+                                                                            .cover)
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),

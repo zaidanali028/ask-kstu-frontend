@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:first_app/feature/pages/dashboard_drawer.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
@@ -351,6 +352,16 @@ class _DashboardState extends State<Dashboard> {
                                                 ),
                                                 NoticeBoardShimmer(),
                                               ])));
+                                } else if (!snapshot.hasData) {
+                                  return Center(
+                                    child: Text(
+                                      "No Data Added Yet",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  );
                                 } else if (snapshot.hasError) {
                                   logout().then((value) => {
                                         Navigator.of(context)
@@ -501,6 +512,16 @@ class _DashboardState extends State<Dashboard> {
                                         TrendingShimmer(),
                                         TrendingShimmer(),
                                       ],
+                                    ),
+                                  );
+                                } else if (!snapshot.hasData) {
+                                  return Center(
+                                    child: Text(
+                                      "No Data Added Yet",
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
