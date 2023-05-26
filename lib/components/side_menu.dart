@@ -22,12 +22,14 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   var name;
   var indexNo;
+  var image;
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
       name = localStorage.getString('name');
       indexNo = localStorage.getInt('index');
+      image = localStorage.getString('image');
     });
   }
 
@@ -60,6 +62,7 @@ class _SideMenuState extends State<SideMenu> {
               InfoCard(
                 name: "${name}",
                 indexNo: "${indexNo}",
+                image: image,
               ),
               SizedBox(
                 height: 40,
