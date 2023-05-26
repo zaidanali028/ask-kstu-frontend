@@ -48,7 +48,7 @@ class _DashboardState extends State<Dashboard>
     // print('invokedRR');
     getUser();
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1))
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
           ..addListener(() {
             setState(() {});
           });
@@ -221,14 +221,14 @@ class _DashboardState extends State<Dashboard>
             child: Stack(
               children: [
                 AnimatedPositioned(
-                    duration: Duration(seconds: 1),
+                    duration: Duration(milliseconds: 200),
                     curve: Curves.fastOutSlowIn,
                     width: 288,
                     left: isMenuClosed ? -288 : 0,
                     height: MediaQuery.of(context).size.height,
                     child: SideMenu()),
                 AnimatedPositioned(
-                  duration: Duration(seconds: 1),
+                  duration: Duration(milliseconds: 200),
                   curve: Curves.fastOutSlowIn,
                   child: Transform(
                     alignment: Alignment.center,
@@ -834,7 +834,7 @@ class _DashboardState extends State<Dashboard>
                 ),
                 AnimatedPositioned(
                   curve: Curves.fastOutSlowIn,
-                  duration: Duration(seconds: 1),
+                  duration: Duration(milliseconds: 200),
                   left: isMenuClosed ? 0 : 220,
                   child: SafeArea(
                       child: Container(
@@ -863,8 +863,8 @@ class _DashboardState extends State<Dashboard>
                           });
                         },
                         icon: isClosedBtn
-                            ? Icon(CupertinoIcons.text_justify)
-                            : Icon(CupertinoIcons.clear)),
+                            ? Icon(Icons.menu)
+                            : Icon(Icons.close)),
                   )),
                 )
               ],
