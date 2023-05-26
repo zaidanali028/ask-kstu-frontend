@@ -21,6 +21,7 @@ class User {
   int? indexNo;
   int? deptId;
   int? programId;
+  String? phone;
   String? yrOfAdmission;
   String? yrOfCompletion;
   int? id;
@@ -40,6 +41,7 @@ class User {
       this.token,
       this.image,
       this.currentLevel,
+      this.phone,
       this.currentSemester});
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class User {
       name: json['user']['name'],
       email: json['user']['email'],
       currentLevel: json['user']['current_level'],
+      phone: json['user']['phone'],
       currentSemester: json['user']['current_sem'],
       image: json['user']['user_img'] ?? '1',
       gender: json['user']['gender'],
@@ -67,6 +70,7 @@ class User {
         "email": email,
         "user_img": image,
         "gender": gender,
+        "phone": phone,
         "faculty_id": facultyId,
         "index_no": indexNo,
         "dept_id": deptId,

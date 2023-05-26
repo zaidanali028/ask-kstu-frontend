@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   var faculty;
   var department;
   var program;
+  var phone;
   final picker = ImagePicker();
   File? pickimage;
   String? imageConvert;
@@ -42,6 +44,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       yearOfCompletion = localStorage.getString('yrOfCompletion');
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
+      phone = localStorage.getString('phone');
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
       semester = localStorage.getString('semester');
@@ -172,7 +175,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                 onPressed: () {
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (context) => UserProfilePage()),
+                                          builder: (context) =>
+                                              UserProfilePage()),
                                       (route) => false);
                                 },
                                 icon: const Icon(
@@ -254,9 +258,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                         pickImage();
                                                       },
                                                       icon: Icon(
-                                                        Icons.camera_alt,
+                                                        CupertinoIcons.photo,
                                                         color: Colors.black87,
-                                                        size: 50,
+                                                        size: 40,
                                                       )))
                                             ],
                                           ),
@@ -279,20 +283,27 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       ),
                                       TextFormFields(
                                           title: Text('${index}'),
+                                          icons:
+                                              Icon(CupertinoIcons.arrow_swap)),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      TextFormFields(
+                                          title: Text('${phone}'),
                                           icons: Icon(Icons.numbers)),
                                       const SizedBox(
                                         height: 15,
                                       ),
                                       TextFormFields(
                                           title: Text(gender),
-                                          icons: Icon(Icons.generating_tokens)),
+                                          icons: Icon(CupertinoIcons.gauge)),
                                       const SizedBox(
                                         height: 15,
                                       ),
                                       TextFormFields(
                                           title: Text('Level $level'),
-                                          icons:
-                                              Icon(Icons.leave_bags_at_home)),
+                                          icons: Icon(
+                                              CupertinoIcons.app_badge_fill)),
                                       const SizedBox(
                                         height: 15,
                                       ),
@@ -304,15 +315,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       ),
                                       TextFormFields(
                                           title: Text('$yearOfAdmission'),
-                                          icons:
-                                              Icon(Icons.youtube_searched_for)),
+                                          icons: Icon(CupertinoIcons
+                                              .bolt_horizontal_circle_fill)),
                                       const SizedBox(
                                         height: 15,
                                       ),
                                       TextFormFields(
                                           title: Text('$yearOfCompletion'),
-                                          icons:
-                                              Icon(Icons.currency_yen_sharp)),
+                                          icons: Icon(CupertinoIcons
+                                              .bolt_horizontal_circle)),
                                       const SizedBox(
                                         height: 15,
                                       ),

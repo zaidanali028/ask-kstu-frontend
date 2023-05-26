@@ -26,6 +26,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   var faculty;
   var department;
   var program;
+  var phone;
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -36,6 +37,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       gender = localStorage.getString('gender');
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
+      phone = localStorage.getString('phone');
       semester = localStorage.getString('semester');
       level = localStorage.getString('level');
     });
@@ -180,6 +182,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ProfileDetails(
                                   subtitle: "${index}",
                                   title: "Student Number",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${phone}",
+                                  title: "Phone Number",
                                 ),
                                 ProfileDetails(
                                   subtitle: "${gender}",

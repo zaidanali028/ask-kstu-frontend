@@ -35,7 +35,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         children: [
                           Text(
                             "${keymoments[index].imageDescription}",
-                            style: TextStyle(fontSize: 22, color: Colors.black),
+                            style: TextStyle(fontSize: 20, color: Colors.black),
                           ),
                           SizedBox(
                             height: 20,
@@ -62,7 +62,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                                     const EdgeInsets.symmetric(horizontal: 25),
                                 child: Text(
                                   "${keymoments[index].imageSubTitle}",
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(fontSize: 18),
                                   textAlign: TextAlign.start,
                                 ),
                               ),

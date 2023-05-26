@@ -28,7 +28,7 @@ Future<ApiResponse> login(String email, String password) async {
         break;
     }
   } catch (e) {
-    apiResponse.error = serverError;
+    apiResponse.error = e.toString();
   }
   return apiResponse;
 }

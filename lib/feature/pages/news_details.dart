@@ -6,6 +6,7 @@ import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/trending_news.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,8 @@ class DetailNews extends StatefulWidget {
 }
 
 class _DetailNewsState extends State<DetailNews> {
-  // final int marignTop = 180;
+  double marignTop = 180;
+  ScrollController _scrollController = ScrollController();
 
   void likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -62,7 +64,30 @@ class _DetailNewsState extends State<DetailNews> {
       ));
     }
   }
-  
+
+  void _handleScroll() {
+    if (_scrollController.position.pixels > 0) {
+      setState(() {
+        if (marignTop == 50) {
+          marignTop = 50;
+        }else{
+          marignTop -= 10;
+        }
+      });
+    } else if (_scrollController.position.pixels == 0) {
+      setState(() {
+        marignTop = 180;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _scrollController.addListener(_handleScroll);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final trending = Provider.of<TrendingNewsProvider>(context, listen: false);
@@ -105,7 +130,7 @@ class _DetailNewsState extends State<DetailNews> {
                       Positioned(
                           // bottom: 20,
                           child: Container(
-                        margin: EdgeInsets.only(top: 180),
+                        margin: EdgeInsets.only(top: marignTop),
                         height: MediaQuery.of(context).size.height,
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -116,117 +141,121 @@ class _DetailNewsState extends State<DetailNews> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 18, vertical: 20),
-                          child: ListView(
-                            children: [
-                              Text(
-                                trend.title,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Divider(
-                                color: Color.fromARGB(255, 91, 89, 89),
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.alarm,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        width: 80,
-                                        child: Text(
-                                          "${trend.created_at}",
-                                          maxLines: 1,
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.bold),
+                          child: AnimatedPositioned(
+                            duration: Duration(seconds: 2),
+                            child: ListView(
+                              controller: _scrollController,
+                              children: [
+                                Text(
+                                  trend.title,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Divider(
+                                  color: Color.fromARGB(255, 91, 89, 89),
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.alarm,
+                                          color: Colors.grey,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 58,
-                                  ),
-                                  trend.category_id == 2
-                                      ? GestureDetector(
-                                          onTap: () {
-                                              AudioPlayer()
-                                                  .play(AssetSource("audio/my_audio.mp3"));
-                                            if (trend.liked_by_auth_user ==
-                                                true) {
-                                              likeAnnouncement(trend.id, 0);
-                                            } else {
-                                              likeAnnouncement(trend.id, 1);
-                                            }
-                                          },
-                                          child: Row(
-                                            children: [
-                                              trend.liked_by_auth_user == true
-                                                  ? Icon(
-                                                      Icons.thumb_up,
-                                                      color: topColor,
-                                                    )
-                                                  : Icon(
-                                                      Icons.thumb_up_outlined,
-                                                      color: Colors.grey,
-                                                    ),
-                                              const SizedBox(
-                                                width: 2,
-                                              ),
-                                              Text(
-                                                '${trend.likes_count}',
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              )
-                                            ],
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          width: 80,
+                                          child: Text(
+                                            "${trend.created_at}",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.fade,
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         )
-                                      : Text(''),
-                                  Spacer(),
-                                  trend.category_id == 2
-                                      ? Row(
-                                          children: [
-                                            Text(
-                                              'Views',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 58,
+                                    ),
+                                    trend.category_id == 2
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              AudioPlayer().play(AssetSource(
+                                                  "audio/my_audio.mp3"));
+                                              if (trend.liked_by_auth_user ==
+                                                  true) {
+                                                likeAnnouncement(trend.id, 0);
+                                              } else {
+                                                likeAnnouncement(trend.id, 1);
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                trend.liked_by_auth_user == true
+                                                    ? Icon(
+                                                        CupertinoIcons.hand_thumbsup_fill,
+                                                        color: topColor,
+                                                      )
+                                                    : Icon(
+                                                        CupertinoIcons.hand_thumbsup,
+                                                        color: Colors.grey,
+                                                      ),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                Text(
+                                                  '${trend.likes_count}',
+                                                  style: TextStyle(
+                                                      color: Colors.grey),
+                                                )
+                                              ],
                                             ),
-                                            const SizedBox(
-                                              width: 6,
-                                            ),
-                                            Text(
-                                              '${trend.views}',
-                                              style:
-                                                  TextStyle(color: Colors.grey),
-                                            )
-                                          ],
-                                        )
-                                      : Text('')
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Divider(
-                                color: Color.fromARGB(255, 91, 89, 89),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              KeyMomentContainer(title: widget.title)
-                            ],
+                                          )
+                                        : Text(''),
+                                    Spacer(),
+                                    trend.category_id == 2
+                                        ? Row(
+                                            children: [
+                                              Text(
+                                                'Views',
+                                                style:
+                                                    TextStyle(color: Colors.grey),
+                                              ),
+                                              const SizedBox(
+                                                width: 6,
+                                              ),
+                                              Text(
+                                                '${trend.views}',
+                                                style:
+                                                    TextStyle(color: Colors.grey),
+                                              )
+                                            ],
+                                          )
+                                        : Text('')
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Divider(
+                                  color: Color.fromARGB(255, 91, 89, 89),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                KeyMomentContainer(title: widget.title)
+                              ],
+                            ),
                           ),
                         ),
                       ))
