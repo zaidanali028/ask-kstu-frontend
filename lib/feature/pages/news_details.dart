@@ -5,14 +5,11 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
-import 'package:first_app/services/key_moments_service.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import '../../models/announcement.dart';
 
 class DetailNews extends StatefulWidget {
   const DetailNews({super.key, required this.title});

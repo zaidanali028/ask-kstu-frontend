@@ -2,8 +2,6 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/calendar_page.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';
-import 'package:first_app/feature/pages/past_questions.dart';
-import 'package:first_app/feature/pages/settings.dart';
 import 'package:first_app/feature/pages/trending_news.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/constant.dart';
@@ -126,14 +124,6 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                     ),
                     DashboardIcons(
                       callback: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SettingsPage()));
-                      },
-                      icons: Icons.settings,
-                      title: "Settings",
-                    ),
-                    DashboardIcons(
-                      callback: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -154,9 +144,7 @@ class _DashboardDrawerState extends State<DashboardDrawer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DashboardIcons(
-                      callback: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => PastQuestionPage())),
+                      callback: () {},
                       icons: Icons.question_answer,
                       title: "Blocks",
                     ),

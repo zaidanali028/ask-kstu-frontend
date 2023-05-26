@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:connectivity/connectivity.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
-import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -174,7 +172,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                 onPressed: () {
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (context) => Dashboard()),
+                                          builder: (context) => UserProfilePage()),
                                       (route) => false);
                                 },
                                 icon: const Icon(

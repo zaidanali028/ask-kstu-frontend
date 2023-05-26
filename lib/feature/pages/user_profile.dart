@@ -2,6 +2,7 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/update_profile.dart';
 import 'package:first_app/models/constant.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,7 +53,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       backgroundColor: topColor,
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
-          icon: Icon(Icons.edit_location),
+          icon: Icon(CupertinoIcons.layers),
           onPressed: () {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => UpdateProfilePage()));

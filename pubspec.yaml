@@ -53,7 +53,6 @@ dependencies:
   audioplayers: ^4.0.1
   convert: ^3.1.1
   path: ^1.8.2
-  jiffy: ^6.1.0
   
 
 dev_dependencies:
