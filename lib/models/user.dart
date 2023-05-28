@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final user = userFromJson(jsonString);
+
 import 'dart:convert';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -5,68 +9,69 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
-  String? name;
-  String? token;
-  String? email;
-  String? gender;
-  String? image;
-  String? currentLevel;
-  int? currentSemester;
-  int? facultyId;
-  int? status;
-  int? indexNo;
-  int? deptId;
-  int? programId;
-  String? phone;
-  String? yrOfAdmission;
-  String? yrOfCompletion;
-  int? id;
 
-  User(
-      {this.name,
-      this.email,
-      this.gender,
-      this.facultyId,
-      this.indexNo,
-      this.deptId,
-      this.programId,
-      this.status,
-      this.yrOfAdmission,
-      this.yrOfCompletion,
-      this.id,
-      this.token,
-      this.image,
-      this.currentLevel,
-      this.phone,
-      this.currentSemester});
+    String? name;
+    String? token;
+    String? email;
+    String? gender;
+    String? image;
+    String? currentLevel;
+    int? currentSemester;
+    int? facultyId;
+    int? status;
+    int? indexNo;
+    int? deptId;
+    int? programId;
+    String? yrOfAdmission;
+    String? yrOfCompletion;
+    String? phone;
+    int? id;
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      name: json['user']['name'],
-      email: json['user']['email'],
-      currentLevel: json['user']['current_level'],
-      phone: json['user']['phone'],
-      currentSemester: json['user']['current_sem'],
-      image: json['user']['user_img'] ?? '1',
-      gender: json['user']['gender'],
-      facultyId: json['user']['faculty_id'],
-      indexNo: json['user']['index_no'],
-      deptId: json['user']['dept_id'],
-      programId: json['user']['program_id'],
-      status: json['user']['status'],
-      yrOfAdmission: json['user']['yr_of_admission'],
-      yrOfCompletion: json['user']['yr_of_completion'],
-      id: json['user']['id'],
-      token: json['authorisation']['token'],
+    User({
+        this.name,
+        this.email,
+        this.gender,
+        this.facultyId,
+        this.indexNo,
+        this.deptId,
+        this.programId,
+        this.status,
+        this.yrOfAdmission,
+        this.yrOfCompletion,
+        this.id,
+        this.token,
+        this.image,
+        this.currentLevel,
+        this.currentSemester,
+        this.phone
+    });
+
+    factory User.fromJson(Map<String, dynamic> json){
+      return User(
+        name: json['user']['name'],
+        email: json['user']['email'],
+        currentLevel: json['user']['current_level'],
+        currentSemester: json['user']['current_sem'],
+        image: json['user']['user_img'] ?? null,
+        gender: json['user']['gender'],
+        facultyId: json['user']['faculty_id'],
+        indexNo: json['user']['index_no'],
+        deptId: json['user']['dept_id'],
+        programId: json['user']['program_id'],
+        status: json['user']['status'],
+        yrOfAdmission: json['user']['yr_of_admission'],
+        yrOfCompletion: json['user']['yr_of_completion'],
+        id: json['user']['id'],
+        phone: json['user']['phone'],
+        token: json['authorisation']['token'],
     );
-  }
+    }
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "name": name,
         "email": email,
         "user_img": image,
         "gender": gender,
-        "phone": phone,
         "faculty_id": facultyId,
         "index_no": indexNo,
         "dept_id": deptId,
@@ -76,5 +81,6 @@ class User {
         "yr_of_completion": yrOfCompletion,
         "id": id,
         "token": token,
-      };
+        "phone":phone
+    };
 }

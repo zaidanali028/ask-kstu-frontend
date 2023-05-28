@@ -82,9 +82,10 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString("name", user.name ?? '');
     await prefs.setInt("index", user.indexNo ?? 0);
     await prefs.setString("gender", user.gender ?? '');
-    await prefs.setString("phone", user.phone ?? '');
     await prefs.setString("level", user.currentLevel ?? '');
-    await prefs.setInt("semester", user.currentSemester ?? 0);
+    // await prefs.setString("semester", user.currentSemester ?? '');
+    // semester has been changed from styring to id,so we may need to create a new field to handle the semester relastion,leave it as 0 for now
+    await prefs.setInt("semester", 0);
     await prefs.setInt("program", user.programId ?? 0);
     await prefs.setInt("department", user.deptId ?? 0);
     await prefs.setInt("faculty", user.facultyId ?? 0);

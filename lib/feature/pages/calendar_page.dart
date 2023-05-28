@@ -1,5 +1,6 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/events.dart';
@@ -7,6 +8,7 @@ import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:jiffy/jiffy.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -122,7 +124,8 @@ class _CalendarPageState extends State<CalendarPage> {
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0, vertical: 10.0),
-                                child: ListView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     TableCalendar(
                                         eventLoader: _getEventFromDay,
@@ -171,6 +174,11 @@ class _CalendarPageState extends State<CalendarPage> {
                                         onDaySelected: _onDaySelected,
                                         selectedDayPredicate: (day) =>
                                             isSameDay(day, today)),
+                                    // ..._getEventFromDay(DateTime.now())
+                                    //     .map((Event event) => ListTile(
+                                    //           title: Text(event.title),
+                                    //         )),
+                                    // SizedBox(height: 20,),
                                     Container(
                                       height:
                                           MediaQuery.of(context).size.height /
@@ -187,18 +195,26 @@ class _CalendarPageState extends State<CalendarPage> {
                                         builder: (context, snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {
-                                            return Center();
-                                          } else if (!snapshot.hasData) {
-                                            return Center(
-                                              child: Text(
-                                                "No Data Added Yet",
-                                                style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 25,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            );
+                                            return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: Container(
+                                                    height: 243,
+                                                    child: ListView(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        children: [
+                                                          NoticeBoardShimmer(),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          NoticeBoardShimmer(),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          NoticeBoardShimmer(),
+                                                        ])));
                                           } else if (snapshot.hasError) {
                                             return Text('${snapshot.error}');
                                           } else {
@@ -249,10 +265,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                             .featured_image !=
                                                                         null
                                                                     ? DecorationImage(
-                                                                        image: NetworkImage(
-                                                                            "${announcement_imgUri}${noticeboard[index].featured_image}"),
-                                                                        fit: BoxFit
-                                                                            .cover)
+
+                                                                image: NetworkImage(
+                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                fit: BoxFit
+                                                                   .cover)
+
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
@@ -310,7 +328,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                             20,
                                                                         child:
                                                                             Text(
+
                                                                           "${DateTime.parse(noticeboard[index].created_at)}",
+
                                                                           style: TextStyle(
                                                                               color: Colors.grey.shade500,
                                                                               fontSize: 15),
@@ -344,6 +364,47 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       )),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => showDialog(
+      //       context: context,
+      //       builder: (context) => AlertDialog(
+      //             title: Text("Add Event"),
+      //             content: TextFormField(
+      //               controller: _eventController,
+      //             ),
+      //             actions: [
+      //               TextButton(
+      //                   onPressed: () {
+      //                     Navigator.pop(context);
+      //                   },
+      //                   child: Text("Cancel")),
+      //               TextButton(
+      //                   onPressed: () {
+      //                     if (_eventController.text.isEmpty) {
+
+      //                     } else {
+      //                       if (selectedEvents[DateTime.now()] != null) {
+      //                         selectedEvents[DateTime.now()]
+      //                             ?.add(Event(title: _eventController.text));
+      //                       } else {
+      //                         selectedEvents[DateTime.now()] = [
+      //                           Event(title: _eventController.text)
+      //                         ];
+      //                       }
+      //                     }
+      //                     Navigator.pop(context);
+      //                     _eventController.clear();
+      //                     setState(() {
+
+      //                     });
+      //                     return;
+      //                   },
+      //                   child: Text("Ok")),
+      //             ],
+      //           )),
+      //   label: Text("Add Event"),
+      //   icon: Icon(Icons.send),
+      // ),
     );
   }
 }
