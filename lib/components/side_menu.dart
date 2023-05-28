@@ -126,11 +126,11 @@ class _SideMenuState extends State<SideMenu> {
               //         MaterialPageRoute(builder: (context) => CalendarPage()));
               //   },
               // ),
-              // SideMenuTitle(
-              //   iconData: CupertinoIcons.building_2_fill,
-              //   title: "Kstu Buildings",
-              //   myfunction: () {},
-              // ),
+              SideMenuTitle(
+                iconData: CupertinoIcons.piano,
+                title: "Change Password",
+                myfunction: () {},
+              ),
               SideMenuTitle(
                 iconData: CupertinoIcons.question_circle,
                 title: "About",
@@ -142,7 +142,7 @@ class _SideMenuState extends State<SideMenu> {
                 myfunction: () {},
               ),
               SizedBox(
-                height: 90,
+                height: 70,
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.tray_arrow_up_fill,
@@ -155,6 +155,19 @@ class _SideMenuState extends State<SideMenu> {
                                 builder: (context) => LoginPage()),
                             (route) => false)
                       });
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("You have been logged out"),
+                    backgroundColor: topColor,
+                    behavior: SnackBarBehavior.floating,
+                    action: SnackBarAction(
+                      label: 'Dismiss',
+                      disabledTextColor: Colors.white,
+                      textColor: Colors.yellow,
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      },
+                    ),
+                  ));
                 },
               ),
             ],
@@ -183,10 +196,12 @@ class SideMenuTitle extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 24),
-          child: isLast ? null : Divider(
-            color: Colors.white24,
-            height: 1,
-          ),
+          child: isLast
+              ? null
+              : Divider(
+                  color: Colors.white24,
+                  height: 1,
+                ),
         ),
         Stack(
           children: [
