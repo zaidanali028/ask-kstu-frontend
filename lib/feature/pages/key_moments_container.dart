@@ -1,4 +1,5 @@
 import 'package:first_app/feature/pages/login_page.dart';
+import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/key_moments_service.dart';
 import 'package:first_app/services/user_service.dart';
@@ -14,13 +15,15 @@ class KeyMomentContainer extends StatefulWidget {
 }
 
 class _KeyMomentContainerState extends State<KeyMomentContainer> {
+  ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final keymoments = Provider.of<KeyMomentProvider>(context, listen: false);
     return Container(
         width: double.infinity,
         height: 700,
-        child: FutureBuilder(
+        child: FutureBuilder<List<AnnouncementKeyMoments>>(
             future: keymoments.fetchKeymoment(widget.title),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -30,58 +33,11 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         (route) => false));
                 return Center();
               } else if (snapshot.connectionState == ConnectionState.waiting) {
-                final keymoments = snapshot.data!;
-                return ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: keymoments.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Text(
-                            "${keymoments[index].imageDescription}",
-                            style: TextStyle(fontSize: 20, color: Colors.black),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 300,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: NetworkImage(
-                                            "${key_moment_uri}${keymoments[index].image}"),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
-                                child: Text(
-                                  "${keymoments[index].imageSubTitle}",
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                            ],
-                          )
-                        ],
-                      );
-                    });
-              
+                return Center();
               } else {
                 final keymoments = snapshot.data!;
                 return ListView.builder(
+                  controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     itemCount: keymoments.length,
                     itemBuilder: (context, index) {
@@ -89,17 +45,17 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         children: [
                           Text(
                             "${keymoments[index].imageDescription}",
-                            style: TextStyle(fontSize: 20, color: Colors.black),
+                            style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: 300,
+                                width: double.infinity,
                                 height: 150,
                                 decoration: BoxDecoration(
                                     image: DecorationImage(
@@ -113,22 +69,21 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 25),
+                                    const EdgeInsets.symmetric(horizontal: 0),
                                 child: Text(
                                   "${keymoments[index].imageSubTitle}",
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyle(fontSize: 15),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
                               SizedBox(
-                                height: 10.0,
+                                height: 25.0,
                               ),
                             ],
                           )
                         ],
                       );
                     });
-              
               }
             }));
   }

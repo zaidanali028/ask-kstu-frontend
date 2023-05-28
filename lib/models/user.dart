@@ -52,7 +52,7 @@ class User {
         email: json['user']['email'],
         currentLevel: json['user']['current_level'],
         currentSemester: json['user']['current_sem'],
-        image: json['user']['user_img'] ?? null,
+        image: json['user']['user_img'] ?? "1",
         gender: json['user']['gender'],
         facultyId: json['user']['faculty_id'],
         indexNo: json['user']['index_no'],

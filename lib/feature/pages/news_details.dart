@@ -70,7 +70,7 @@ class _DetailNewsState extends State<DetailNews> {
       setState(() {
         if (marignTop == 50) {
           marignTop = 50;
-        }else{
+        } else {
           marignTop -= 10;
         }
       });
@@ -150,7 +150,7 @@ class _DetailNewsState extends State<DetailNews> {
                                   trend.title,
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 25,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
@@ -189,61 +189,56 @@ class _DetailNewsState extends State<DetailNews> {
                                     SizedBox(
                                       width: 58,
                                     ),
-                                    trend.category_id == 2
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              AudioPlayer().play(AssetSource(
-                                                  "audio/my_audio.mp3"));
-                                              if (trend.liked_by_auth_user ==
-                                                  true) {
-                                                likeAnnouncement(trend.id, 0);
-                                              } else {
-                                                likeAnnouncement(trend.id, 1);
-                                              }
-                                            },
-                                            child: Row(
-                                              children: [
-                                                trend.liked_by_auth_user == true
-                                                    ? Icon(
-                                                        CupertinoIcons.hand_thumbsup_fill,
-                                                        color: topColor,
-                                                      )
-                                                    : Icon(
-                                                        CupertinoIcons.hand_thumbsup,
-                                                        color: Colors.grey,
-                                                      ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text(
-                                                  '${trend.likes_count}',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                    GestureDetector(
+                                      onTap: () {
+                                        AudioPlayer().play(
+                                            AssetSource("audio/my_audio.mp3"));
+                                        if (trend.liked_by_auth_user == true) {
+                                          likeAnnouncement(trend.id, 0);
+                                        } else {
+                                          likeAnnouncement(trend.id, 1);
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          trend.liked_by_auth_user == true
+                                              ? Icon(
+                                                  CupertinoIcons
+                                                      .hand_thumbsup_fill,
+                                                  color: topColor,
                                                 )
-                                              ],
-                                            ),
+                                              : Icon(
+                                                  CupertinoIcons.hand_thumbsup,
+                                                  color: Colors.grey,
+                                                ),
+                                          const SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            '${trend.likes_count}',
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           )
-                                        : Text(''),
-                                    Spacer(),
-                                    trend.category_id == 2
-                                        ? Row(
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),Row(
                                             children: [
                                               Text(
                                                 'Views',
-                                                style:
-                                                    TextStyle(color: Colors.grey),
+                                                style: TextStyle(
+                                                    color: Colors.grey),
                                               ),
                                               const SizedBox(
                                                 width: 6,
                                               ),
                                               Text(
                                                 '${trend.views}',
-                                                style:
-                                                    TextStyle(color: Colors.grey),
+                                                style: TextStyle(
+                                                    color: Colors.grey),
                                               )
                                             ],
                                           )
-                                        : Text('')
                                   ],
                                 ),
                                 SizedBox(height: 10),
