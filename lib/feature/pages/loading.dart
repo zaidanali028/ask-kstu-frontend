@@ -10,7 +10,7 @@ import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
+import 'news_details.dart';
 import 'package:notification_permissions/notification_permissions.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -89,104 +89,47 @@ class _LoadingPageState extends State<LoadingPage> {
     }
   }
 
-  showAlertDialog(BuildContext context, Function() runthis) {
-    // set up the button
-    Widget okButton = TextButton(
-      child: Text("OK"),
-      onPressed: runthis,
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Receive notification alerts"),
-      content: Text(
-          'This app would like to send you push notifications when there is any activity on your account'),
-      actions: [
-        okButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  void requestNotificationPermission_() async {
-    print('invoked 2');
-    // open prompt for user to enable notification
-    PermissionStatus permissionStatus =
-        await NotificationPermissions.getNotificationPermissionStatus();
-    // if(permissionStatus == PermissionStatus.denied) {
-    //   // if user explicitly denied notifications, we don't want to show them again
-    //   return;
-    // }
-
-    if (permissionStatus != PermissionStatus.granted) {
-      if (!mounted) return;
-
-      // showConfirmDialog(context, title: 'Receive notification alerts',
-      //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
-      //   onConfirmTapped: () async {
-      //     }
-      //   },
-      // );
-      showAlertDialog(context, () async {
-        final requestResponse =
-            await NotificationPermissions.requestNotificationPermissions();
-        if (requestResponse == PermissionStatus.granted) {
-          // user granted permission
-          registerUserForPushNotification();
-          return;
-        }
-      });
-    } else {
-      registerUserForPushNotification();
-    }
-  }
-
-  void registerUserForPushNotification() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-
-    var user_id = localStorage.getInt('id');
-    print("here!: ${user_id}");
-
-    var myCustomUniqueUserId = "${user_id}";
-    //await OneSignal.shared.removeExternalUserId();
-    final setExtPushIdResponse =
-        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-    debugPrint(
-        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
-
-    if (setExtPushIdResponse['push']['success'] != null) {
-      if (setExtPushIdResponse['push']['success'] is bool) {
-        final status = setExtPushIdResponse['push']['success'] as bool;
-        // if (status) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      } else if (setExtPushIdResponse['push']['success'] is int) {
-        final status = setExtPushIdResponse['push']['success'] as int;
-        // if (status == 1) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      }
-      debugPrint(
-          "registered for push: ${setExtPushIdResponse['push']['success']}");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    print('invokedRR');
-    requestNotificationPermission_();
+
+    listenForPushNotifications(context);
 
     Timer(Duration(seconds: 4), _loadUserInfo);
   }
 
+
+
+void listenForPushNotifications(BuildContext context) {
+  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    final data = result.notification.additionalData;
+    final announcemet_id = data!['announcemet_id'];
+    debugPrint("background notification announcemet_id $announcemet_id.");
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => DetailNews(title: announcemet_id),
+    //   ),
+    // );
+
+      Navigator.of(context).pushAndRemoveUntil(
+        // this is not a  permanent solution cus it does not make sense
+        MaterialPageRoute(builder: (context) => DetailNews(title: announcemet_id)), (route) => false);
+  });
+
+  // OneSignal.shared.setNotificationWillShowInForegroundHandler(
+  //   (OSNotificationReceivedEvent notification) async {
+  //     final data = notification.notification.additionalData;
+  //     final announcemet_id = data!['announcemet_id'];
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => DetailNews(title: announcemet_id),
+  //       ),
+  //     );
+  //   },
+  // );
+}
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(seconds: 7), () {
@@ -204,7 +147,6 @@ class _LoadingPageState extends State<LoadingPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Spacer(),
                   Container(
                     width: 240,
                     height: 240,
@@ -213,13 +155,8 @@ class _LoadingPageState extends State<LoadingPage> {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
-                  Spacer(),
-                  const Text(
-                    "Academic Student Knowledge Base",
-                    style: TextStyle(
-                        color: bottomColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 21),
+                  const SizedBox(
+                    height: 20,
                   ),
                 ],
               ),

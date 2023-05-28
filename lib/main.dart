@@ -5,7 +5,7 @@ import 'package:first_app/services/trending_news.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'dart:core';
+
 
 void main() {
   //Remove this method to stop OneSignal Debugging
@@ -13,7 +13,11 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   OneSignal.shared.setAppId("7e696d2c-01f7-4742-9a4f-f0a900d76526");
 
+
+
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+ 
+
 
   runApp(MultiProvider(
     providers: [

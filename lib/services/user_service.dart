@@ -29,7 +29,11 @@ Future<ApiResponse> login(String email, String password) async {
         break;
     }
   } catch (e) {
-    apiResponse.error = e.toString();
+
+    apiResponse.error = serverError;
+      print("e1 $e.");
+
+
   }
   return apiResponse;
 }
