@@ -4,6 +4,7 @@ import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -67,6 +68,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -168,7 +171,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                           height: 15,
                                         ),
                                         GestureDetector(
-                                          onTap: () {
+                                          onTap: () async{
+                                              _dialog.show(
+                                                  message: 'Sending...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 2));
+                                              _dialog.hide();
                                             if (formkey.currentState!
                                                 .validate()) {
                                               setState(() {

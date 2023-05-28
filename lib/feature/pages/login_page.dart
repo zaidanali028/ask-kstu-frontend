@@ -6,6 +6,7 @@ import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
@@ -20,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool ispassword = true;
-  bool loading = false;
 
   @override
   void dispose() {
@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
             label: 'Dismiss',
             disabledTextColor: Colors.white,
             textColor: Colors.yellow,
-
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
@@ -55,10 +54,6 @@ class _LoginPageState extends State<LoginPage> {
         ));
       }
     } else {
-      // print(jsonEncode(response.data));
-      setState(() {
-        loading = false;
-      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
         backgroundColor: Colors.red.shade700,
@@ -114,6 +109,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -255,11 +252,18 @@ class _LoginPageState extends State<LoginPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
+                                              _dialog.show(
+                                                  message: 'Loading...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 2));
+                                              _dialog.hide();
                                               if (formkey.currentState!
                                                   .validate()) {
                                                 setState(() {
-                                                  loading = true;
                                                   _loginUser();
                                                 });
                                               }
@@ -273,24 +277,14 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           10)),
                                               child: Center(
-                                                child: loading
-                                                    ? Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                color: Colors
-                                                                    .white,
-                                                                backgroundColor:
-                                                                    topColor),
-                                                      )
-                                                    : Text(
-                                                        "SIGN IN",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                child: Text(
+                                                  "SIGN IN",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -303,6 +297,5 @@ class _LoginPageState extends State<LoginPage> {
                         ])))),
           )),
     );
-  
   }
 }

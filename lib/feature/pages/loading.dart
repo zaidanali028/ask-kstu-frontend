@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'news_details.dart';
-import 'package:notification_permissions/notification_permissions.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -159,11 +159,22 @@ class _LoadingPageState extends State<LoadingPage> {
                             fit: BoxFit.contain)),
                   ),
                   Spacer(),
-                  CircularProgressIndicator(
-                    color: bottomColor,
-                    strokeWidth: 4.0,
-                    semanticsLabel: "Loading.....",
-                    semanticsValue: "Loading......",
+                  Container(
+                    width: 100,
+                    height: 100,
+                    child: LiquidCircularProgressIndicator(
+                      value:
+                          0.5, // Sets the progress value (between 0.0 and 1.0)
+                      valueColor: AlwaysStoppedAnimation(
+                          topColor), // Sets the color of the progress
+                      backgroundColor:
+                          Colors.grey.shade200, // Sets the background color
+                      borderColor: topColor, // Sets the color of the border
+                      borderWidth: 7.0, // Sets the width of the border
+                      direction: Axis
+                          .horizontal, // Sets the direction of the liquid animation
+                      center: Text('Loading..'),
+                    ),
                   ),
                   Spacer(),
                   const Text(
