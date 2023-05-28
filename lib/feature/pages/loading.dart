@@ -98,38 +98,40 @@ class _LoadingPageState extends State<LoadingPage> {
     Timer(Duration(seconds: 4), _loadUserInfo);
   }
 
-
-
-void listenForPushNotifications(BuildContext context) {
-  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    final data = result.notification.additionalData;
-    final announcemet_id = data!['announcemet_id'];
-    debugPrint("background notification announcemet_id $announcemet_id.");
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => DetailNews(title: announcemet_id),
-    //   ),
-    // );
+  void listenForPushNotifications(BuildContext context) {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      final data = result.notification.additionalData;
+      final announcemet_id = data!['announcemet_id'];
+      debugPrint("background notification announcemet_id $announcemet_id.");
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => DetailNews(title: announcemet_id),
+      //   ),
+      // );
 
       Navigator.of(context).pushAndRemoveUntil(
-        // this is not a  permanent solution cus it does not make sense
-        MaterialPageRoute(builder: (context) => DetailNews(title: announcemet_id)), (route) => false);
-  });
+          // this is not a  permanent solution cus it does not make sense
+          MaterialPageRoute(
+              builder: (context) => DetailNews(title: announcemet_id)),
+          (route) => false);
+    });
 
-  // OneSignal.shared.setNotificationWillShowInForegroundHandler(
-  //   (OSNotificationReceivedEvent notification) async {
-  //     final data = notification.notification.additionalData;
-  //     final announcemet_id = data!['announcemet_id'];
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => DetailNews(title: announcemet_id),
-  //       ),
-  //     );
-  //   },
-  // );
-}
+    // OneSignal.shared.setNotificationWillShowInForegroundHandler(
+    //   (OSNotificationReceivedEvent notification) async {
+    //     final data = notification.notification.additionalData;
+    //     final announcemet_id = data!['announcemet_id'];
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => DetailNews(title: announcemet_id),
+    //       ),
+    //     );
+    //   },
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(seconds: 7), () {
@@ -147,6 +149,7 @@ void listenForPushNotifications(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Spacer(),
                   Container(
                     width: 240,
                     height: 240,
@@ -155,8 +158,20 @@ void listenForPushNotifications(BuildContext context) {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  Spacer(),
+                  CircularProgressIndicator(
+                    color: bottomColor,
+                    strokeWidth: 4.0,
+                    semanticsLabel: "Loading.....",
+                    semanticsValue: "Loading......",
+                  ),
+                  Spacer(),
+                  const Text(
+                    "Academic Student Knowledge Base",
+                    style: TextStyle(
+                        color: bottomColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
                   ),
                 ],
               ),

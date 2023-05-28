@@ -33,11 +33,59 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         (route) => false));
                 return Center();
               } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center();
+                final keymoments = snapshot.data!;
+                return ListView.builder(
+                    controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: keymoments.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Text(
+                            "${keymoments[index].imageDescription}",
+                            style: TextStyle(fontSize: 15, color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            "${key_moment_uri}${keymoments[index].image}"),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: Text(
+                                  "${keymoments[index].imageSubTitle}",
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 25.0,
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    });
               } else {
                 final keymoments = snapshot.data!;
                 return ListView.builder(
-                  controller: _scrollController,
+                    controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     itemCount: keymoments.length,
                     itemBuilder: (context, index) {

@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/components/side_menu.dart';
-import 'package:first_app/feature/pages/dashboard_drawer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
@@ -12,6 +13,7 @@ import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:provider/provider.dart';
@@ -432,19 +434,18 @@ class _DashboardState extends State<Dashboard>
                                                               ),
                                                               NoticeBoardShimmer(),
                                                             ])));
-                                              }
-                                              else if (snapshot.hasError) {
+                                              } else if (snapshot.hasError) {
                                                 logout().then((value) => {
                                                       Navigator.of(context)
                                                           .pushAndRemoveUntil(
                                                               MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      LoginPage()),
+                                                                  builder:
+                                                                      (context) =>
+                                                                          LoginPage()),
                                                               (route) => false)
                                                     });
                                                 return Text('');
-                                              }
-                                              else {
+                                              } else {
                                                 final noticeboard =
                                                     snapshot.data!;
                                                 return Padding(
@@ -597,19 +598,18 @@ class _DashboardState extends State<Dashboard>
                                                     ],
                                                   ),
                                                 );
-                                              }
-                                              // else if (snapshot.hasError) {
-                                              //   logout().then((value) => {
-                                              //         Navigator.of(context)
-                                              //             .pushAndRemoveUntil(
-                                              //                 MaterialPageRoute(
-                                              //                     builder: (context) =>
-                                              //                         LoginPage()),
-                                              //                 (route) => false)
-                                              //       });
-                                              //   return Center();
-                                              // }
-                                              else {
+                                              } else if (snapshot.hasError) {
+                                                logout().then((value) => {
+                                                      Navigator.of(context)
+                                                          .pushAndRemoveUntil(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          LoginPage()),
+                                                              (route) => false)
+                                                    });
+                                                return Center();
+                                              } else {
                                                 final trend = snapshot.data!;
                                                 return Container(
                                                   height: 530,
@@ -739,6 +739,7 @@ class _DashboardState extends State<Dashboard>
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
+                                                                            AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
                                                                             if (trend[index].liked_by_auth_user ==
                                                                                 true) {
                                                                               likeAnnouncement(trend[index].id, 0);
@@ -751,11 +752,11 @@ class _DashboardState extends State<Dashboard>
                                                                             children: [
                                                                               trend[index].liked_by_auth_user == true
                                                                                   ? Icon(
-                                                                                      Icons.favorite,
+                                                                                      CupertinoIcons.hand_thumbsup_fill,
                                                                                       color: topColor,
                                                                                     )
                                                                                   : Icon(
-                                                                                      Icons.favorite_outline,
+                                                                                      CupertinoIcons.hand_thumbsup,
                                                                                       color: Colors.grey,
                                                                                     ),
                                                                               const SizedBox(
@@ -821,7 +822,7 @@ class _DashboardState extends State<Dashboard>
                     ),
                   ),
                   AnimatedPositioned(
-                    left: isSideMenuClosed ? 0 :220,
+                    left: isSideMenuClosed ? 0 : 220,
                     duration: Duration(milliseconds: 200),
                     child: GestureDetector(
                       onTap: () {
