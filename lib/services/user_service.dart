@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -123,25 +124,30 @@ Future<ApiResponse> updateUserProfile(File? image) async {
     String token = await getToken();
     List<int> imageBytes = image!.readAsBytesSync();
     String baseimage = base64Encode(imageBytes);
+    var baseDecode = base64Decode(baseimage);
     final response = await http.post(Uri.parse(updateDpUrl), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     }, body: {
-      'user_img': baseimage
+      'user_img': baseDecode
     });
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
+        print(baseDecode);
         break;
       case 422:
         final errors = json.decode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        print(baseDecode);
         break;
       case 401:
         apiResponse.error = jsonDecode(response.body)['message'];
+        print(baseDecode);
         break;
       default:
         apiResponse.error = somethingWentwrong;
+        print(baseDecode);
         break;
     }
   } catch (e) {
@@ -150,13 +156,11 @@ Future<ApiResponse> updateUserProfile(File? image) async {
   return apiResponse;
 }
 
-
 Future<ApiResponse> forgotPassword(String email) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.post(Uri.parse(forgotPasswordUrl),
-        headers: {'Accept': 'application/json'},
-        body: {'email': email});
+        headers: {'Accept': 'application/json'}, body: {'email': email});
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)["message"];
@@ -177,4 +181,3 @@ Future<ApiResponse> forgotPassword(String email) async {
   }
   return apiResponse;
 }
-

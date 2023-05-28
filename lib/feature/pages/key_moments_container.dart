@@ -1,5 +1,7 @@
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/key_moments_service.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,13 +24,15 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
             future: keymoments.fetchKeymoment(widget.title),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
+                logout().then((value) => Navigator.of(context)
+                    .pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (route) => false));
                 return Center();
               } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center();
-              } else {
                 final keymoments = snapshot.data!;
                 return ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                    physics: BouncingScrollPhysics(),
                     itemCount: keymoments.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -74,6 +78,57 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         ],
                       );
                     });
+              
+              } else {
+                final keymoments = snapshot.data!;
+                return ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: keymoments.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Text(
+                            "${keymoments[index].imageDescription}",
+                            style: TextStyle(fontSize: 20, color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 300,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            "${key_moment_uri}${keymoments[index].image}"),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 25),
+                                child: Text(
+                                  "${keymoments[index].imageSubTitle}",
+                                  style: TextStyle(fontSize: 18),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    });
+              
               }
             }));
   }
