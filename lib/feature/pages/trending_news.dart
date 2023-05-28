@@ -9,6 +9,7 @@ import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -319,14 +320,14 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                                   trend[index].liked_by_auth_user ==
                                                                           true
                                                                       ? Icon(
-                                                                          Icons
-                                                                              .thumb_up,
+                                                                          CupertinoIcons
+                                                                              .hand_thumbsup_fill,
                                                                           color:
                                                                               topColor,
                                                                         )
                                                                       : Icon(
-                                                                          Icons
-                                                                              .thumb_up_outlined,
+                                                                          CupertinoIcons
+                                                                              .hand_thumbsup,
                                                                           color:
                                                                               Colors.grey,
                                                                         ),

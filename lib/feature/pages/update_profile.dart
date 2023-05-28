@@ -36,6 +36,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final picker = ImagePicker();
   File? pickimage;
   String? imageConvert;
+  
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -47,7 +48,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       phone = localStorage.getString('phone');
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
-      semester = localStorage.getString('semester');
+      semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
     });
   }
@@ -59,7 +60,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   }
 
   void pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    var pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       String extension = path.basename(pickedFile.path);
       setState(() {
@@ -87,7 +88,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   bool loading = false;
 
   void updateUserProfiles() async {
-    ApiResponse response = await updateUserProfile(imageConvert);
+    ApiResponse response = await updateUserProfile(pickimage);
     if (response.error == null) {
       _saveupdatedProfile(response.data as User);
     } else {

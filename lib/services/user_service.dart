@@ -117,16 +117,21 @@ String? getStringImage(File? file) {
   return base64Encode(file.readAsBytesSync());
 }
 
-Future<ApiResponse> updateUserProfile(String? imageString) async {
+Future<ApiResponse> updateUserProfile(File? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    final response = await http.post(Uri.parse(updateDpUrl),
-        headers: {'Accept': 'application/json'},
-        body: {'user_img': imageString});
+    String token = await getToken();
+    List<int> imageBytes = image!.readAsBytesSync();
+    String baseimage = base64Encode(imageBytes);
+    final response = await http.post(Uri.parse(updateDpUrl), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'user_img': baseimage
+    });
     switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
-        print(jsonDecode(response.body));
         break;
       case 422:
         final errors = json.decode(response.body)['errors'];
@@ -134,14 +139,42 @@ Future<ApiResponse> updateUserProfile(String? imageString) async {
         break;
       case 401:
         apiResponse.error = jsonDecode(response.body)['message'];
-        print(jsonDecode(response.body)['messag']);
         break;
       default:
         apiResponse.error = somethingWentwrong;
         break;
     }
   } catch (e) {
-    apiResponse.error = serverError;
+    apiResponse.error = e.toString();
   }
   return apiResponse;
 }
+
+
+Future<ApiResponse> forgotPassword(String email) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.post(Uri.parse(forgotPasswordUrl),
+        headers: {'Accept': 'application/json'},
+        body: {'email': email});
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)["message"];
+        break;
+      case 422:
+        final errors = json.decode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = somethingWentwrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+  return apiResponse;
+}
+

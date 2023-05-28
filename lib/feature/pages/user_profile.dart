@@ -38,7 +38,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       image = localStorage.getString('image');
       index = localStorage.getInt('index');
       phone = localStorage.getString('phone');
-      semester = localStorage.getString('semester');
+      semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
     });
   }

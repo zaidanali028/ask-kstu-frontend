@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString("gender", user.gender ?? '');
     await prefs.setString("phone", user.phone ?? '');
     await prefs.setString("level", user.currentLevel ?? '');
-    await prefs.setString("semester", user.currentSemester ?? '');
+    await prefs.setInt("semester", user.currentSemester ?? 0);
     await prefs.setInt("program", user.programId ?? 0);
     await prefs.setInt("department", user.deptId ?? 0);
     await prefs.setInt("faculty", user.facultyId ?? 0);
