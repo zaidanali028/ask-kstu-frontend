@@ -7,6 +7,7 @@ const logoutUrl = buildUrl + '/logout';
 const userUrl = buildUrl + '/me';
 const forgotPasswordUrl = buildUrl + '/forgot-password';
 const updateDpUrl = buildUrl + '/me/update-dp';
+const updatePasswordUrl = buildUrl + '/update-password';
 
 const noticeUrl = buildUrl + '/announcements/notice-board';
 const trendingUrl = buildUrl + '/announcements/trending-news';

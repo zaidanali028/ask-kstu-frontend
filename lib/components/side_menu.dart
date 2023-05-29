@@ -3,6 +3,7 @@ import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';
 import 'package:first_app/feature/pages/trending_news.dart';
+import 'package:first_app/feature/pages/update_password_page.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/components/info_card.dart';
 import 'package:first_app/services/user_service.dart';
@@ -118,18 +119,14 @@ class _SideMenuState extends State<SideMenu> {
                   mylauntcher('https://portal.kstu.edu.gh/students/login');
                 },
               ),
-              // SideMenuTitle(
-              //   iconData: CupertinoIcons.calendar,
-              //   title: "Calendar",
-              //   myfunction: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (context) => CalendarPage()));
-              //   },
-              // ),
               SideMenuTitle(
                 iconData: CupertinoIcons.piano,
                 title: "Change Password",
-                myfunction: () {},
+                myfunction: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdatePasswordPage()));},
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.question_circle,

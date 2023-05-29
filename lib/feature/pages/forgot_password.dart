@@ -23,7 +23,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   void _forgotPassword() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
     ApiResponse response = await forgotPassword(_emailController.text);
     if (response.error == null) {
       Navigator.of(context).pushAndRemoveUntil(

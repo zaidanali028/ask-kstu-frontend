@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/trending_news.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -127,7 +129,8 @@ class _DetailNewsState extends State<DetailNews> {
                           ],
                         ),
                       ),
-                      Positioned(
+                      AnimatedPositioned(
+                        duration: Duration(seconds: 2),
                           // bottom: 20,
                           child: Container(
                         margin: EdgeInsets.only(top: marignTop),
@@ -141,116 +144,113 @@ class _DetailNewsState extends State<DetailNews> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 18, vertical: 20),
-                          child: AnimatedPositioned(
-                            duration: Duration(seconds: 2),
-                            child: ListView(
-                              controller: _scrollController,
-                              children: [
-                                Text(
-                                  trend.title,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Divider(
-                                  color: Color.fromARGB(255, 91, 89, 89),
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                          child: ListView(
+                            controller: _scrollController,
+                            children: [
+                              Text(
+                                trend.title,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Divider(
+                                color: Color.fromARGB(255, 91, 89, 89),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        CupertinoIcons.alarm,
+                                        color: Colors.grey,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        width: 80,
+                                        child: Text(
+                                          "${trend.created_at}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 58,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      AudioPlayer().play(
+                                          AssetSource("audio/my_audio.mp3"));
+                                      if (trend.liked_by_auth_user == true) {
+                                        likeAnnouncement(trend.id, 0);
+                                      } else {
+                                        likeAnnouncement(trend.id, 1);
+                                      }
+                                    },
+                                    child: Row(
                                       children: [
-                                        Icon(
-                                          CupertinoIcons.alarm,
-                                          color: Colors.grey,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: 80,
-                                          child: Text(
-                                            "${trend.created_at}",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.fade,
-                                            style: TextStyle(
+                                        trend.liked_by_auth_user == true
+                                            ? Icon(
+                                                CupertinoIcons
+                                                    .hand_thumbsup_fill,
+                                                color: topColor,
+                                              )
+                                            : Icon(
+                                                CupertinoIcons.hand_thumbsup,
                                                 color: Colors.grey,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                              ),
+                                        const SizedBox(
+                                          width: 2,
+                                        ),
+                                        Text(
+                                          '${trend.likes_count}',
+                                          style:
+                                              TextStyle(color: Colors.grey),
                                         )
                                       ],
                                     ),
-                                    SizedBox(
-                                      width: 58,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        AudioPlayer().play(
-                                            AssetSource("audio/my_audio.mp3"));
-                                        if (trend.liked_by_auth_user == true) {
-                                          likeAnnouncement(trend.id, 0);
-                                        } else {
-                                          likeAnnouncement(trend.id, 1);
-                                        }
-                                      },
-                                      child: Row(
-                                        children: [
-                                          trend.liked_by_auth_user == true
-                                              ? Icon(
-                                                  CupertinoIcons
-                                                      .hand_thumbsup_fill,
-                                                  color: topColor,
-                                                )
-                                              : Icon(
-                                                  CupertinoIcons.hand_thumbsup,
-                                                  color: Colors.grey,
-                                                ),
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text(
-                                            '${trend.likes_count}',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Spacer(),Row(
-                                            children: [
-                                              Text(
-                                                'Views',
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              ),
-                                              const SizedBox(
-                                                width: 6,
-                                              ),
-                                              Text(
-                                                '${trend.views}',
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              )
-                                            ],
-                                          )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Divider(
-                                  color: Color.fromARGB(255, 91, 89, 89),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                KeyMomentContainer(title: widget.title)
-                              ],
-                            ),
+                                  ),
+                                  Spacer(),Row(
+                                          children: [
+                                            Text(
+                                              'Views',
+                                              style: TextStyle(
+                                                  color: Colors.grey),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            Text(
+                                              '${trend.views}',
+                                              style: TextStyle(
+                                                  color: Colors.grey),
+                                            )
+                                          ],
+                                        )
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Divider(
+                                color: Color.fromARGB(255, 91, 89, 89),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              KeyMomentContainer(title: widget.title, marignTop: marignTop,)
+                            ],
                           ),
                         ),
                       ))
@@ -281,7 +281,11 @@ class _DetailNewsState extends State<DetailNews> {
                         ),
                       ));
                 } else {
-                  return Center();
+                logout().then((value) => Navigator.of(context)
+                    .pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (route) => false));
+                return Center();
                 }
               }),
         ));

@@ -21,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool ispassword = true;
+  bool loading = false;
 
   @override
   void dispose() {
@@ -47,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
             label: 'Dismiss',
             disabledTextColor: Colors.white,
             textColor: Colors.yellow,
+
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
@@ -54,6 +56,10 @@ class _LoginPageState extends State<LoginPage> {
         ));
       }
     } else {
+      // print(jsonEncode(response.data));
+      setState(() {
+        loading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
         backgroundColor: Colors.red.shade700,
@@ -252,9 +258,9 @@ class _LoginPageState extends State<LoginPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: GestureDetector(
-                                            onTap: () async {
+                                            onTap: () async{
                                               _dialog.show(
-                                                  message: 'Loading...',
+                                                  message: 'Sending...',
                                                   type:
                                                       SimpleFontelicoProgressDialogType
                                                           .hurricane);
@@ -264,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                                               if (formkey.currentState!
                                                   .validate()) {
                                                 setState(() {
+                                                  loading = true;
                                                   _loginUser();
                                                 });
                                               }
@@ -277,14 +284,24 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           10)),
                                               child: Center(
-                                                child: Text(
-                                                  "SIGN IN",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
+                                                child: loading
+                                                    ? Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                color: Colors
+                                                                    .white,
+                                                                backgroundColor:
+                                                                    topColor),
+                                                      )
+                                                    : Text(
+                                                        "SIGN IN",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
                                               ),
                                             ),
                                           ),
@@ -297,5 +314,6 @@ class _LoginPageState extends State<LoginPage> {
                         ])))),
           )),
     );
+  
   }
 }

@@ -164,16 +164,19 @@ class _LoadingPageState extends State<LoadingPage> {
                     height: 100,
                     child: LiquidCircularProgressIndicator(
                       value:
-                          0.5, // Sets the progress value (between 0.0 and 1.0)
+                          0.7, // Sets the progress value (between 0.0 and 1.0)
                       valueColor: AlwaysStoppedAnimation(
-                          topColor), // Sets the color of the progress
-                      backgroundColor:
-                          Colors.grey.shade200, // Sets the background color
+                          bottomColor), // Sets the color of the progress
+                      backgroundColor: topColor, // Sets the background color
                       borderColor: topColor, // Sets the color of the border
                       borderWidth: 7.0, // Sets the width of the border
                       direction: Axis
                           .horizontal, // Sets the direction of the liquid animation
-                      center: Text('Loading..'),
+                      center: Text(
+                        'Loading..',
+                        style: TextStyle(
+                            color: topColor, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   Spacer(),

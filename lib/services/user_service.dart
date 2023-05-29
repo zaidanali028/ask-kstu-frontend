@@ -28,11 +28,8 @@ Future<ApiResponse> login(String email, String password) async {
         break;
     }
   } catch (e) {
-
     apiResponse.error = serverError;
-      print("e1 $e.");
-
-
+    print("e1 $e.");
   }
   return apiResponse;
 }
@@ -154,16 +151,14 @@ Future<ApiResponse> updateUserProfile(File? image) async {
   return apiResponse;
 }
 
-
 Future<ApiResponse> forgotPassword(String email) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.post(Uri.parse(forgotPasswordUrl),
-        headers: {'Accept': 'application/json'},
-        body: {'email': email});
+        headers: {'Accept': 'application/json'}, body: {'old_pass': email});
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)["message"];
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 422:
         final errors = json.decode(response.body)['errors'];
@@ -182,3 +177,34 @@ Future<ApiResponse> forgotPassword(String email) async {
   return apiResponse;
 }
 
+Future<ApiResponse> updatePassword(
+    String oldPassword, String password, String confirmPassword) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.post(Uri.parse(updatePasswordUrl), headers: {
+      'Accept': 'application/json'
+    }, body: {
+      'old_pass': oldPassword,
+      'password': password,
+      'password_confirmation': confirmPassword
+    });
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 422:
+        final errors = json.decode(response.body)['errors'];
+        apiResponse.error = errors[errors.keys.elementAt(0)][0];
+        break;
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      default:
+        apiResponse.error = somethingWentwrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+  return apiResponse;
+}
