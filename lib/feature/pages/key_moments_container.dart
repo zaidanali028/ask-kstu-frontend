@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class KeyMomentContainer extends StatefulWidget {
-   KeyMomentContainer({super.key, required this.title, required this.marignTop});
+  const KeyMomentContainer({super.key, required this.title});
   final int title;
-  double marignTop;
 
   @override
   State<KeyMomentContainer> createState() => _KeyMomentContainerState();
@@ -17,28 +16,6 @@ class KeyMomentContainer extends StatefulWidget {
 
 class _KeyMomentContainerState extends State<KeyMomentContainer> {
   ScrollController _scrollController = ScrollController();
-  void _handleScroll() {
-    if (_scrollController.position.pixels > 0) {
-      setState(() {
-        if (widget.marignTop == 50) {
-          widget.marignTop = 50;
-        } else {
-          widget.marignTop -= 10;
-        }
-      });
-    } else if (_scrollController.position.pixels == 0) {
-      setState(() {
-        widget.marignTop = 180;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    _scrollController.addListener(_handleScroll);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +32,57 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                         MaterialPageRoute(builder: (context) => LoginPage()),
                         (route) => false));
                 return Center();
-              }else {
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                final keymoments = snapshot.data!;
+                return ListView.builder(
+                    controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: keymoments.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Text(
+                            "${keymoments[index].imageDescription}",
+                            style: TextStyle(fontSize: 15, color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            "${key_moment_uri}${keymoments[index].image}"),
+                                        fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: Text(
+                                  "${keymoments[index].imageSubTitle}",
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 25.0,
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    });
+              } else {
                 final keymoments = snapshot.data!;
                 return ListView.builder(
                     controller: _scrollController,

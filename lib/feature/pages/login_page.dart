@@ -5,7 +5,6 @@ import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // 052141350070  SHANI IDDI
@@ -31,30 +30,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginUser() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
     ApiResponse response =
         await login(emailController.text, passwordController.text);
     if (response.error == null) {
-      if (connectivityResult == ConnectivityResult.mobile ||
-          connectivityResult == ConnectivityResult.wifi) {
         _saveAndRedirectToDashboard(response.data as User);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Please connect to the internet'),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-          elevation: 2.0,
-          action: SnackBarAction(
-            label: 'Dismiss',
-            disabledTextColor: Colors.white,
-            textColor: Colors.yellow,
-
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ));
-      }
     } else {
       // print(jsonEncode(response.data));
       setState(() {

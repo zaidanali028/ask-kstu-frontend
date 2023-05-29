@@ -181,8 +181,10 @@ Future<ApiResponse> updatePassword(
     String oldPassword, String password, String confirmPassword) async {
   ApiResponse apiResponse = ApiResponse();
   try {
+    String token = await getToken();
     final response = await http.post(Uri.parse(updatePasswordUrl), headers: {
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
     }, body: {
       'old_pass': oldPassword,
       'password': password,

@@ -1,5 +1,7 @@
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/models/api_response.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -25,6 +27,48 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
     passwordController.dispose();
     passwordConfirmationController.dispose();
     super.dispose();
+  }
+
+  void updatePasswords() async {
+    ApiResponse response = await updatePassword(oldPasswordController.text,
+        passwordController.text, passwordConfirmationController.text);
+    if (response.error == null) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (contex) => Dashboard()));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Password updated successfully'),
+        backgroundColor: topColor,
+        elevation: 2.0,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    } else {
+      // print(jsonEncode(response.data));
+      setState(() {
+        loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+        backgroundColor: Colors.red.shade700,
+        elevation: 2.0,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
   }
 
   @override
@@ -106,146 +150,157 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                     topRight: Radius.circular(30))),
                             child: Form(
                               key: formkey,
-                              child: Column(children: [
-                                const SizedBox(
-                                  height: 50,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18.0, vertical: 10),
-                                  child: TextFormField(
-                                    validator: ((value) {
-                                      if (value!.isEmpty) {
-                                        return "Old password field is required";
-                                      }
-                                      return null;
-                                    }),
-                                    keyboardType: TextInputType.visiblePassword,
-                                    obscureText: true,
-                                    controller: oldPasswordController,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.all(10),
-                                      label: Text("Old Password"),
-                                      hintText: '',
-                                      prefixIcon: Icon(CupertinoIcons.lock_circle_fill),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      height: 100,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 10),
+                                      child: TextFormField(
+                                        validator: ((value) {
+                                          if (value!.isEmpty) {
+                                            return "Old password field is required";
+                                          }
+                                          return null;
+                                        }),
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        obscureText: true,
+                                        controller: oldPasswordController,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
+                                          label: Text("Old Password"),
+                                          hintText: '',
+                                          prefixIcon: Icon(
+                                              CupertinoIcons.lock_circle_fill),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18.0, vertical: 10),
-                                  child: TextFormField(
-                                    validator: ((value) {
-                                      if (value!.isEmpty) {
-                                        return "Password field is required";
-                                      }
-                                      return null;
-                                    }),
-                                    keyboardType: TextInputType.visiblePassword,
-                                    controller: passwordController,
-                                    obscureText: ispassword,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.all(10),
-                                      label: Text("Password"),
-                                      hintText: '',
-                                      prefixIcon: Icon(CupertinoIcons.lock_slash_fill),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(ispassword
-                                            ? Icons.visibility_off
-                                            : Icons.visibility),
-                                        onPressed: () {
-                                          setState(() {
-                                            ispassword = !ispassword;
-                                          });
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 10),
+                                      child: TextFormField(
+                                        validator: ((value) {
+                                          if (value!.isEmpty) {
+                                            return "Password field is required";
+                                          }
+                                          return null;
+                                        }),
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        controller: passwordController,
+                                        obscureText: ispassword,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
+                                          label: Text("Password"),
+                                          hintText: '',
+                                          prefixIcon: Icon(
+                                              CupertinoIcons.lock_slash_fill),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(ispassword
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            onPressed: () {
+                                              setState(() {
+                                                ispassword = !ispassword;
+                                              });
+                                            },
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0, vertical: 10),
+                                      child: TextFormField(
+                                        validator: ((value) {
+                                          if (value!.isEmpty) {
+                                            return "Password Confirmation field is required";
+                                          }
+                                          return null;
+                                        }),
+                                        keyboardType:
+                                            TextInputType.visiblePassword,
+                                        controller:
+                                            passwordConfirmationController,
+                                        obscureText: false,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(10),
+                                          label: Text("Confirm Password"),
+                                          hintText: '',
+                                          prefixIcon:
+                                              Icon(CupertinoIcons.lock_fill),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 18.0),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          _dialog.show(
+                                              message: 'Updating...',
+                                              type:
+                                                  SimpleFontelicoProgressDialogType
+                                                      .hurricane);
+                                          await Future.delayed(
+                                              Duration(seconds: 2));
+                                          _dialog.hide();
+                                          if (formkey.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              loading = true;
+                                              updatePasswords();
+                                            });
+                                          }
                                         },
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18.0, vertical: 10),
-                                  child: TextFormField(
-                                    validator: ((value) {
-                                      if (value!.isEmpty) {
-                                        return "Password Confirmation field is required";
-                                      }
-                                      return null;
-                                    }),
-                                    keyboardType: TextInputType.visiblePassword,
-                                    controller: passwordConfirmationController,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.all(10),
-                                      label: Text("Confirm Password"),
-                                      hintText: '',
-                                      prefixIcon: Icon(CupertinoIcons.lock_fill),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 18.0),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      _dialog.show(
-                                          message: 'Updating...',
-                                          type:
-                                              SimpleFontelicoProgressDialogType
-                                                  .hurricane);
-                                      await Future.delayed(
-                                          Duration(seconds: 2));
-                                      _dialog.hide();
-                                      if (formkey.currentState!.validate()) {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color: topColor,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                        child: loading
-                                            ? Center(
-                                                child:
-                                                    CircularProgressIndicator(
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              color: topColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                            child: loading
+                                                ? Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            color: Colors.white,
+                                                            backgroundColor:
+                                                                topColor),
+                                                  )
+                                                : Text(
+                                                    "Change Password",
+                                                    style: TextStyle(
                                                         color: Colors.white,
-                                                        backgroundColor:
-                                                            topColor),
-                                              )
-                                            : Text(
-                                                "Change Password",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )
-                              ]),
+                                    )
+                                  ]),
                             ),
                           ))
                     ],
