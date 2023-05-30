@@ -107,17 +107,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                           TrendingShimmer(),
                                         ],
                                       );
-                                    } else if (!snapshot.hasData) {
-                                      return Center(
-                                        child: Text(
-                                          "No Data Added Yet",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
+                                    }else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(

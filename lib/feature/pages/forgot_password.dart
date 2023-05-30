@@ -3,7 +3,9 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -170,15 +172,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                           height: 15,
                                         ),
                                         GestureDetector(
-                                          onTap: () async{
-                                              _dialog.show(
-                                                  message: 'Sending...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 2));
-                                              _dialog.hide();
+                                          onTap: () async {
+                                            _dialog.show(
+                                                message: 'Sending...',
+                                                type:
+                                                    SimpleFontelicoProgressDialogType
+                                                        .hurricane);
+                                            await Future.delayed(
+                                                Duration(seconds: 1));
+                                            _dialog.hide();
                                             if (formkey.currentState!
                                                 .validate()) {
                                               setState(() {
@@ -200,7 +202,27 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                                           10)),
                                               child: Center(
                                                 child: loading
-                                                    ? CircularProgressIndicator()
+                                                    ? SpinKitFadingCircle(
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return DecoratedBox(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: index
+                                                                      .isEven
+                                                                  ? bottomColor
+                                                                  : bottomColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                          );
+                                                        },
+                                                        size: 40,
+                                                      )
                                                     : Text(
                                                         "Forgot Password",
                                                         style: TextStyle(

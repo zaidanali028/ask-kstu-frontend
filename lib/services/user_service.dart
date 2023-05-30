@@ -1,10 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
+import 'dart:io';
 
 Future<ApiResponse> login(String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
@@ -29,7 +32,6 @@ Future<ApiResponse> login(String email, String password) async {
     }
   } catch (e) {
     apiResponse.error = serverError;
-    print("e1 $e.");
   }
   return apiResponse;
 }
@@ -118,21 +120,14 @@ String? getStringImage(File? file) {
   return base64Encode(file.readAsBytesSync());
 }
 
-Future<ApiResponse> updateUserProfile(File? image) async {
+Future<ApiResponse> forgotPassword(String email) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    String token = await getToken();
-    List<int> imageBytes = image!.readAsBytesSync();
-    String baseimage = base64Encode(imageBytes);
-    final response = await http.post(Uri.parse(updateDpUrl), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    }, body: {
-      'user_img': baseimage
-    });
+    final response = await http.post(Uri.parse(forgotPasswordUrl),
+        headers: {'Accept': 'application/json'}, body: {'email': email});
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 422:
         final errors = json.decode(response.body)['errors'];
@@ -151,14 +146,33 @@ Future<ApiResponse> updateUserProfile(File? image) async {
   return apiResponse;
 }
 
-Future<ApiResponse> forgotPassword(String email) async {
+Future<ApiResponse> uploadUserDp(File file) async {
   ApiResponse apiResponse = ApiResponse();
+
   try {
-    final response = await http.post(Uri.parse(forgotPasswordUrl),
-        headers: {'Accept': 'application/json'}, body: {'old_pass': email});
+    final token = getToken();
+    var request = http.MultipartRequest('POST', Uri.parse(updateDpUrl));
+    var headers = {
+      'content-type': 'multipart/form-data',
+      'Authorization': 'Bearer $token'
+    };
+    request.headers.addAll(headers);
+    final mimeType = lookupMimeType(file.path);
+    var length = await file.length();
+    var stream = http.ByteStream(file.openRead());
+    var multipartFile = http.MultipartFile(
+      'user_img',
+      stream,
+      length,
+      filename: path.basename(file.path),
+      contentType: MediaType.parse(mimeType!),
+    );
+    request.files.add(multipartFile);
+    var response = await http.Response.fromStream(await request.send());
+
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['message'];
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 422:
         final errors = json.decode(response.body)['errors'];
@@ -169,10 +183,12 @@ Future<ApiResponse> forgotPassword(String email) async {
         break;
       default:
         apiResponse.error = somethingWentwrong;
+        print(jsonDecode(response.body));
         break;
     }
   } catch (e) {
     apiResponse.error = e.toString();
+    print(e.toString());
   }
   return apiResponse;
 }

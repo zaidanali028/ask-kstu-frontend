@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:flutter/material.dart';
 
 class InfoCard extends StatelessWidget {
@@ -18,10 +18,10 @@ class InfoCard extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.white24,
-        backgroundImage: image == '1'
-            ? NetworkImage(
-                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")
-            : NetworkImage("${image}"),
+        backgroundImage: image != "1"
+            ? NetworkImage("${user_img_uri}${image}")
+            : NetworkImage(
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
       ),
       title: Text(
         name,

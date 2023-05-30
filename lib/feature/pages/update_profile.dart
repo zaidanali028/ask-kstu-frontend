@@ -1,16 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:first_app/feature/pages/dashboard.dart';
+import 'package:first_app/feature/pages/notice_board.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/api_response.dart';
+import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../models/api_response.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:http/http.dart' as http;
 
 class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({super.key});
@@ -36,7 +42,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final picker = ImagePicker();
   File? pickimage;
   String? imageConvert;
-  
+  bool loading = false;
+
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
@@ -85,10 +92,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     }
   }
 
-  bool loading = false;
-
-  void updateUserProfiles() async {
-    ApiResponse response = await updateUserProfile(pickimage);
+  void updateUserProfile() async {
+    ApiResponse response = await uploadUserDp(pickimage!);
     if (response.error == null) {
       _saveupdatedProfile(response.data as User);
     } else {
@@ -136,6 +141,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: topColor,
@@ -229,9 +236,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                           color: bottomColor,
                                                           image: DecorationImage(
                                                               image: image !=
-                                                                      '1'
+                                                                      "1"
                                                                   ? NetworkImage(
-                                                                      image)
+                                                                      "${user_img_uri}${image}")
                                                                   : NetworkImage(
                                                                       "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                                               fit: BoxFit
@@ -340,16 +347,33 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       )),
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
-          icon: Icon(Icons.send),
+          icon: loading ? null : Icon(Icons.send),
           onPressed: () async {
+            _dialog.show(
+                message: 'waiting...',
+                type: SimpleFontelicoProgressDialogType.hurricane);
+            await Future.delayed(Duration(seconds: 1));
+            _dialog.hide();
             setState(() {
               loading = !loading;
-              updateUserProfiles();
+              updateUserProfile();
             });
-            print('Image string: $imageConvert');
+            // print('Image string: $imageConvert');
             print('Hello Wordl');
           },
-          label: loading ? CircularProgressIndicator() : Text('Update')),
+          label: loading
+              ? SpinKitFadingCircle(
+                  itemBuilder: (BuildContext context, int index) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: index.isEven ? bottomColor : bottomColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    );
+                  },
+                  size: 20,
+                )
+              : Text('Update')),
     );
   }
 }

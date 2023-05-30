@@ -10,6 +10,7 @@ import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SideMenu extends StatefulWidget {
@@ -51,6 +52,8 @@ class _SideMenuState extends State<SideMenu> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
       body: Container(
         width: 288,
@@ -78,7 +81,12 @@ class _SideMenuState extends State<SideMenu> {
               SideMenuTitle(
                 iconData: CupertinoIcons.person_alt_circle_fill,
                 title: "Profile",
-                myfunction: () {
+                myfunction: () async{
+                  _dialog.show(
+                      message: 'Waiting...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -88,7 +96,12 @@ class _SideMenuState extends State<SideMenu> {
               SideMenuTitle(
                 iconData: CupertinoIcons.shield_lefthalf_fill,
                 title: "Notice Board",
-                myfunction: () {
+                myfunction: () async{
+                  _dialog.show(
+                      message: 'Waiting...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -98,7 +111,12 @@ class _SideMenuState extends State<SideMenu> {
               SideMenuTitle(
                 iconData: CupertinoIcons.sun_haze_fill,
                 title: "Trending News",
-                myfunction: () {
+                myfunction: () async{
+                  _dialog.show(
+                      message: 'Waiting...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -108,25 +126,41 @@ class _SideMenuState extends State<SideMenu> {
               SideMenuTitle(
                 iconData: CupertinoIcons.globe,
                 title: "Kstu Website",
-                myfunction: () {
+                myfunction: () async {
+                  _dialog.show(
+                      message: 'Opening...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   mylauntcher('https://kstu.edu.gh');
                 },
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.cube_box_fill,
                 title: "Kstu Portal",
-                myfunction: () {
+                myfunction: () async {
+                  _dialog.show(
+                      message: 'opening...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   mylauntcher('https://portal.kstu.edu.gh/students/login');
                 },
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.piano,
                 title: "Change Password",
-                myfunction: () {
+                myfunction: () async{
+                  _dialog.show(
+                      message: 'waiting...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => UpdatePasswordPage()));},
+                          builder: (context) => UpdatePasswordPage()));
+                },
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.question_circle,
@@ -145,7 +179,12 @@ class _SideMenuState extends State<SideMenu> {
                 iconData: CupertinoIcons.tray_arrow_up_fill,
                 title: "Logout",
                 isLast: true,
-                myfunction: () {
+                myfunction: () async {
+                  _dialog.show(
+                      message: 'Logging out...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
                   logout().then((value) => {
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(

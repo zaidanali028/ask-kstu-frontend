@@ -167,6 +167,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.15"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -240,13 +247,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.18.1"
-  jiffy:
-    dependency: "direct main"
-    description:
-      name: jiffy
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "6.1.0"
   js:
     dependency: transitive
     description:
@@ -254,13 +254,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
-  liquid_progress_indicator:
-    dependency: "direct main"
-    description:
-      name: liquid_progress_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   matcher:
     dependency: transitive
     description:
@@ -282,6 +275,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  mime:
+    dependency: "direct main"
+    description:
+      name: mime
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   nested:
     dependency: transitive
     description:
@@ -304,7 +304,7 @@ packages:
     source: hosted
     version: "3.5.1"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"

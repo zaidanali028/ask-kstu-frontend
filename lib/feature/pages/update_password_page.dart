@@ -4,6 +4,7 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class UpdatePasswordPage extends StatefulWidget {
@@ -262,7 +263,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                                   SimpleFontelicoProgressDialogType
                                                       .hurricane);
                                           await Future.delayed(
-                                              Duration(seconds: 2));
+                                              Duration(seconds: 1));
                                           _dialog.hide();
                                           if (formkey.currentState!
                                               .validate()) {
@@ -281,13 +282,27 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                                   BorderRadius.circular(10)),
                                           child: Center(
                                             child: loading
-                                                ? Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                            color: Colors.white,
-                                                            backgroundColor:
-                                                                topColor),
-                                                  )
+                                                ? SpinKitFadingCircle(
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return DecoratedBox(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: index
+                                                                      .isEven
+                                                                  ? bottomColor
+                                                                  : bottomColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                          );
+                                                        },
+                                                        size: 40,
+                                                      )
                                                 : Text(
                                                     "Change Password",
                                                     style: TextStyle(

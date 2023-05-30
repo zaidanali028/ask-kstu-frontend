@@ -7,11 +7,12 @@ import 'package:first_app/feature/pages/welcome_screen.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'news_details.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -134,9 +135,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Future.delayed(Duration(seconds: 7), () {
-    //   _loadUserInfo();
-    // });
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -158,35 +156,27 @@ class _LoadingPageState extends State<LoadingPage> {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
-                  Spacer(),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: LiquidCircularProgressIndicator(
-                      value:
-                          0.7, // Sets the progress value (between 0.0 and 1.0)
-                      valueColor: AlwaysStoppedAnimation(
-                          bottomColor), // Sets the color of the progress
-                      backgroundColor: topColor, // Sets the background color
-                      borderColor: topColor, // Sets the color of the border
-                      borderWidth: 7.0, // Sets the width of the border
-                      direction: Axis
-                          .horizontal, // Sets the direction of the liquid animation
-                      center: Text(
-                        'Loading..',
-                        style: TextStyle(
-                            color: topColor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Spacer(),
+                  const SizedBox(height: 20,),
                   const Text(
-                    "Academic Student Knowledge Base",
+                    "Academic Student Knowledgebase",
                     style: TextStyle(
                         color: bottomColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 21),
                   ),
+                  Spacer(),
+                  SpinKitFadingCircle(
+                    itemBuilder: (BuildContext context, int index) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: index.isEven ? bottomColor : bottomColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      );
+                    },
+                    size: 80,
+                  ),
+                  Spacer(),
                 ],
               ),
             ),

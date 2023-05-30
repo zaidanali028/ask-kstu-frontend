@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/components/side_menu.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
@@ -355,12 +353,12 @@ class _DashboardState extends State<Dashboard>
                                                       minRadius: 24,
                                                       backgroundColor:
                                                           bottomColor,
-                                                      backgroundImage: image ==
-                                                              '1'
+                                                      backgroundImage: image !=
+                                                              "1"
                                                           ? NetworkImage(
-                                                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")
+                                                              "${user_img_uri}${image}")
                                                           : NetworkImage(
-                                                              "${image}"),
+                                                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                                                     ),
                                                     Positioned(
                                                       right: 0,

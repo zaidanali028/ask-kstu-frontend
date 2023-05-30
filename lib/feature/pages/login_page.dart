@@ -4,6 +4,7 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
@@ -33,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     ApiResponse response =
         await login(emailController.text, passwordController.text);
     if (response.error == null) {
-        _saveAndRedirectToDashboard(response.data as User);
+      _saveAndRedirectToDashboard(response.data as User);
     } else {
       // print(jsonEncode(response.data));
       setState(() {
@@ -63,8 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setInt("index", user.indexNo ?? 0);
     await prefs.setString("gender", user.gender ?? '');
     await prefs.setString("level", user.currentLevel ?? '');
-    // await prefs.setString("semester", user.currentSemester ?? '');
-    // semester has been changed from styring to id,so we may need to create a new field to handle the semester relastion,leave it as 0 for now
+    await prefs.setString("phone", user.phone ?? '');
     await prefs.setInt("semester", 0);
     await prefs.setInt("program", user.programId ?? 0);
     await prefs.setInt("department", user.deptId ?? 0);
@@ -237,14 +237,14 @@ class _LoginPageState extends State<LoginPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: GestureDetector(
-                                            onTap: () async{
+                                            onTap: () async {
                                               _dialog.show(
                                                   message: 'Sending...',
                                                   type:
                                                       SimpleFontelicoProgressDialogType
                                                           .hurricane);
                                               await Future.delayed(
-                                                  Duration(seconds: 2));
+                                                  Duration(seconds: 1));
                                               _dialog.hide();
                                               if (formkey.currentState!
                                                   .validate()) {
@@ -264,13 +264,26 @@ class _LoginPageState extends State<LoginPage> {
                                                           10)),
                                               child: Center(
                                                 child: loading
-                                                    ? Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                color: Colors
-                                                                    .white,
-                                                                backgroundColor:
-                                                                    topColor),
+                                                    ? SpinKitFadingCircle(
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return DecoratedBox(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: index
+                                                                      .isEven
+                                                                  ? bottomColor
+                                                                  : bottomColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                          );
+                                                        },
+                                                        size: 40,
                                                       )
                                                     : Text(
                                                         "SIGN IN",
@@ -293,6 +306,5 @@ class _LoginPageState extends State<LoginPage> {
                         ])))),
           )),
     );
-  
   }
 }
