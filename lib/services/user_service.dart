@@ -152,9 +152,10 @@ Future<ApiResponse> uploadUserDp(File file) async {
   try {
     final token = getToken();
     var request = http.MultipartRequest('POST', Uri.parse(updateDpUrl));
-    var headers = {
-      'content-type': 'multipart/form-data',
-      'Authorization': 'Bearer $token'
+    Map<String, String> headers = {
+      "Authorization": "Bearer $token",
+      "Content-Type": "multipart/form-data;charset=UTF-8",
+      "Charset": "utf-8"
     };
     request.headers.addAll(headers);
     final mimeType = lookupMimeType(file.path);
@@ -168,24 +169,27 @@ Future<ApiResponse> uploadUserDp(File file) async {
       contentType: MediaType.parse(mimeType!),
     );
     request.files.add(multipartFile);
-    var response = await http.Response.fromStream(await request.send());
-
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
-        break;
-      case 422:
-        final errors = json.decode(response.body)['errors'];
-        apiResponse.error = errors[errors.keys.elementAt(0)][0];
-        break;
-      case 401:
-        apiResponse.error = jsonDecode(response.body)['message'];
-        break;
-      default:
-        apiResponse.error = somethingWentwrong;
-        print(jsonDecode(response.body));
-        break;
-    }
+    // var response = await http.Response.fromStream(await request.send());
+    await request.send().then((response) {
+      http.Response.fromStream(response).then((value) {
+        switch (value.statusCode) {
+          case 200:
+            apiResponse.data = User.fromJson(jsonDecode(value.body));
+            break;
+          case 422:
+            final errors = json.decode(value.body)['errors'];
+            apiResponse.error = errors[errors.keys.elementAt(0)][0];
+            break;
+          case 401:
+            apiResponse.error = jsonDecode(value.body)['message'];
+            break;
+          default:
+            apiResponse.error = somethingWentwrong;
+            print(jsonDecode(value.body));
+            break;
+        }
+      });
+    });
   } catch (e) {
     apiResponse.error = e.toString();
     print(e.toString());
