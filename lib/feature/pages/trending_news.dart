@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
@@ -64,6 +63,18 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
         ),
       ));
     }
+  }
+
+  List<dynamic> paginatedData = [];
+  int currentPage = 1;
+  bool isLoading = false;
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(_scrollListner);
+    fetchData();
   }
 
   @override
@@ -141,244 +152,205 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(30))),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 18.0),
-                              child: FutureBuilder<List<Announcement>>(
-                                  future: trendProvider.fetchTrend(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return ListView(
-                                        children: [
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                        ],
-                                      );
-                                    } else if (!snapshot.hasData) {
-                                      return Center(
-                                        child: Text(
-                                          "No Data Added Yet",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      logout().then((value) => {
-                                            Navigator.of(context)
-                                                .pushAndRemoveUntil(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LoginPage()),
-                                                    (route) => false)
-                                          });
-                                      return Center();
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 18.0),
+                                child: ListView.builder(
+                                  controller: scrollController,
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: isLoading
+                                      ? paginatedData.length + 1
+                                      : paginatedData.length,
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (context, index) {
+                                    final item = paginatedData[index];
+                                    if (index == paginatedData.length) {
+                                      return CircularProgressIndicator();
                                     } else {
-                                      final trend = snapshot.data!;
-                                      return ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: trend.length,
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            width: double.infinity,
-                                            height: 320,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: ((context) =>
-                                                                  DetailNews(
-                                                                      title: trend[
-                                                                              index]
-                                                                          .id))));
-                                                    },
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: 200,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          image: trend[index]
-                                                                      .featured_image !=
-                                                                  null
-                                                              ? DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
-                                                                  fit: BoxFit
-                                                                      .cover)
-                                                              : null),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: ((context) =>
-                                                                  DetailNews(
-                                                                      title: trend[
-                                                                              index]
-                                                                          .id))));
-                                                    },
-                                                    child: Text(
-                                                      trend[index].title.trim(),
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
+                                      return Container(
+                                        width: double.infinity,
+                                        height: 320,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: ((context) =>
+                                                              DetailNews(
+                                                                  title: item[
+                                                                      "id"]))));
+                                                },
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 200,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      image: item["featured_image"] !=
+                                                              null
+                                                          ? DecorationImage(
+                                                              image: NetworkImage(
+                                                                  "${announcement_imgUri}${item["featured_image"]}"),
+                                                              fit: BoxFit.cover)
+                                                          : null),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: ((context) =>
+                                                              DetailNews(
+                                                                  title: item[
+                                                                      "id"]))));
+                                                },
+                                                child: Text(
+                                                  item["title"].trim(),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
                                                         horizontal: 15),
-                                                    child: Row(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .spaceEvenly,
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            FaIcon(
-                                                              FontAwesomeIcons
-                                                                  .clock,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Container(
-                                                              width: 80,
-                                                              child: Text(
-                                                                '${DateTime.parse(trend[index].created_at)}',
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .fade,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            )
-                                                          ],
+                                                        FaIcon(
+                                                          FontAwesomeIcons
+                                                              .clock,
+                                                          color: Colors.grey,
                                                         ),
-                                                        Spacer(),
-                                                        Row(
-                                                          children: [
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                AudioPlayer().play(
-                                                                    AssetSource(
-                                                                        "audio/my_audio.mp3"));
-                                                                if (trend[index]
-                                                                        .liked_by_auth_user ==
-                                                                    true) {
-                                                                  likeAnnouncement(
-                                                                      trend[index]
-                                                                          .id,
-                                                                      0);
-                                                                } else {
-                                                                  likeAnnouncement(
-                                                                      trend[index]
-                                                                          .id,
-                                                                      1);
-                                                                }
-                                                              },
-                                                              child: Row(
-                                                                children: [
-                                                                  trend[index].liked_by_auth_user ==
-                                                                          true
-                                                                      ? Icon(
-                                                                          CupertinoIcons
-                                                                              .hand_thumbsup_fill,
-                                                                          color:
-                                                                              topColor,
-                                                                        )
-                                                                      : Icon(
-                                                                          CupertinoIcons
-                                                                              .hand_thumbsup,
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                  const SizedBox(
-                                                                    width: 2,
-                                                                  ),
-                                                                  Text(
-                                                                    '${trend[index].likes_count_formatted}',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            SizedBox(width: 12),
-                                                            FaIcon(
-                                                                FontAwesomeIcons
-                                                                    .eye,
-                                                                color: Colors
-                                                                    .grey),
-                                                            const SizedBox(
-                                                              width: 6,
-                                                            ),
-                                                            Text(
-                                                              '${trend[index].views_count_formatted}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                            )
-                                                          ],
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Container(
+                                                          width: 80,
+                                                          child: Text(
+                                                            '${DateTime.parse(item["created_at"])}',
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .fade,
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                         )
                                                       ],
                                                     ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Divider(
-                                                    thickness: 1,
-                                                    color: Colors.grey,
-                                                  )
-                                                ],
+                                                    Spacer(),
+                                                    Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            AudioPlayer().play(
+                                                                AssetSource(
+                                                                    "audio/my_audio.mp3"));
+                                                            if (item[
+                                                                    "liked_by_auth_user"] ==
+                                                                true) {
+                                                              likeAnnouncement(
+                                                                  item["id"],
+                                                                  0);
+                                                            } else {
+                                                              likeAnnouncement(
+                                                                  item["id"],
+                                                                  1);
+                                                            }
+                                                          },
+                                                          child: Row(
+                                                            children: [
+                                                              item["liked_by_auth_user"] ==
+                                                                      true
+                                                                  ? Icon(
+                                                                      CupertinoIcons
+                                                                          .hand_thumbsup_fill,
+                                                                      color:
+                                                                          topColor,
+                                                                    )
+                                                                  : Icon(
+                                                                      CupertinoIcons
+                                                                          .hand_thumbsup,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                              const SizedBox(
+                                                                width: 2,
+                                                              ),
+                                                              Text(
+                                                                '${item["likes_count_formatted"]}',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 12),
+                                                        FaIcon(
+                                                            FontAwesomeIcons
+                                                                .eye,
+                                                            color: Colors.grey),
+                                                        const SizedBox(
+                                                          width: 6,
+                                                        ),
+                                                        Text(
+                                                          '${item["views_count_formatted"]}',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Divider(
+                                                thickness: 1,
+                                                color: Colors.grey,
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       );
                                     }
-                                  }),
-                            )))
+                                  },
+                                ))))
                   ],
                 )
               ],
@@ -387,5 +359,35 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
         ),
       )),
     );
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final List<dynamic> apiData = await fetchTrendWithPagination(currentPage);
+      setState(() {
+        paginatedData = paginatedData + apiData;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _scrollListner() async {
+    if (isLoading) return;
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoading = true;
+      });
+      currentPage = currentPage + 1;
+      // await fetchData();
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

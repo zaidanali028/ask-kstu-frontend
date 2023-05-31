@@ -30,9 +30,9 @@ class AnnouncementKeyMoments {
     factory AnnouncementKeyMoments.fromJson(Map<String, dynamic> json) => AnnouncementKeyMoments(
         id: json["id"],
         announcementId: json["announcement_id"],
-        imageSubTitle: json["image_sub_title"],
-        image: json["image"],
-        imageDescription: json["image_description"],
+        imageSubTitle: json["image_sub_title"] ?? '',
+        image: json["image"] ?? '',
+        imageDescription: json["image_description"] ?? '',
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
     );

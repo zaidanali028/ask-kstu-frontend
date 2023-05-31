@@ -1,8 +1,7 @@
 import 'dart:convert';
-
-import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,24 +34,46 @@ class TrendingNewsProvider extends ChangeNotifier {
     }
   }
 
-  Future<Announcement> fetchTrendDetails(int trend_id) async {
-    String token = await getToken();
-    final response = await http
-        .get(Uri.parse(announcementDetailUrl + '/${trend_id}'), headers: {
-      "Accept": "application/json",
-      'Authorization': 'Bearer $token'
-    });
-    if (response.statusCode == 200) {
-      return Announcement.fromJson(jsonDecode(response.body)['data']);
-    } else if (response.statusCode == 401) {
-      throw Exception('Unauthorized!');
-    } else {
-      throw Exception('Failed to fetch noticeboard!');
-    }
-  }
-
   Future<String> getToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getString("token") ?? '';
+  }
+}
+
+Future<Map<String, dynamic>> fetchTrendDetails(int trend_id) async {
+  String token = await getToken();
+  final response = await http
+      .get(Uri.parse(announcementDetailUrl + '/${trend_id}'), headers: {
+    "Accept": "application/json",
+    'Authorization': 'Bearer $token'
+  });
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> announcement = jsonDecode(response.body)["data"];
+    return announcement;
+  } else if (response.statusCode == 401) {
+    throw Exception('Unauthorized!');
+  } else {
+    throw Exception('Failed to fetch data from api!');
+  }
+}
+
+Future<List<dynamic>> fetchTrendWithPagination(int page) async {
+  String token = await getToken();
+  final response = await http.get(
+      Uri.parse(
+          "http://16.16.192.97/api/v1/announcements/trending-news?page=1"),
+      headers: {
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token'
+      });
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonData = json.decode(response.body)['announcements'];
+    final List<dynamic> data = jsonData['data'];
+    return data;
+  } else if (response.statusCode == 401) {
+    throw Exception('Unauthorized!');
+  } else {
+    throw Exception('Failed to fetch noticeboard!');
   }
 }

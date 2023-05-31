@@ -3,11 +3,9 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
-import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/trending_news.dart';
-import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -96,8 +94,8 @@ class _DetailNewsState extends State<DetailNews> {
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
-          child: FutureBuilder(
-              future: trending.fetchTrendDetails(widget.title),
+          child: FutureBuilder<Map<String, dynamic>>(
+              future: fetchTrendDetails(widget.title),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final trend = snapshot.data!;
@@ -110,7 +108,7 @@ class _DetailNewsState extends State<DetailNews> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "${announcement_imgUri}${trend.featured_image}"),
+                                    "${announcement_imgUri}${trend['featured_image']}"),
                                 fit: BoxFit.cover)),
                         child: Stack(
                           children: [
@@ -148,7 +146,7 @@ class _DetailNewsState extends State<DetailNews> {
                                 controller: _scrollController,
                                 children: [
                                   Text(
-                                    trend.title,
+                                    trend['title'],
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 22,
@@ -177,7 +175,7 @@ class _DetailNewsState extends State<DetailNews> {
                                           Container(
                                             width: 80,
                                             child: Text(
-                                              "${trend.created_at}",
+                                              "${trend['created_at']}",
                                               maxLines: 1,
                                               overflow: TextOverflow.fade,
                                               style: TextStyle(
@@ -194,16 +192,16 @@ class _DetailNewsState extends State<DetailNews> {
                                         onTap: () {
                                           AudioPlayer().play(AssetSource(
                                               "audio/my_audio.mp3"));
-                                          if (trend.liked_by_auth_user ==
+                                          if (trend['liked_by_auth_user'] ==
                                               true) {
-                                            likeAnnouncement(trend.id, 0);
+                                            likeAnnouncement(trend['id'], 0);
                                           } else {
-                                            likeAnnouncement(trend.id, 1);
+                                            likeAnnouncement(trend['id'], 1);
                                           }
                                         },
                                         child: Row(
                                           children: [
-                                            trend.liked_by_auth_user == true
+                                            trend['liked_by_auth_user'] == true
                                                 ? Icon(
                                                     CupertinoIcons
                                                         .hand_thumbsup_fill,
@@ -218,7 +216,7 @@ class _DetailNewsState extends State<DetailNews> {
                                               width: 2,
                                             ),
                                             Text(
-                                              '${trend.likes_count}',
+                                              '${trend['likes_count']}',
                                               style:
                                                   TextStyle(color: Colors.grey),
                                             )
@@ -237,7 +235,7 @@ class _DetailNewsState extends State<DetailNews> {
                                             width: 6,
                                           ),
                                           Text(
-                                            '${trend.views}',
+                                            '${trend['views']}',
                                             style:
                                                 TextStyle(color: Colors.grey),
                                           )
@@ -284,12 +282,12 @@ class _DetailNewsState extends State<DetailNews> {
                         ),
                       ));
                 } else {
-                  print("${snapshot.error}");
+                  print("Error ${snapshot.error}");
                   // logout().then((value) => Navigator.of(context)
                   //     .pushAndRemoveUntil(
                   //         MaterialPageRoute(builder: (context) => LoginPage()),
                   //         (route) => false));
-                  return Text("${snapshot.error}");
+                  return Text("Error ${snapshot.error}");
                 }
               }),
         ));
