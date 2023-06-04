@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:first_app/feature/pages/profile_details.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
@@ -370,63 +371,42 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      TextFormFields(
-                                          title: Text(name),
-                                          icons: Icon(Icons.person)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${name}",
+                                        title: "Full Name",
                                       ),
-                                      TextFormFields(
-                                          title: Text(email),
-                                          icons: Icon(Icons.mail)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${email}",
+                                        title: "Student Email",
                                       ),
-                                      TextFormFields(
-                                          title: Text('${index}'),
-                                          icons:
-                                              Icon(CupertinoIcons.arrow_swap)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${index}",
+                                        title: "Student Number",
                                       ),
-                                      TextFormFields(
-                                          title: Text('${phone}'),
-                                          icons: Icon(Icons.numbers)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${phone}",
+                                        title: "Phone Number",
                                       ),
-                                      TextFormFields(
-                                          title: Text(gender),
-                                          icons: Icon(CupertinoIcons.gauge)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${gender}",
+                                        title: "Gender",
                                       ),
-                                      TextFormFields(
-                                          title: Text('Level $level'),
-                                          icons: Icon(
-                                              CupertinoIcons.app_badge_fill)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: "${level}",
+                                        title: "Level",
                                       ),
-                                      TextFormFields(
-                                          title: Text('$semester'),
-                                          icons: Icon(Icons.set_meal)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: '${semester}',
+                                        title: "Semester",
                                       ),
-                                      TextFormFields(
-                                          title: Text('$yearOfAdmission'),
-                                          icons: Icon(CupertinoIcons
-                                              .bolt_horizontal_circle_fill)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: '${yearOfAdmission}',
+                                        title: "Year Of Admission",
                                       ),
-                                      TextFormFields(
-                                          title: Text('$yearOfCompletion'),
-                                          icons: Icon(CupertinoIcons
-                                              .bolt_horizontal_circle)),
-                                      const SizedBox(
-                                        height: 15,
+                                      ProfileDetails(
+                                        subtitle: '${yearOfCompletion}',
+                                        title: "Year Of Completion",
+                                        isLast: true,
                                       ),
                                     ],
                                   ),
