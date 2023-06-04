@@ -8,7 +8,6 @@ import 'package:first_app/services/notice_board.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:jiffy/jiffy.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});

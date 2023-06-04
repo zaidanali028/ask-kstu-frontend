@@ -8,6 +8,7 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'news_details.dart';
@@ -98,38 +99,40 @@ class _LoadingPageState extends State<LoadingPage> {
     Timer(Duration(seconds: 4), _loadUserInfo);
   }
 
-
-
-void listenForPushNotifications(BuildContext context) {
-  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    final data = result.notification.additionalData;
-    final announcemet_id = data!['announcemet_id'];
-    debugPrint("background notification announcemet_id $announcemet_id.");
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => DetailNews(title: announcemet_id),
-    //   ),
-    // );
+  void listenForPushNotifications(BuildContext context) {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      final data = result.notification.additionalData;
+      final announcemet_id = data!['announcemet_id'];
+      debugPrint("background notification announcemet_id $announcemet_id.");
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => DetailNews(title: announcemet_id),
+      //   ),
+      // );
 
       Navigator.of(context).pushAndRemoveUntil(
-        // this is not a  permanent solution cus it does not make sense
-        MaterialPageRoute(builder: (context) => DetailNews(title: announcemet_id)), (route) => false);
-  });
+          // this is not a  permanent solution cus it does not make sense
+          MaterialPageRoute(
+              builder: (context) => DetailNews(title: announcemet_id)),
+          (route) => false);
+    });
 
-  // OneSignal.shared.setNotificationWillShowInForegroundHandler(
-  //   (OSNotificationReceivedEvent notification) async {
-  //     final data = notification.notification.additionalData;
-  //     final announcemet_id = data!['announcemet_id'];
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => DetailNews(title: announcemet_id),
-  //       ),
-  //     );
-  //   },
-  // );
-}
+    // OneSignal.shared.setNotificationWillShowInForegroundHandler(
+    //   (OSNotificationReceivedEvent notification) async {
+    //     final data = notification.notification.additionalData;
+    //     final announcemet_id = data!['announcemet_id'];
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => DetailNews(title: announcemet_id),
+    //       ),
+    //     );
+    //   },
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(seconds: 7), () {
@@ -147,6 +150,7 @@ void listenForPushNotifications(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Spacer(),
                   Container(
                     width: 240,
                     height: 240,
@@ -157,6 +161,25 @@ void listenForPushNotifications(BuildContext context) {
                   ),
                   const SizedBox(
                     height: 20,
+                  ),
+                  const Text(
+                    "Academic Student Knowledgebase",
+                    style: TextStyle(
+                        color: bottomColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                  Spacer(),
+                  SpinKitFadingCircle(
+                    itemBuilder: (BuildContext context, int index) {
+                      return DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: index.isEven ? topColor : topColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      );
+                    },
+                    size: 80,
                   ),
                 ],
               ),

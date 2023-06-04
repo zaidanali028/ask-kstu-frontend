@@ -3,10 +3,7 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';
-import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 
 Future<ApiResponse> login(String email, String password) async {
@@ -146,48 +143,23 @@ Future<ApiResponse> forgotPassword(String email) async {
   return apiResponse;
 }
 
-Future<ApiResponse> uploadUserDp(File file) async {
+Future<http.StreamedResponse> updateUserProfile(String pickedImagePath) async {
   ApiResponse apiResponse = ApiResponse();
-
   try {
-    final token = getToken();
+    String token = await getToken();
     var request = http.MultipartRequest('POST', Uri.parse(updateDpUrl));
-    Map<String, String> headers = {
-      "Authorization": "Bearer $token",
-      "Content-Type": "multipart/form-data;charset=UTF-8",
-      "Charset": "utf-8"
-    };
-    request.headers.addAll(headers);
-    var stream = http.ByteStream(file.openRead());
-    var multipartFile = http.MultipartFile(
-      'user_img',
-      stream,
-      file.lengthSync(),
-      filename: path.basename(file.path),
-    );
-    request.files.add(multipartFile);
-    var response = await http.Response.fromStream(await request.send());
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
-        break;
-      case 422:
-        final errors = json.decode(response.body)['errors'];
-        apiResponse.error = errors[errors.keys.elementAt(0)][0];
-        break;
-      case 401:
-        apiResponse.error = jsonDecode(response.body)['message'];
-        break;
-      default:
-        apiResponse.error = somethingWentwrong;
-        print(jsonDecode(response.body));
-        break;
-    }
+    request.files.add(await http.MultipartFile.fromPath('user_img', pickedImagePath));
+    request.headers.addAll({
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+      'Content-type': 'multipart/form-data',
+    });
+    var response = await request.send();
+    return response;
   } catch (e) {
     apiResponse.error = e.toString();
-    print(e.toString());
+    throw apiResponse;
   }
-  return apiResponse;
 }
 
 Future<ApiResponse> updatePassword(

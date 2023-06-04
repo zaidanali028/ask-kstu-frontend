@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-// import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -108,7 +108,7 @@ class _DetailNewsState extends State<DetailNews> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "${announcement_imgUri}${trend.featured_image}"),
+                                    "${announcement_imgUri}${trend['featured_image']}"),
                                 fit: BoxFit.cover)),
                         child: Stack(
                           children: [
@@ -147,7 +147,7 @@ class _DetailNewsState extends State<DetailNews> {
                               controller: _scrollController,
                               children: [
                                 Text(
-                                  trend.title,
+                                  trend['title'],
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 25,
@@ -176,7 +176,7 @@ class _DetailNewsState extends State<DetailNews> {
                                         Container(
                                           width: 80,
                                           child: Text(
-                                            "${trend.created_at}",
+                                            "${trend['created_at']}",
                                             maxLines: 1,
                                             overflow: TextOverflow.fade,
                                             style: TextStyle(
@@ -189,21 +189,21 @@ class _DetailNewsState extends State<DetailNews> {
                                     SizedBox(
                                       width: 58,
                                     ),
-                                    trend.category_id == 2
+                                    trend['category_id'] == 2
                                         ? GestureDetector(
                                             onTap: () {
-                                              // AudioPlayer().play(AssetSource(
-                                              //     "audio/my_audio.mp3"));
-                                              if (trend.liked_by_auth_user ==
+                                              AudioPlayer().play(AssetSource(
+                                                  "audio/my_audio.mp3"));
+                                              if (trend['liked_by_auth_user'] ==
                                                   true) {
-                                                likeAnnouncement(trend.id, 0);
+                                                likeAnnouncement(trend['id'], 0);
                                               } else {
-                                                likeAnnouncement(trend.id, 1);
+                                                likeAnnouncement(trend['id'], 1);
                                               }
                                             },
                                             child: Row(
                                               children: [
-                                                trend.liked_by_auth_user == true
+                                                trend['liked_by_auth_user'] == true
                                                     ? Icon(
                                                         CupertinoIcons.hand_thumbsup_fill,
                                                         color: topColor,
@@ -216,7 +216,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                   width: 2,
                                                 ),
                                                 Text(
-                                                  '${trend.likes_count}',
+                                                  '${trend['likes_count']}',
                                                   style: TextStyle(
                                                       color: Colors.grey),
                                                 )
@@ -225,7 +225,7 @@ class _DetailNewsState extends State<DetailNews> {
                                           )
                                         : Text(''),
                                     Spacer(),
-                                    trend.category_id == 2
+                                    trend['category_id'] == 2
                                         ? Row(
                                             children: [
                                               Text(
@@ -237,7 +237,7 @@ class _DetailNewsState extends State<DetailNews> {
                                                 width: 6,
                                               ),
                                               Text(
-                                                '${trend.views}',
+                                                '${trend['views']}',
                                                 style:
                                                     TextStyle(color: Colors.grey),
                                               )

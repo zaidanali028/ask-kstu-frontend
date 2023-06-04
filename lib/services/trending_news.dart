@@ -38,8 +38,6 @@ class TrendingNewsProvider extends ChangeNotifier {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getString("token") ?? '';
   }
-}
-
 Future<Map<String, dynamic>> fetchTrendDetails(int trend_id) async {
   String token = await getToken();
   final response = await http
@@ -55,6 +53,8 @@ Future<Map<String, dynamic>> fetchTrendDetails(int trend_id) async {
   } else {
     throw Exception('Failed to fetch data from api!');
   }
+}
+
 }
 
 Future<List<dynamic>> fetchTrendWithPagination(int page) async {

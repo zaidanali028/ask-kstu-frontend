@@ -4,8 +4,10 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
@@ -117,6 +119,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -258,7 +262,15 @@ class _LoginPageState extends State<LoginPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: GestureDetector(
-                                            onTap: () {
+                                            onTap: () async{
+                                            _dialog.show(
+                                                message: 'Sending...',
+                                                type:
+                                                    SimpleFontelicoProgressDialogType
+                                                        .hurricane);
+                                            await Future.delayed(
+                                                Duration(seconds: 1));
+                                            _dialog.hide();
                                               if (formkey.currentState!
                                                   .validate()) {
                                                 setState(() {
@@ -277,13 +289,26 @@ class _LoginPageState extends State<LoginPage> {
                                                           10)),
                                               child: Center(
                                                 child: loading
-                                                    ? Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                color: Colors
-                                                                    .white,
-                                                                backgroundColor:
-                                                                    topColor),
+                                                    ? SpinKitFadingCircle(
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return DecoratedBox(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: index
+                                                                      .isEven
+                                                                  ? bottomColor
+                                                                  : bottomColor,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                          );
+                                                        },
+                                                        size: 40,
                                                       )
                                                     : Text(
                                                         "SIGN IN",

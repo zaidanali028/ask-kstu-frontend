@@ -4,6 +4,7 @@ import 'package:first_app/feature/pages/user_profile.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
@@ -55,7 +56,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       index = localStorage.getInt('index');
       semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
-   
     });
   }
 
@@ -152,16 +152,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget ImgProfile() {
     return Center(
       child: Stack(children: [
-       
-            (pickimage != null)
-                ? CircleAvatar(
-                    radius: 80.0,
-                    backgroundImage: FileImage(pickimage!),
-                  ): image != ''
+        (pickimage != null)
             ? CircleAvatar(
                 radius: 80.0,
-                backgroundImage: NetworkImage("${user_img_uri}${image}"),
+                backgroundImage: FileImage(pickimage!),
               )
+            : image != ''
+                ? CircleAvatar(
+                    radius: 80.0,
+                    backgroundImage: NetworkImage("${user_img_uri}${image}"),
+                  )
                 : CircleAvatar(
                     radius: 80.0,
                     foregroundColor: Colors.red,
@@ -187,8 +187,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     print('is it working? ${userData.userImg}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("user_img", userData.userImg ?? '');
-  
- ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Profile Successfully Updated'),
       backgroundColor: topColor,
       behavior: SnackBarBehavior.floating,
@@ -216,24 +216,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       });
 
       _saveupdatedProfile();
-    }else{
- ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Error Uploading Profile Image!'),
-      backgroundColor: topColor,
-      behavior: SnackBarBehavior.floating,
-      action: SnackBarAction(
-        label: 'Dismiss',
-        disabledTextColor: Colors.white,
-        textColor: Colors.red,
-        onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        },
-      ),
-    ));
-  }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error Uploading Profile Image!'),
+        backgroundColor: topColor,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.red,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
     }
-
-   
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -448,12 +446,20 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               loading = !loading;
               updateUserProfiles();
             });
-            print('Image string: $imageConvert');
-            print('Hello Wordl');
           },
-          label: loading ? CircularProgressIndicator(
-            color: Colors.white,
-          ) : Text('Update')),
+          label: loading
+              ? SpinKitFadingCircle(
+                  itemBuilder: (BuildContext context, int index) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: index.isEven ? bottomColor : bottomColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    );
+                  },
+                  size: 40,
+                )
+              : Text('Update')),
     );
   }
 }
