@@ -6,14 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-// =====================Hey there Bro!!!!!!!! I made this push on Date: 31/05/2023   Time: 01:07pm
+
 void main() {
   //Remove this method to stop OneSignal Debugging
   // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   WidgetsFlutterBinding.ensureInitialized();
   OneSignal.shared.setAppId("7e696d2c-01f7-4742-9a4f-f0a900d76526");
 
+
+
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+ 
+
 
   runApp(MultiProvider(
     providers: [

@@ -35,7 +35,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       yearOfCompletion = localStorage.getString('yrOfCompletion');
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
-      image = localStorage.getString('image');
+      image = localStorage.getString('user_img');
       index = localStorage.getInt('index');
       phone = localStorage.getString('phone');
       semester = localStorage.getInt('semester');

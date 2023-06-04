@@ -1,22 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:first_app/feature/pages/dashboard.dart';
-import 'package:first_app/feature/pages/notice_board.dart';
 import 'package:first_app/feature/pages/user_profile.dart';
-import 'package:first_app/models/api_response.dart';
-import 'package:first_app/models/constant.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:first_app/feature/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
-import 'package:http/http.dart' as http;
+import '../../models/constant.dart';
+import '../../models/api_response.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({super.key});
@@ -41,8 +36,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   var phone;
   final picker = ImagePicker();
   File? pickimage;
+  late String pickimagePath;
+
   String? imageConvert;
-  bool loading = false;
+  late PickedFile imageFile_;
+  final ImagePicker picker_ = ImagePicker();
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -53,10 +51,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
       phone = localStorage.getString('phone');
-      image = localStorage.getString('image');
+      image = localStorage.getString('user_img');
       index = localStorage.getInt('index');
       semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
+   
     });
   }
 
@@ -65,14 +64,23 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     getUser();
     super.initState();
   }
+  //   void takePhoto(ImageSource src) async {
+  //   final pickedFile =await picker_.pickImage(source: src);
+  //   setState(() {
+  //     imageFile_ = pickedFile;
+  //   });
+  // }
 
-  void pickImage() async {
-    var pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  void pickImage(ImageSource src) async {
+    var pickedFile = await picker.pickImage(source: src);
     if (pickedFile != null) {
-      String extension = path.basename(pickedFile.path);
+      // String extension = path.basename(pickedFile.path);
       setState(() {
-        pickimage = File(pickedFile.path);
-        imageConvert = extension;
+        pickimagePath = pickedFile.path;
+        pickimage = File(pickimagePath);
+
+        // print( pickimage);
+        // imageConvert = extension;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -92,57 +100,143 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     }
   }
 
-  void updateUserProfile() async {
-    ApiResponse response = await uploadUserDp(pickimage!);
-    if (response.error == null) {
-      _saveupdatedProfile(response.data as User);
-    } else {
-      print(jsonEncode(response.data));
-      setState(() {
-        loading = !loading;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-        backgroundColor: Colors.red.shade700,
-        elevation: 2.0,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
+  bool loading = false;
+  Widget bottomSheet() {
+    return Container(
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.horizontal(
+      //     right: Radius.circular(40),
+      //     left: Radius.circular(40),
+      //   )
+      // ),
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(children: [
+        Text("Choose Profile Photo", style: TextStyle(fontSize: 20.0)),
+        SizedBox(
+          height: 20,
         ),
-      ));
-    }
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            InkWell(
+              onTap: () {
+                pickImage(ImageSource.camera);
+              },
+              child: FaIcon(
+                FontAwesomeIcons.camera,
+
+                // color: Colors.grey,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                pickImage(ImageSource.gallery);
+              },
+              child: FaIcon(
+                FontAwesomeIcons.image,
+                // color: Colors.grey,
+              ),
+            ),
+          ],
+        )
+      ]),
+    );
   }
 
-  void _saveupdatedProfile(User user) async {
+  Widget ImgProfile() {
+    return Center(
+      child: Stack(children: [
+       
+            (pickimage != null)
+                ? CircleAvatar(
+                    radius: 80.0,
+                    backgroundImage: FileImage(pickimage!),
+                  ): image != ''
+            ? CircleAvatar(
+                radius: 80.0,
+                backgroundImage: NetworkImage("${user_img_uri}${image}"),
+              )
+                : CircleAvatar(
+                    radius: 80.0,
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.blue,
+                    // backgroundImage: FileImage(pickimage!) ,
+                  ),
+        Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context, builder: (builder) => bottomSheet());
+                },
+                child: Icon(Icons.camera_alt, color: Colors.white, size: 30.0)))
+      ]),
+    );
+  }
+
+  void _saveupdatedProfile() async {
+    var user = await getUserDetails();
+    User userData = user.data as User;
+    print('is it working? ${userData.userImg}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("user_img", user.image ?? '');
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => UserProfilePage()),
-        (route) => false);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    await prefs.setString("user_img", userData.userImg ?? '');
+  
+ ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Profile Successfully Updated'),
       backgroundColor: topColor,
       behavior: SnackBarBehavior.floating,
       action: SnackBarAction(
         label: 'Dismiss',
         disabledTextColor: Colors.white,
-        textColor: Colors.yellow,
+        textColor: Colors.green,
+        onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+      ),
+    ));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => UserProfilePage()),
+        (route) => false);
+  }
+
+  void updateUserProfiles() async {
+    var response = await updateUserProfile(pickimagePath);
+    // print('Here> '+response.stream.toString());
+    if (response.statusCode == 200) {
+      // _saveupdatedProfile();
+      setState(() {
+        loading = !loading;
+      });
+
+      _saveupdatedProfile();
+    }else{
+ ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Error Uploading Profile Image!'),
+      backgroundColor: topColor,
+      behavior: SnackBarBehavior.floating,
+      action: SnackBarAction(
+        label: 'Dismiss',
+        disabledTextColor: Colors.white,
+        textColor: Colors.red,
         onPressed: () {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
         },
       ),
     ));
   }
+    }
+
+   
 
   @override
   Widget build(BuildContext context) {
-    SimpleFontelicoProgressDialog _dialog =
-        SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: topColor,
@@ -225,51 +319,52 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                         children: [
                                           Stack(
                                             children: [
-                                              pickimage == null
-                                                  ? Container(
-                                                      width: 200,
-                                                      height: 200,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          color: bottomColor,
-                                                          image: DecorationImage(
-                                                              image: image !=
-                                                                      "1"
-                                                                  ? NetworkImage(
-                                                                      "${user_img_uri}${image}")
-                                                                  : NetworkImage(
-                                                                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
-                                                              fit: BoxFit
-                                                                  .cover)),
-                                                    )
-                                                  : Container(
-                                                      width: 200,
-                                                      height: 200,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          color: bottomColor,
-                                                          image: DecorationImage(
-                                                              image: FileImage(
-                                                                  pickimage!),
-                                                              fit: BoxFit
-                                                                  .cover)),
-                                                    ),
-                                              Positioned(
-                                                  right: 5,
-                                                  bottom: 10,
-                                                  child: IconButton(
-                                                      onPressed: () {
-                                                        pickImage();
-                                                      },
-                                                      icon: Icon(
-                                                        CupertinoIcons.photo,
-                                                        color: Colors.black87,
-                                                        size: 40,
-                                                      )))
+                                              // pickimage == null
+                                              //     ? Container(
+                                              //         width: 200,
+                                              //         height: 200,
+                                              //         decoration: BoxDecoration(
+                                              //             borderRadius:
+                                              //                 BorderRadius
+                                              //                     .circular(20),
+                                              //             color: bottomColor,
+                                              //             image: DecorationImage(
+                                              //                 image: image !=
+                                              //                         '1'
+                                              //                     ? NetworkImage(
+                                              //                         image)
+                                              //                     : NetworkImage(
+                                              //                         "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
+                                              //                 fit: BoxFit
+                                              //                     .cover)),
+                                              //       )
+                                              //     : Container(
+                                              //         width: 200,
+                                              //         height: 200,
+                                              //         // decoration: BoxDecoration(
+                                              //         //     borderRadius:
+                                              //         //         BorderRadius
+                                              //         //             .circular(20),
+                                              //         //     color: bottomColor,
+                                              //         //     image: DecorationImage(
+                                              //         //         image: FileImage(
+                                              //         //             pickimage!),
+                                              //         //         fit: BoxFit
+                                              //         //             .cover)),
+                                              //       ),
+                                              // // Positioned(
+                                              // //     right: 5,
+                                              // //     bottom: 10,
+                                              // //     child: IconButton(
+                                              // //         onPressed: () {
+                                              // //           pickImage();
+                                              // //         },
+                                              // //         icon: Icon(
+                                              // //           CupertinoIcons.photo,
+                                              // //           color: Colors.black87,
+                                              // //           size: 40,
+                                              // //         )))
+                                              ImgProfile()
                                             ],
                                           ),
                                         ],
@@ -347,33 +442,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       )),
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
-          icon: loading ? null : Icon(Icons.send),
+          icon: Icon(Icons.send),
           onPressed: () async {
-            _dialog.show(
-                message: 'waiting...',
-                type: SimpleFontelicoProgressDialogType.hurricane);
-            await Future.delayed(Duration(seconds: 1));
-            _dialog.hide();
             setState(() {
               loading = !loading;
-              updateUserProfile();
+              updateUserProfiles();
             });
-            // print('Image string: $imageConvert');
+            print('Image string: $imageConvert');
             print('Hello Wordl');
           },
-          label: loading
-              ? SpinKitFadingCircle(
-                  itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: index.isEven ? bottomColor : bottomColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    );
-                  },
-                  size: 20,
-                )
-              : Text('Update')),
+          label: loading ? CircularProgressIndicator(
+            color: Colors.white,
+          ) : Text('Update')),
     );
   }
 }

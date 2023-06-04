@@ -4,9 +4,8 @@ import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:connectivity/connectivity.dart';
 
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
@@ -31,10 +30,29 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginUser() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
     ApiResponse response =
         await login(emailController.text, passwordController.text);
     if (response.error == null) {
-      _saveAndRedirectToDashboard(response.data as User);
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        _saveAndRedirectToDashboard(response.data as User);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Please connect to the internet'),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          elevation: 2.0,
+          action: SnackBarAction(
+            label: 'Dismiss',
+            disabledTextColor: Colors.white,
+            textColor: Colors.yellow,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ));
+      }
     } else {
       // print(jsonEncode(response.data));
       setState(() {
@@ -60,20 +78,25 @@ class _LoginPageState extends State<LoginPage> {
   void _saveAndRedirectToDashboard(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", user.token ?? '');
+
     await prefs.setString("name", user.name ?? '');
     await prefs.setInt("index", user.indexNo ?? 0);
     await prefs.setString("gender", user.gender ?? '');
     await prefs.setString("level", user.currentLevel ?? '');
-    await prefs.setString("phone", user.phone ?? '');
+    await prefs.setString("user_img", user.userImg ?? '');
+
+    // await prefs.setString("semester", user.currentSemester ?? '');
+    // semester has been changed from styring to id,so we may need to create a new field to handle the semester relastion,leave it as 0 for now
     await prefs.setInt("semester", 0);
-    await prefs.setInt("program", user.programId ?? 0);
-    await prefs.setInt("department", user.deptId ?? 0);
-    await prefs.setInt("faculty", user.facultyId ?? 0);
+    await prefs.setString("program", user.programName ?? "");
+    await prefs.setString("department", user.deptName ?? "");
+    await prefs.setString("faculty", user.facultyName ?? "");
+    await prefs.setString("phone", user.phone ?? "");
     await prefs.setString("email", user.email ?? '');
-    await prefs.setString("image", user.image ?? '');
+    await prefs.setString("image", user.userImg ?? '');
     await prefs.setString("yrOfAdmission", user.yrOfAdmission ?? '');
     await prefs.setString("yrOfCompletion", user.yrOfCompletion ?? '');
-    await prefs.setInt("userId", user.id ?? 0);
+    // await prefs.setInt("userId", user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
     var name = await prefs.getString('name');
@@ -94,8 +117,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    SimpleFontelicoProgressDialog _dialog =
-        SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -237,15 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 18.0),
                                           child: GestureDetector(
-                                            onTap: () async {
-                                              _dialog.show(
-                                                  message: 'Sending...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
+                                            onTap: () {
                                               if (formkey.currentState!
                                                   .validate()) {
                                                 setState(() {
@@ -264,26 +277,13 @@ class _LoginPageState extends State<LoginPage> {
                                                           10)),
                                               child: Center(
                                                 child: loading
-                                                    ? SpinKitFadingCircle(
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index) {
-                                                          return DecoratedBox(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: index
-                                                                      .isEven
-                                                                  ? bottomColor
-                                                                  : bottomColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                          );
-                                                        },
-                                                        size: 40,
+                                                    ? Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                color: Colors
+                                                                    .white,
+                                                                backgroundColor:
+                                                                    topColor),
                                                       )
                                                     : Text(
                                                         "SIGN IN",
