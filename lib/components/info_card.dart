@@ -1,13 +1,14 @@
 import 'package:first_app/models/constant.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class InfoCard extends StatelessWidget {
   InfoCard(
       {Key? key,
       required this.name,
       required this.indexNo,
-      required this.image})
-      : super(key: key);
+      required this.image}
+    ): super(key: key);
 
   String name;
   String indexNo;

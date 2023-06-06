@@ -264,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
                                           child: GestureDetector(
                                             onTap: () async{
                                             _dialog.show(
-                                                message: 'Sending...',
+                                                message: 'Logging...',
                                                 type:
                                                     SimpleFontelicoProgressDialogType
                                                         .hurricane);

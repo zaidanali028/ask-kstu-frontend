@@ -158,7 +158,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 radius: 80.0,
                 backgroundImage: FileImage(pickimage!),
               )
-            : image != ''
+            : image != '1'
                 ? CircleAvatar(
                     radius: 80.0,
                     backgroundImage: NetworkImage("${user_img_uri}${image}"),
@@ -167,7 +167,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     radius: 80.0,
                     foregroundColor: Colors.red,
                     backgroundColor: Colors.blue,
-                    // backgroundImage: FileImage(pickimage!) ,
+                    backgroundImage: NetworkImage(
+                        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                   ),
         Positioned(
             bottom: 20.0,

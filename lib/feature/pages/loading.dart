@@ -159,6 +159,9 @@ class _LoadingPageState extends State<LoadingPage> {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   const Text(
                     "Academic Student Knowledgebase",
                     style: TextStyle(
@@ -171,13 +174,13 @@ class _LoadingPageState extends State<LoadingPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return DecoratedBox(
                         decoration: BoxDecoration(
-                          color: index.isEven ? topColor : topColor,
+                          color: index.isEven ? bottomColor : bottomColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                       );
                     },
                     size: 80,
-                  ),
+                  )
                 ],
               ),
             ),

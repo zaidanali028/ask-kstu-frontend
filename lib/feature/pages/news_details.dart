@@ -69,7 +69,7 @@ class _DetailNewsState extends State<DetailNews> {
       setState(() {
         if (marignTop == 50) {
           marignTop = 50;
-        }else{
+        } else {
           marignTop -= 10;
         }
       });
@@ -107,7 +107,7 @@ class _DetailNewsState extends State<DetailNews> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "${announcement_imgUri}${trend['featured_image']}"),
+                                    "${announcement_imgUri}${trend['featuredImage']}"),
                                 fit: BoxFit.cover)),
                         child: Stack(
                           children: [
@@ -175,7 +175,7 @@ class _DetailNewsState extends State<DetailNews> {
                                         Container(
                                           width: 80,
                                           child: Text(
-                                            "${trend['created_at']}",
+                                            "${trend['createdAt']}",
                                             maxLines: 1,
                                             overflow: TextOverflow.fade,
                                             style: TextStyle(
@@ -188,61 +188,55 @@ class _DetailNewsState extends State<DetailNews> {
                                     SizedBox(
                                       width: 58,
                                     ),
-                                    trend['category_id'] == 2
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              // AudioPlayer().play(AssetSource(
-                                              //     "audio/my_audio.mp3"));
-                                              if (trend['liked_by_auth_user'] ==
-                                                  true) {
-                                                likeAnnouncement(trend['id'], 0);
-                                              } else {
-                                                likeAnnouncement(trend['id'], 1);
-                                              }
-                                            },
-                                            child: Row(
-                                              children: [
-                                                trend['liked_by_auth_user'] == true
-                                                    ? Icon(
-                                                        CupertinoIcons.hand_thumbsup_fill,
-                                                        color: topColor,
-                                                      )
-                                                    : Icon(
-                                                        CupertinoIcons.hand_thumbsup,
-                                                        color: Colors.grey,
-                                                      ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text(
-                                                  '${trend['likes_count']}',
-                                                  style: TextStyle(
-                                                      color: Colors.grey),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // AudioPlayer().play(AssetSource(
+                                        //     "audio/my_audio.mp3"));
+                                        if (trend['likeByAuthUser'] == true) {
+                                          likeAnnouncement(trend['id'], 0);
+                                        } else {
+                                          likeAnnouncement(trend['id'], 1);
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          trend['likeByAuthUser'] == true
+                                              ? Icon(
+                                                  CupertinoIcons
+                                                      .hand_thumbsup_fill,
+                                                  color: topColor,
                                                 )
-                                              ],
-                                            ),
+                                              : Icon(
+                                                  CupertinoIcons.hand_thumbsup,
+                                                  color: Colors.grey,
+                                                ),
+                                          const SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            '${trend['likesCountFormatted']}',
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           )
-                                        : Text(''),
+                                        ],
+                                      ),
+                                    ),
                                     Spacer(),
-                                    trend['category_id'] == 2
-                                        ? Row(
-                                            children: [
-                                              Text(
-                                                'Views',
-                                                style:
-                                                    TextStyle(color: Colors.grey),
-                                              ),
-                                              const SizedBox(
-                                                width: 6,
-                                              ),
-                                              Text(
-                                                '${trend['views']}',
-                                                style:
-                                                    TextStyle(color: Colors.grey),
-                                              )
-                                            ],
-                                          )
-                                        : Text('')
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Views',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        const SizedBox(
+                                          width: 6,
+                                        ),
+                                        Text(
+                                          '${trend['viewsCountFormatted']}',
+                                          style: TextStyle(color: Colors.grey),
+                                        )
+                                      ],
+                                    )
                                   ],
                                 ),
                                 SizedBox(height: 10),

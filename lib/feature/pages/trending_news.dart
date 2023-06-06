@@ -213,11 +213,11 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               BorderRadius
                                                                   .circular(10),
                                                           image: trend[index]
-                                                                      .featured_image !=
+                                                                      .featuredImage !=
                                                                   null
                                                               ? DecorationImage(
                                                                   image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featured_image}"),
+                                                                      "${announcement_imgUri}${trend[index].featuredImage}"),
                                                                   fit: BoxFit
                                                                       .cover)
                                                               : null),
@@ -278,7 +278,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                             Container(
                                                               width: 80,
                                                               child: Text(
-                                                                '${DateTime.parse(trend[index].created_at)}',
+                                                                '${DateTime.parse(trend[index].createdAt)}',
                                                                 maxLines: 1,
                                                                 overflow:
                                                                     TextOverflow
@@ -302,7 +302,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                                 //     AssetSource(
                                                                 //         "audio/my_audio.mp3"));
                                                                 if (trend[index]
-                                                                        .liked_by_auth_user ==
+                                                                        .likedByAuthUser ==
                                                                     true) {
                                                                   likeAnnouncement(
                                                                       trend[index]
@@ -317,7 +317,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               },
                                                               child: Row(
                                                                 children: [
-                                                                  trend[index].liked_by_auth_user ==
+                                                                  trend[index].likedByAuthUser ==
                                                                           true
                                                                       ? Icon(
                                                                           CupertinoIcons
@@ -335,7 +335,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                                     width: 2,
                                                                   ),
                                                                   Text(
-                                                                    '${trend[index].likes_count_formatted}',
+                                                                    '${trend[index].likesCountFormatted}',
                                                                     style: TextStyle(
                                                                         color: Colors
                                                                             .grey),
@@ -353,7 +353,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               width: 6,
                                                             ),
                                                             Text(
-                                                              '${trend[index].views_count_formatted}',
+                                                              '${trend[index].viewsCountFormatted}',
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .grey),

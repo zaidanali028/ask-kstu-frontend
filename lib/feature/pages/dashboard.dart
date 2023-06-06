@@ -436,16 +436,16 @@ class _DashboardState extends State<Dashboard>
                                                               NoticeBoardShimmer(),
                                                             ])));
                                               } else if (snapshot.hasError) {
-                                                logout().then((value) => {
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          LoginPage()),
-                                                              (route) => false)
-                                                    });
-                                                return Text('');
+                                                // logout().then((value) => {
+                                                //       Navigator.of(context)
+                                                //           .pushAndRemoveUntil(
+                                                //               MaterialPageRoute(
+                                                //                   builder:
+                                                //                       (context) =>
+                                                //                           LoginPage()),
+                                                //               (route) => false)
+                                                //     });
+                                                return Text('${snapshot.error}');
                                               } else {
                                                 final noticeboard =
                                                     snapshot.data!;
@@ -508,8 +508,8 @@ class _DashboardState extends State<Dashboard>
                                                                           138,
                                                                       //
                                                                       decoration: BoxDecoration(
-                                                                          image: noticeboard[index].featured_image != null
-                                                                              ? DecorationImage(image: NetworkImage("${announcement_imgUri}${noticeboard[index].featured_image}"), fit: BoxFit.fill)
+                                                                          image: noticeboard[index].featuredImage != null
+                                                                              ? DecorationImage(image: NetworkImage("${announcement_imgUri}${noticeboard[index].featuredImage}"), fit: BoxFit.fill)
                                                                               : DecorationImage(image: NetworkImage("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"), fit: BoxFit.fill),
                                                                           color: topColor,
                                                                           borderRadius: BorderRadius.circular(10)),
@@ -538,7 +538,7 @@ class _DashboardState extends State<Dashboard>
                                                                           20,
                                                                     ),
                                                                     Text(
-                                                                      "${DateTime.parse(noticeboard[index].created_at)}",
+                                                                      "${DateTime.parse(noticeboard[index].createdAt)}",
                                                                       style: TextStyle(
                                                                           color: Colors
                                                                               .grey
@@ -600,16 +600,16 @@ class _DashboardState extends State<Dashboard>
                                                   ),
                                                 );
                                               } else if (snapshot.hasError) {
-                                                logout().then((value) => {
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          LoginPage()),
-                                                              (route) => false)
-                                                    });
-                                                return Center();
+                                                // logout().then((value) => {
+                                                //       Navigator.of(context)
+                                                //           .pushAndRemoveUntil(
+                                                //               MaterialPageRoute(
+                                                //                   builder:
+                                                //                       (context) =>
+                                                //                           LoginPage()),
+                                                //               (route) => false)
+                                                //     });
+                                                return Text('${snapshot.error}');
                                               } else {
                                                 final trend = snapshot.data!;
                                                 return Container(
@@ -649,10 +649,10 @@ class _DashboardState extends State<Dashboard>
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               10),
-                                                                      image: trend[index].featured_image !=
+                                                                      image: trend[index].featuredImage !=
                                                                               null
                                                                           ? DecorationImage(
-                                                                              image: NetworkImage("${announcement_imgUri}${trend[index].featured_image}"),
+                                                                              image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"),
                                                                               fit: BoxFit.cover)
                                                                           : null),
                                                                 ),
@@ -719,7 +719,7 @@ class _DashboardState extends State<Dashboard>
                                                                               100,
                                                                           child:
                                                                               Text(
-                                                                            '${DateTime.parse(trend[index].created_at)}',
+                                                                            '${DateTime.parse(trend[index].createdAt)}',
                                                                             maxLines:
                                                                                 1,
                                                                             overflow:
@@ -741,7 +741,7 @@ class _DashboardState extends State<Dashboard>
                                                                           onTap:
                                                                               () {
                                                                             // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
-                                                                            if (trend[index].liked_by_auth_user ==
+                                                                            if (trend[index].likedByAuthUser ==
                                                                                 true) {
                                                                               likeAnnouncement(trend[index].id, 0);
                                                                             } else {
@@ -751,7 +751,7 @@ class _DashboardState extends State<Dashboard>
                                                                           child:
                                                                               Row(
                                                                             children: [
-                                                                              trend[index].liked_by_auth_user == true
+                                                                              trend[index].likedByAuthUser == true
                                                                                   ? Icon(
                                                                                       CupertinoIcons.hand_thumbsup_fill,
                                                                                       color: topColor,
@@ -764,7 +764,7 @@ class _DashboardState extends State<Dashboard>
                                                                                 width: 2,
                                                                               ),
                                                                               Text(
-                                                                                '${trend[index].likes_count_formatted}',
+                                                                                '${trend[index].likesCountFormatted}',
                                                                                 style: TextStyle(color: Colors.grey),
                                                                               )
                                                                             ],
@@ -783,7 +783,7 @@ class _DashboardState extends State<Dashboard>
                                                                               6,
                                                                         ),
                                                                         Text(
-                                                                          '${trend[index].views_count_formatted}',
+                                                                          '${trend[index].viewsCountFormatted}',
                                                                           style:
                                                                               TextStyle(color: Colors.grey),
                                                                         )

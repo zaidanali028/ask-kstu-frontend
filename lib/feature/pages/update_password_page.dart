@@ -163,7 +163,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                       child: TextFormField(
                                         validator: ((value) {
                                           if (value!.isEmpty) {
-                                            return "Old password field is required";
+                                            return "Current password field is required";
                                           }
                                           return null;
                                         }),
@@ -173,10 +173,20 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                         controller: oldPasswordController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
-                                          label: Text("Old Password"),
+                                          label: Text("Current Password"),
                                           hintText: '',
                                           prefixIcon: Icon(
                                               CupertinoIcons.lock_circle_fill),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(ispassword
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            onPressed: () {
+                                              setState(() {
+                                                ispassword = !ispassword;
+                                              });
+                                            },
+                                          ),
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
@@ -190,7 +200,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                       child: TextFormField(
                                         validator: ((value) {
                                           if (value!.isEmpty) {
-                                            return "Password field is required";
+                                            return "New Password field is required";
                                           }
                                           return null;
                                         }),
@@ -200,7 +210,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                         obscureText: ispassword,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
-                                          label: Text("Password"),
+                                          label: Text("New Password"),
                                           hintText: '',
                                           prefixIcon: Icon(
                                               CupertinoIcons.lock_slash_fill),
@@ -283,26 +293,23 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                           child: Center(
                                             child: loading
                                                 ? SpinKitFadingCircle(
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index) {
-                                                          return DecoratedBox(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: index
-                                                                      .isEven
-                                                                  ? bottomColor
-                                                                  : bottomColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                          );
-                                                        },
-                                                        size: 40,
-                                                      )
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return DecoratedBox(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: index.isEven
+                                                              ? bottomColor
+                                                              : bottomColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                      );
+                                                    },
+                                                    size: 40,
+                                                  )
                                                 : Text(
                                                     "Change Password",
                                                     style: TextStyle(

@@ -261,15 +261,13 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                         .circular(
                                                                             10)),
                                                                 image: noticeboard[index]
-                                                                            .featured_image !=
+                                                                            .featuredImage !=
                                                                         null
                                                                     ? DecorationImage(
-
-                                                                image: NetworkImage(
-                                                                      "${announcement_imgUri}${noticeboard[index].featured_image}"),
-                                                                fit: BoxFit
-                                                                   .cover)
-
+                                                                        image: NetworkImage(
+                                                                            "${announcement_imgUri}${noticeboard[index].featuredImage}"),
+                                                                        fit: BoxFit
+                                                                            .cover)
                                                                     : DecorationImage(
                                                                         image: NetworkImage(
                                                                             "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
@@ -327,9 +325,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                                             20,
                                                                         child:
                                                                             Text(
-
-                                                                          "${DateTime.parse(noticeboard[index].created_at)}",
-
+                                                                          "${DateTime.parse(noticeboard[index].createdAt)}",
                                                                           style: TextStyle(
                                                                               color: Colors.grey.shade500,
                                                                               fontSize: 15),

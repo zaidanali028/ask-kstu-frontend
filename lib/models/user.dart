@@ -1,6 +1,6 @@
 class User {
   int? id;
-    int? facultyId;
+  int? facultyId;
   int? deptId;
   int? programId;
   String? name;
@@ -56,7 +56,7 @@ class User {
         name: json['user']['name'],
         email: json['user']['email'],
         gender: json['user']['gender'],
-        userImg: json['user']['user_img'],
+        userImg: json['user']['user_img'] ?? '1',
         indexNo: json['user']['index_no'],
         currentLevel: json['user']['current_level'],
         currentSem: json['user']['current_sem'],

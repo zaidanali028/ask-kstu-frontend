@@ -161,11 +161,11 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                             height: 150,
                                                             decoration: BoxDecoration(
                                                                 image: noticeboard[index]
-                                                                            .featured_image !=
+                                                                            .featuredImage !=
                                                                         null
                                                                     ? DecorationImage(
                                                                         image: NetworkImage(
-                                                                            "${announcement_imgUri}${noticeboard[index].featured_image}"),
+                                                                            "${announcement_imgUri}${noticeboard[index].featuredImage}"),
                                                                         fit: BoxFit
                                                                             .cover)
                                                                     : DecorationImage(
@@ -200,7 +200,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                             height: 10,
                                                           ),
                                                           Text(
-                                                            "${DateTime.parse(noticeboard[index].created_at)}",
+                                                            "${DateTime.parse(noticeboard[index].createdAt)}",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .grey
