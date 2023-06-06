@@ -23,7 +23,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:notification_permissions/notification_permissions.dart';
 
-
 // Make some changes /  Push to github on Date: 04/06/2023 Time:03:55am
 
 class Dashboard extends StatefulWidget {
@@ -196,6 +195,7 @@ class _DashboardState extends State<Dashboard>
     );
   }
 
+  late final data;
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -206,7 +206,9 @@ class _DashboardState extends State<Dashboard>
           "Authorization": "Bearer $token"
         });
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      setState(() {
+        data = jsonDecode(response.body);
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,
@@ -445,7 +447,8 @@ class _DashboardState extends State<Dashboard>
                                                 //                           LoginPage()),
                                                 //               (route) => false)
                                                 //     });
-                                                return Text('${snapshot.error}');
+                                                return Text(
+                                                    '${snapshot.error}');
                                               } else {
                                                 final noticeboard =
                                                     snapshot.data!;
@@ -609,7 +612,8 @@ class _DashboardState extends State<Dashboard>
                                                 //                           LoginPage()),
                                                 //               (route) => false)
                                                 //     });
-                                                return Text('${snapshot.error}');
+                                                return Text(
+                                                    '${snapshot.error}');
                                               } else {
                                                 final trend = snapshot.data!;
                                                 return Container(

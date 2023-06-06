@@ -25,6 +25,7 @@ class TrendingNewsPage extends StatefulWidget {
 }
 
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
+  late final data;
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -35,7 +36,9 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
           "Authorization": "Bearer $token"
         });
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      setState(() {
+        data = jsonDecode(response.body);
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,

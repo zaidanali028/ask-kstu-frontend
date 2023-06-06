@@ -104,12 +104,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   bool loading = false;
   Widget bottomSheet() {
     return Container(
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.horizontal(
-      //     right: Radius.circular(40),
-      //     left: Radius.circular(40),
-      //   )
-      // ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.horizontal(
+          right: Radius.circular(40),
+          left: Radius.circular(40),
+        )
+      ),
       height: 100.0,
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(

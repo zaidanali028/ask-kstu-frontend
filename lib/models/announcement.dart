@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final announcement = announcementFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -21,7 +18,7 @@ class Announcement {
     String updatedAt;
     int likesCount;
     int likesCountFormatted;
-    String viewsCountFormatted;
+    int viewsCountFormatted;
     bool likedByAuthUser;
     List<dynamic> likedUsers;
 
@@ -52,7 +49,7 @@ class Announcement {
         views: json["views"],
         adminId: json["admin_id"],
         categoryId: json["category_id"],
-        createdAt:json["created_at"],
+        createdAt:json["created_at"] ?? '',
         updatedAt: json["updated_at"],
         likesCount: json["likes_count"],
         likesCountFormatted: json["likes_count_formatted"],

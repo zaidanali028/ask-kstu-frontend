@@ -23,7 +23,8 @@ class _DetailNewsState extends State<DetailNews> {
   double marignTop = 180;
   ScrollController _scrollController = ScrollController();
 
-  void likeAnnouncement(int category_id, int status) async {
+  late final data;
+  Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     final response = await http.post(
@@ -33,7 +34,9 @@ class _DetailNewsState extends State<DetailNews> {
           "Authorization": "Bearer $token"
         });
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      setState(() {
+        data = jsonDecode(response.body);
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,
