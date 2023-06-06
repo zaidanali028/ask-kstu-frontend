@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/components/side_menu.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
@@ -740,7 +740,7 @@ class _DashboardState extends State<Dashboard>
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
+                                                                            // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
                                                                             if (trend[index].liked_by_auth_user ==
                                                                                 true) {
                                                                               likeAnnouncement(trend[index].id, 0);

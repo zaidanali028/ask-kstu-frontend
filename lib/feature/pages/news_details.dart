@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
@@ -192,8 +191,8 @@ class _DetailNewsState extends State<DetailNews> {
                                     trend['category_id'] == 2
                                         ? GestureDetector(
                                             onTap: () {
-                                              AudioPlayer().play(AssetSource(
-                                                  "audio/my_audio.mp3"));
+                                              // AudioPlayer().play(AssetSource(
+                                              //     "audio/my_audio.mp3"));
                                               if (trend['liked_by_auth_user'] ==
                                                   true) {
                                                 likeAnnouncement(trend['id'], 0);

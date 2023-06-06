@@ -2,12 +2,15 @@ import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/forgot_password.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class WelcomeScreenPage extends StatelessWidget {
   const WelcomeScreenPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -81,7 +84,15 @@ class WelcomeScreenPage extends StatelessWidget {
                                             height: 25,
                                           ),
                                           GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -112,7 +123,15 @@ class WelcomeScreenPage extends StatelessWidget {
                                             height: 20,
                                           ),
                                           GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(

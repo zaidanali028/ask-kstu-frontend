@@ -159,9 +159,6 @@ class _LoadingPageState extends State<LoadingPage> {
                             image: AssetImage("assets/images/f.png"),
                             fit: BoxFit.contain)),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
                   const Text(
                     "Academic Student Knowledgebase",
                     style: TextStyle(

@@ -6,6 +6,7 @@ import 'package:first_app/models/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -52,12 +53,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     return Scaffold(
       backgroundColor: topColor,
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: topColor,
           icon: Icon(CupertinoIcons.layers),
-          onPressed: () {
+          onPressed: () async {
+            _dialog.show(
+                message: 'Waiting...',
+                type: SimpleFontelicoProgressDialogType.hurricane);
+            await Future.delayed(Duration(seconds: 1));
+            _dialog.hide();
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => UpdateProfilePage()));
           },

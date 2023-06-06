@@ -38,33 +38,33 @@ class Announcement {
 
   factory Announcement.fromJson(Map<String, dynamic> json) {
     return Announcement(
-      title: json['title'],
-      id: json['id'],
-      featured_image: json['featured_image'],
-      status: json['status'],
-      views: json['views'],
-      category_id: json['category_id'],
-      created_at: json['created_at'],
-      updated_at: json['updated_at'],
-      liked_by_auth_user: json['liked_by_auth_user']??false,
-      likes_count: json['likes_count'],
-      likes_count_formatted: json['likes_count_formatted'],
-      views_count_formatted: json['views_count_formatted'],
+      title: json['title'] ?? '',
+      id: json['id'] ?? 0,
+      featured_image: json['featured_image'] ?? '',
+      status: json['status'] ?? 0,
+      views: json['views'] ?? 0,
+      category_id: json['category_id'] ?? 0,
+      created_at: json['created_at'] ?? 0,
+      updated_at: json['updated_at'] ?? 0,
+      liked_by_auth_user: json['liked_by_auth_user'] ?? false,
+      likes_count: json['likes_count'] ?? 0,
+      likes_count_formatted: json['likes_count_formatted'] ?? 0,
+      views_count_formatted: json['views_count_formatted'] ?? 0,
       get_announcement_key_moments: json['get_announcement_key_moments'] ?? [],
     );
   }
 
-  // Map<String, dynamic> toJson() => {
-  //       "title": title,
-  //       "featured_image": featured_image,
-  //       "status": status,
-  //       "category_id": category_id,
-  //       "views": views,
-  //       "id": id,  //       'likes_count_formatted': likesCount,
-  //       'views_count_formatted': viewsCount,
-  //       'liked_by_auth_user': authUserLikes,
-  //       'get_announcement_key_moments': get_announcement_key_moments,
-  //       'liked_users': users,
-  //       "created_at": date
-  //     };
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "featured_image": featured_image,
+        "status": status,
+        "category_id": category_id,
+        "views": views,
+        "id": id,  //       'likes_count_formatted': likesCount,
+        'views_count_formatted': viewsCount,
+        'liked_by_auth_user': authUserLikes,
+        'get_announcement_key_moments': get_announcement_key_moments,
+        'liked_users': users,
+        "created_at": date
+      };
 }
