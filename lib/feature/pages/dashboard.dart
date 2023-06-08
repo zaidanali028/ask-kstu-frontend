@@ -41,6 +41,7 @@ class _DashboardState extends State<Dashboard>
   late AnimationController _animationController;
   late Animation<double> animation;
   late Animation<double> scaleAnimation;
+  bool isLoading = false;
   @override
   initState() {
     _animationController = AnimationController(
@@ -195,7 +196,6 @@ class _DashboardState extends State<Dashboard>
     );
   }
 
-  late final data;
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -207,8 +207,9 @@ class _DashboardState extends State<Dashboard>
         });
     if (response.statusCode == 200) {
       setState(() {
-        data = jsonDecode(response.body);
+        isLoading = true;
       });
+      final data = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,
@@ -222,7 +223,13 @@ class _DashboardState extends State<Dashboard>
           },
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     } else {
+      setState(() {
+        isLoading = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${jsonDecode(response.body)['message']}"),
         backgroundColor: Colors.red,
@@ -438,17 +445,16 @@ class _DashboardState extends State<Dashboard>
                                                               NoticeBoardShimmer(),
                                                             ])));
                                               } else if (snapshot.hasError) {
-                                                // logout().then((value) => {
-                                                //       Navigator.of(context)
-                                                //           .pushAndRemoveUntil(
-                                                //               MaterialPageRoute(
-                                                //                   builder:
-                                                //                       (context) =>
-                                                //                           LoginPage()),
-                                                //               (route) => false)
-                                                //     });
-                                                return Text(
-                                                    '${snapshot.error}');
+                                                logout().then((value) => {
+                                                      Navigator.of(context)
+                                                          .pushAndRemoveUntil(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          LoginPage()),
+                                                              (route) => false)
+                                                    });
+                                                return Center();
                                               } else {
                                                 final noticeboard =
                                                     snapshot.data!;
@@ -603,17 +609,16 @@ class _DashboardState extends State<Dashboard>
                                                   ),
                                                 );
                                               } else if (snapshot.hasError) {
-                                                // logout().then((value) => {
-                                                //       Navigator.of(context)
-                                                //           .pushAndRemoveUntil(
-                                                //               MaterialPageRoute(
-                                                //                   builder:
-                                                //                       (context) =>
-                                                //                           LoginPage()),
-                                                //               (route) => false)
-                                                //     });
-                                                return Text(
-                                                    '${snapshot.error}');
+                                                logout().then((value) => {
+                                                      Navigator.of(context)
+                                                          .pushAndRemoveUntil(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          LoginPage()),
+                                                              (route) => false)
+                                                    });
+                                                return Center();
                                               } else {
                                                 final trend = snapshot.data!;
                                                 return Container(

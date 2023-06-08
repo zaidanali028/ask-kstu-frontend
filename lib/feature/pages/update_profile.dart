@@ -48,13 +48,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
       name = localStorage.getString('name');
+      department = localStorage.getString('department');
+      program = localStorage.getString('program');
+      faculty = localStorage.getString('faculty');
       email = localStorage.getString('email');
       yearOfCompletion = localStorage.getString('yrOfCompletion');
       yearOfAdmission = localStorage.getString('yrOfAdmission');
       gender = localStorage.getString('gender');
-      phone = localStorage.getString('phone');
       image = localStorage.getString('user_img');
       index = localStorage.getInt('index');
+      phone = localStorage.getString('phone');
       semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
     });
@@ -65,13 +68,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     getUser();
     super.initState();
   }
-  //   void takePhoto(ImageSource src) async {
-  //   final pickedFile =await picker_.pickImage(source: src);
-  //   setState(() {
-  //     imageFile_ = pickedFile;
-  //   });
-  // }
-
+  
   void pickImage(ImageSource src) async {
     var pickedFile = await picker.pickImage(source: src);
     if (pickedFile != null) {
@@ -105,11 +102,10 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget bottomSheet() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.horizontal(
-          right: Radius.circular(40),
-          left: Radius.circular(40),
-        )
-      ),
+          borderRadius: BorderRadius.horizontal(
+        right: Radius.circular(40),
+        left: Radius.circular(40),
+      )),
       height: 100.0,
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(
@@ -315,60 +311,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                   child: ListView(
                                     physics: BouncingScrollPhysics(),
                                     children: [
-                                      Column(
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              // pickimage == null
-                                              //     ? Container(
-                                              //         width: 200,
-                                              //         height: 200,
-                                              //         decoration: BoxDecoration(
-                                              //             borderRadius:
-                                              //                 BorderRadius
-                                              //                     .circular(20),
-                                              //             color: bottomColor,
-                                              //             image: DecorationImage(
-                                              //                 image: image !=
-                                              //                         '1'
-                                              //                     ? NetworkImage(
-                                              //                         image)
-                                              //                     : NetworkImage(
-                                              //                         "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
-                                              //                 fit: BoxFit
-                                              //                     .cover)),
-                                              //       )
-                                              //     : Container(
-                                              //         width: 200,
-                                              //         height: 200,
-                                              //         // decoration: BoxDecoration(
-                                              //         //     borderRadius:
-                                              //         //         BorderRadius
-                                              //         //             .circular(20),
-                                              //         //     color: bottomColor,
-                                              //         //     image: DecorationImage(
-                                              //         //         image: FileImage(
-                                              //         //             pickimage!),
-                                              //         //         fit: BoxFit
-                                              //         //             .cover)),
-                                              //       ),
-                                              // // Positioned(
-                                              // //     right: 5,
-                                              // //     bottom: 10,
-                                              // //     child: IconButton(
-                                              // //         onPressed: () {
-                                              // //           pickImage();
-                                              // //         },
-                                              // //         icon: Icon(
-                                              // //           CupertinoIcons.photo,
-                                              // //           color: Colors.black87,
-                                              // //           size: 40,
-                                              // //         )))
-                                              ImgProfile()
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                      ImgProfile(),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -387,6 +330,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       ProfileDetails(
                                         subtitle: "${phone}",
                                         title: "Phone Number",
+                                      ),
+                                      ProfileDetails(
+                                        subtitle: "${department}",
+                                        title: "Department",
+                                      ),
+                                      ProfileDetails(
+                                        subtitle: "${program}",
+                                        title: "Program",
+                                      ),
+                                      ProfileDetails(
+                                        subtitle: "${faculty}",
+                                        title: "Faculty",
                                       ),
                                       ProfileDetails(
                                         subtitle: "${gender}",

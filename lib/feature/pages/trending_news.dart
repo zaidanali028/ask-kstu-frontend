@@ -25,7 +25,8 @@ class TrendingNewsPage extends StatefulWidget {
 }
 
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
-  late final data;
+  bool isLoading = false;
+
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -37,8 +38,9 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
         });
     if (response.statusCode == 200) {
       setState(() {
-        data = jsonDecode(response.body);
+        isLoading = true;
       });
+      final data = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,
@@ -52,7 +54,13 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
           },
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     } else {
+      setState(() {
+        isLoading = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${jsonDecode(response.body)['message']}"),
         backgroundColor: Colors.red,
@@ -365,6 +373,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                         )
                                                       ],
                                                     ),
+                                                  
                                                   ),
                                                   const SizedBox(
                                                     height: 10,

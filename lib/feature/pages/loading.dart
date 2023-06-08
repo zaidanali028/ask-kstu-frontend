@@ -24,23 +24,7 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   void _loadUserInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    // var token = localStorage.getString('token');
     var name = localStorage.getString('name');
-    // if (token != null) {
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => Dashboard()),
-    //       (route) => false);
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text("Welcome Back $name"),
-    //       backgroundColor: topColor,
-    //     ),
-    //   );
-    // } else {
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
-    //       (route) => false);
-    // }
     String token = await getToken();
     if (token == '') {
       Navigator.of(context).pushAndRemoveUntil(
@@ -163,7 +147,7 @@ class _LoadingPageState extends State<LoadingPage> {
                     height: 20,
                   ),
                   const Text(
-                    "Academic Student Knowledgebase",
+                    "Academic Student KnowledgeBase",
                     style: TextStyle(
                         color: bottomColor,
                         fontWeight: FontWeight.bold,
@@ -180,7 +164,17 @@ class _LoadingPageState extends State<LoadingPage> {
                       );
                     },
                     size: 80,
-                  )
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  const Text(
+                    "Powered by @nextBrainRobotics 2023",
+                    style: TextStyle(
+                        color: bottomColor,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12),
+                  ),
                 ],
               ),
             ),

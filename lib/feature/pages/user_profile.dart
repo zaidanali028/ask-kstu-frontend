@@ -33,6 +33,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
       name = localStorage.getString('name');
+      department = localStorage.getString('department');
+      program = localStorage.getString('program');
+      faculty = localStorage.getString('faculty');
       email = localStorage.getString('email');
       yearOfCompletion = localStorage.getString('yrOfCompletion');
       yearOfAdmission = localStorage.getString('yrOfAdmission');
@@ -202,7 +205,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 ),
                                 ProfileDetails(
                                   subtitle: "${email}",
-                                  title: "Email",
+                                  title: "Student Email",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${department}",
+                                  title: "Department",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${program}",
+                                  title: "Program",
+                                ),
+                                ProfileDetails(
+                                  subtitle: "${faculty}",
+                                  title: "Faculty",
                                 ),
                                 ProfileDetails(
                                   subtitle: "${level}",

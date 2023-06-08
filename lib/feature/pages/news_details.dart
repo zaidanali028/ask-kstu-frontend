@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:first_app/feature/colors.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
+import 'package:first_app/models/announcement.dart';
+import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -22,8 +25,8 @@ class DetailNews extends StatefulWidget {
 class _DetailNewsState extends State<DetailNews> {
   double marignTop = 180;
   ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
 
-  late final data;
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
@@ -35,8 +38,9 @@ class _DetailNewsState extends State<DetailNews> {
         });
     if (response.statusCode == 200) {
       setState(() {
-        data = jsonDecode(response.body);
+        isLoading = true;
       });
+      final data = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${data['message']}"),
         backgroundColor: topColor,
@@ -50,7 +54,13 @@ class _DetailNewsState extends State<DetailNews> {
           },
         ),
       ));
+      setState(() {
+        isLoading = false;
+      });
     } else {
+      setState(() {
+        isLoading = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("${jsonDecode(response.body)['message']}"),
         backgroundColor: Colors.red,
@@ -96,7 +106,7 @@ class _DetailNewsState extends State<DetailNews> {
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
-          child: FutureBuilder(
+          child: FutureBuilder<Announcement>(
               future: trending.fetchTrendDetails(widget.title),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -110,7 +120,7 @@ class _DetailNewsState extends State<DetailNews> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    "${announcement_imgUri}${trend['featuredImage']}"),
+                                    "${announcement_imgUri}${trend.featuredImage}"),
                                 fit: BoxFit.cover)),
                         child: Stack(
                           children: [
@@ -149,7 +159,7 @@ class _DetailNewsState extends State<DetailNews> {
                               controller: _scrollController,
                               children: [
                                 Text(
-                                  trend['title'],
+                                  trend.title,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 25,
@@ -167,9 +177,11 @@ class _DetailNewsState extends State<DetailNews> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Icon(
-                                          CupertinoIcons.alarm,
+                                        FaIcon(
+                                          FontAwesomeIcons.clock,
                                           color: Colors.grey,
                                         ),
                                         const SizedBox(
@@ -178,7 +190,7 @@ class _DetailNewsState extends State<DetailNews> {
                                         Container(
                                           width: 80,
                                           child: Text(
-                                            "${trend['createdAt']}",
+                                            '${DateTime.parse(trend.createdAt)}',
                                             maxLines: 1,
                                             overflow: TextOverflow.fade,
                                             style: TextStyle(
@@ -188,54 +200,52 @@ class _DetailNewsState extends State<DetailNews> {
                                         )
                                       ],
                                     ),
-                                    SizedBox(
-                                      width: 58,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // AudioPlayer().play(AssetSource(
-                                        //     "audio/my_audio.mp3"));
-                                        if (trend['likeByAuthUser'] == true) {
-                                          likeAnnouncement(trend['id'], 0);
-                                        } else {
-                                          likeAnnouncement(trend['id'], 1);
-                                        }
-                                      },
-                                      child: Row(
-                                        children: [
-                                          trend['likeByAuthUser'] == true
-                                              ? Icon(
-                                                  CupertinoIcons
-                                                      .hand_thumbsup_fill,
-                                                  color: topColor,
-                                                )
-                                              : Icon(
-                                                  CupertinoIcons.hand_thumbsup,
-                                                  color: Colors.grey,
-                                                ),
-                                          const SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text(
-                                            '${trend['likesCountFormatted']}',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
                                     Spacer(),
                                     Row(
                                       children: [
-                                        Text(
-                                          'Views',
-                                          style: TextStyle(color: Colors.grey),
+                                        GestureDetector(
+                                          onTap: () {
+                                            // AudioPlayer().play(
+                                            //     AssetSource(
+                                            //         "audio/my_audio.mp3"));
+                                            if (trend.likedByAuthUser == true) {
+                                              likeAnnouncement(trend.id, 0);
+                                            } else {
+                                              likeAnnouncement(trend.id, 1);
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              trend.likedByAuthUser == true
+                                                  ? Icon(
+                                                      CupertinoIcons
+                                                          .hand_thumbsup_fill,
+                                                      color: topColor,
+                                                    )
+                                                  : Icon(
+                                                      CupertinoIcons
+                                                          .hand_thumbsup,
+                                                      color: Colors.grey,
+                                                    ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Text(
+                                                '${trend.likesCountFormatted}',
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              )
+                                            ],
+                                          ),
                                         ),
+                                        SizedBox(width: 12),
+                                        FaIcon(FontAwesomeIcons.eye,
+                                            color: Colors.grey),
                                         const SizedBox(
                                           width: 6,
                                         ),
                                         Text(
-                                          '${trend['viewsCountFormatted']}',
+                                          '${trend.viewsCountFormatted}',
                                           style: TextStyle(color: Colors.grey),
                                         )
                                       ],

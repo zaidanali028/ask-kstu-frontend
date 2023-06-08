@@ -1,7 +1,9 @@
 import 'package:first_app/feature/colors.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/key_moments_service.dart';
+import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -27,15 +29,10 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
             future: keymoments.fetchKeymoment(widget.title),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                // logout().then((value) => Navigator.of(context)
-                //     .pushAndRemoveUntil(
-                //         MaterialPageRoute(builder: (context) => LoginPage()),
-                //         (route) => false));
-                return Center(child: Text('${snapshot.error}'),);
+                return Center();
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: 
-                  SpinKitFadingCircle(
+                  child: SpinKitFadingCircle(
                     itemBuilder: (BuildContext context, int index) {
                       return DecoratedBox(
                         decoration: BoxDecoration(
