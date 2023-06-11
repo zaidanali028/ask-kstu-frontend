@@ -1,5 +1,5 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/services/user_service.dart';

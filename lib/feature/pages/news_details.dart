@@ -1,6 +1,7 @@
 import 'dart:convert';
 // import 'package:audioplayers/audioplayers.dart';
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
+import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/key_moments_container.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
@@ -129,10 +130,23 @@ class _DetailNewsState extends State<DetailNews> {
                                 left: 10,
                                 child: GestureDetector(
                                     onTap: () {
-                                      Navigator.pop(context);
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Dashboard()));
                                     },
                                     child: Icon(
                                       Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ))),
+                            Positioned(
+                                top: 10,
+                                right: 10,
+                                child: GestureDetector(
+                                    onTap: () {},
+                                    child: Icon(
+                                      CupertinoIcons.bookmark,
                                       color: Colors.white,
                                       size: 30,
                                     ))),
@@ -277,20 +291,9 @@ class _DetailNewsState extends State<DetailNews> {
                           borderRadius:
                               BorderRadius.only(topRight: Radius.circular(30))),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 18.0),
-                        child: ListView(
-                          children: [
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                            TrendingShimmer(),
-                          ],
-                        ),
-                      ));
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 18.0),
+                          child: TrendingShimmer()));
                 } else {
                   return Center();
                 }

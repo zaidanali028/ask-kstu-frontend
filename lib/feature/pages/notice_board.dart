@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class AllNoticeBoardPage extends StatefulWidget {
   const AllNoticeBoardPage({super.key});
@@ -78,6 +79,8 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     final noticeboardProvider =
         Provider.of<NoticeBoardProvider>(context, listen: false);
     return Scaffold(
@@ -158,14 +161,7 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return ListView(
-                                        children: [
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                        ],
-                                      );
+                                      return TrendingShimmer();
                                     } else if (snapshot.hasError) {
                                       logout().then((value) => {
                                             Navigator.of(context)
@@ -195,7 +191,15 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async {
+                                                      _dialog.show(
+                                                          message: 'Waiting...',
+                                                          type:
+                                                              SimpleFontelicoProgressDialogType
+                                                                  .hurricane);
+                                                      await Future.delayed(
+                                                          Duration(seconds: 1));
+                                                      _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -205,29 +209,59 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                                                                               index]
                                                                           .id))));
                                                     },
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: 200,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          image: trend[index]
-                                                                      .featuredImage !=
-                                                                  null
-                                                              ? DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featuredImage}"),
-                                                                  fit: BoxFit
-                                                                      .cover)
-                                                              : null),
+                                                    child: Stack(
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 200,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              image: trend[index]
+                                                                          .featuredImage !=
+                                                                      null
+                                                                  ? DecorationImage(
+                                                                      image: NetworkImage(
+                                                                          "${announcement_imgUri}${trend[index].featuredImage}"),
+                                                                      fit: BoxFit
+                                                                          .cover)
+                                                                  : null),
+                                                        ),
+                                                        trend[index].featuredImage !=
+                                                                null
+                                                            ? Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 200,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                              )
+                                                            : Center(),
+                                                      ],
                                                     ),
                                                   ),
                                                   const SizedBox(
                                                     height: 10,
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async {
+                                                      _dialog.show(
+                                                          message: 'Waiting...',
+                                                          type:
+                                                              SimpleFontelicoProgressDialogType
+                                                                  .hurricane);
+                                                      await Future.delayed(
+                                                          Duration(seconds: 1));
+                                                      _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(

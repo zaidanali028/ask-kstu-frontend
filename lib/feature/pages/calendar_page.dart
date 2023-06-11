@@ -1,4 +1,4 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/models/announcement.dart';

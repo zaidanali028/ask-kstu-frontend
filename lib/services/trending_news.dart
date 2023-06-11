@@ -55,3 +55,24 @@ class TrendingNewsProvider extends ChangeNotifier {
   }
 
 }
+
+Future<List<dynamic>> fetchTrendWithPagination(int page) async {
+  String token = await getToken();
+  final response = await http.get(
+      Uri.parse(
+          "http://16.16.192.97/api/v1/announcements/trending-news?page=1"),
+      headers: {
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token'
+      });
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonData = json.decode(response.body)['announcements'];
+    final List<dynamic> data = jsonData['data'];
+    return data;
+  } else if (response.statusCode == 401) {
+    throw Exception('Unauthorized!');
+  } else {
+    throw Exception('Failed to fetch noticeboard!');
+  }
+}

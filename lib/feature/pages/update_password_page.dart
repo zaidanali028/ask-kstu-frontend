@@ -1,4 +1,4 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/services/user_service.dart';
@@ -169,7 +169,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                         }),
                                         keyboardType:
                                             TextInputType.visiblePassword,
-                                        obscureText: true,
+                                        obscureText: ispassword,
                                         controller: oldPasswordController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
@@ -335,4 +335,5 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
       ),
     );
   }
+
 }

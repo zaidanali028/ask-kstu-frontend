@@ -1,4 +1,4 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/calendar_page.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';

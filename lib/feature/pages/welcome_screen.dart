@@ -1,11 +1,70 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/forgot_password.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
-class WelcomeScreenPage extends StatelessWidget {
+class WelcomeScreenPage extends StatefulWidget {
   const WelcomeScreenPage({super.key});
+
+  @override
+  State<WelcomeScreenPage> createState() => _WelcomeScreenPageState();
+}
+
+class _WelcomeScreenPageState extends State<WelcomeScreenPage>
+    with TickerProviderStateMixin {
+  late Animation<double> animation1;
+  late AnimationController controller1;
+  late Animation<double> animation2;
+  late AnimationController controller2;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // Animation & Controller 1
+    controller1 = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2500));
+    final CurvedAnimation curvedAnimation1 =
+        CurvedAnimation(parent: controller1, curve: Curves.easeInOut);
+    animation1 = Tween(begin: 100.0, end: 240.0).animate(curvedAnimation1);
+
+    // Animation & Controller 2
+    controller2 = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2500));
+    final CurvedAnimation curvedAnimation2 =
+        CurvedAnimation(parent: controller2, curve: Curves.easeInOut);
+    animation2 = Tween(begin: 5.0, end: 20.0).animate(curvedAnimation2);
+
+    controller1.forward();
+    controller2.forward();
+  }
+
+  Widget containerLogo(BuildContext context) {
+    return Container(
+      width: animation1.value,
+      height: animation1.value,
+      child: Image.asset("assets/images/f.png", fit: BoxFit.contain),
+    );
+  }
+
+  Widget textAnimated(BuildContext context) {
+    return Text(
+      "Official Mobile App For KsTU Students",
+      style: TextStyle(
+          color: bottomColor,
+          fontWeight: FontWeight.bold,
+          fontSize: animation2.value),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller1.dispose();
+    controller2.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,25 +105,18 @@ class WelcomeScreenPage extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          width: 240,
-                                          height: 240,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "assets/images/f.png"),
-                                                  fit: BoxFit.contain)),
-                                        ),
+                                        AnimatedBuilder(
+                                            animation: animation1,
+                                            builder: (context, child) =>
+                                                containerLogo(context)),
                                         const SizedBox(
                                           height: 25,
                                         ),
-                                        const Text(
-                                          "Official mobile app for KSTU students",
-                                          style: TextStyle(
-                                              color: bottomColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
+                                        
+                                        AnimatedBuilder(
+                                            animation: animation1,
+                                            builder: (context, child) =>
+                                                textAnimated(context)),
                                       ],
                                     ),
                                   )),
@@ -109,7 +161,7 @@ class WelcomeScreenPage extends StatelessWidget {
                                                           10)),
                                               child: const Center(
                                                 child: Text(
-                                                  "Tap to Login in",
+                                                  "Tap To Login",
                                                   style: TextStyle(
                                                       color: bottomColor,
                                                       fontSize: 20,

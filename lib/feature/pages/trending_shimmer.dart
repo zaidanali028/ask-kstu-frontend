@@ -7,67 +7,72 @@ class TrendingShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey.shade500,
-      highlightColor: Colors.grey.shade300,
-      enabled: true,
+      baseColor: Colors.grey.shade600,
+      highlightColor: Colors.grey.shade400,
+      period: Duration(seconds: 3),
       child: Container(
         width: double.infinity,
         height: 320,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        image: NetworkImage(''), fit: BoxFit.cover)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: double.infinity,
-                height: 20,
-                color: Colors.grey.shade400,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
+          child: ListView.builder(
+            itemCount: 6,
+            itemBuilder: (context, index) {
+              return Column(
                 children: [
                   Container(
-                    width: 100,
-                    height: 20,
-                    color: Colors.grey.shade400,
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            image: NetworkImage(''), fit: BoxFit.cover)),
                   ),
-                  Spacer(),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
-                    width: 100,
+                    width: double.infinity,
                     height: 20,
                     color: Colors.grey.shade400,
                   ),
                   const SizedBox(
-                    width: 10,
+                    height: 10,
                   ),
-                  Container(
-                    width: 100,
-                    height: 20,
-                    color: Colors.grey.shade400,
+                  Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.grey.shade400,
+                      ),
+                      Spacer(),
+                      Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.grey.shade400,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.grey.shade400,
+                      ),
+                    ],
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  )
                 ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Divider(
-                thickness: 1,
-                color: Colors.grey,
-              )
-            ],
+              );
+            },
           ),
         ),
       ),

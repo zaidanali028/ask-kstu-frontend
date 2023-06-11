@@ -1,4 +1,5 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
+import 'package:first_app/feature/pages/about_page.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/notice_board.dart';
@@ -125,7 +126,7 @@ class _SideMenuState extends State<SideMenu> {
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.globe,
-                title: "Kstu Website",
+                title: "Kstu Vclass",
                 myfunction: () async {
                   _dialog.show(
                       message: 'Opening...',
@@ -165,7 +166,16 @@ class _SideMenuState extends State<SideMenu> {
               SideMenuTitle(
                 iconData: CupertinoIcons.question_circle,
                 title: "About",
-                myfunction: () {},
+                myfunction: () async{
+                  _dialog.show(
+                      message: 'waiting...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AboutPage()));},
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.chat_bubble_2_fill,

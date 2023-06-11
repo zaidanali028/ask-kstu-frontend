@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
@@ -82,8 +82,7 @@ class _LoadingPageState extends State<LoadingPage> {
 
     Timer(Duration(seconds: 4), _loadUserInfo);
   }
-
-  void listenForPushNotifications(BuildContext context) {
+ void listenForPushNotifications(BuildContext context) {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       final data = result.notification.additionalData;
@@ -116,7 +115,6 @@ class _LoadingPageState extends State<LoadingPage> {
     //   },
     // );
   }
-
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(seconds: 7), () {
@@ -147,11 +145,11 @@ class _LoadingPageState extends State<LoadingPage> {
                     height: 20,
                   ),
                   const Text(
-                    "Academic Student KnowledgeBase",
+                    "Students Represantative Council KsTU",
                     style: TextStyle(
                         color: bottomColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                        fontSize: 18),
                   ),
                   Spacer(),
                   SpinKitFadingCircle(
@@ -163,18 +161,11 @@ class _LoadingPageState extends State<LoadingPage> {
                         ),
                       );
                     },
-                    size: 80,
+                    size: 60,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 40,
-                  ),
-                  const Text(
-                    "Powered by @nextBrainRobotics 2023",
-                    style: TextStyle(
-                        color: bottomColor,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 12),
-                  ),
+                  )
                 ],
               ),
             ),

@@ -13,7 +13,7 @@ import 'package:first_app/services/notice_board.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
@@ -22,6 +22,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:notification_permissions/notification_permissions.dart';
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // Make some changes /  Push to github on Date: 04/06/2023 Time:03:55am
 
@@ -248,6 +249,8 @@ class _DashboardState extends State<Dashboard>
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     final noticeProvider =
         Provider.of<NoticeBoardProvider>(context, listen: false);
     final trendProvider =
@@ -348,7 +351,15 @@ class _DashboardState extends State<Dashboard>
                                               ],
                                             ),
                                             GestureDetector(
-                                              onTap: () {
+                                              onTap: () async {
+                                                _dialog.show(
+                                                    message: 'Waiting...',
+                                                    type:
+                                                        SimpleFontelicoProgressDialogType
+                                                            .hurricane);
+                                                await Future.delayed(
+                                                    Duration(seconds: 1));
+                                                _dialog.hide();
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -430,20 +441,8 @@ class _DashboardState extends State<Dashboard>
                                                         horizontal: 10.0),
                                                     child: Container(
                                                         height: 243,
-                                                        child: ListView(
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            children: [
-                                                              NoticeBoardShimmer(),
-                                                              SizedBox(
-                                                                width: 15,
-                                                              ),
-                                                              NoticeBoardShimmer(),
-                                                              SizedBox(
-                                                                width: 15,
-                                                              ),
-                                                              NoticeBoardShimmer(),
-                                                            ])));
+                                                        child:
+                                                            NoticeBoardShimmer()));
                                               } else if (snapshot.hasError) {
                                                 logout().then((value) => {
                                                       Navigator.of(context)
@@ -474,7 +473,18 @@ class _DashboardState extends State<Dashboard>
                                                       itemBuilder:
                                                           (context, index) {
                                                         return GestureDetector(
-                                                          onTap: () {
+                                                          onTap: () async {
+                                                            _dialog.show(
+                                                                message:
+                                                                    'Waiting...',
+                                                                type: SimpleFontelicoProgressDialogType
+                                                                    .hurricane);
+                                                            await Future
+                                                                .delayed(
+                                                                    Duration(
+                                                                        seconds:
+                                                                            1));
+                                                            _dialog.hide();
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
@@ -597,17 +607,9 @@ class _DashboardState extends State<Dashboard>
                                               if (snapshot.connectionState ==
                                                   ConnectionState.waiting) {
                                                 return Container(
-                                                  height: 300,
-                                                  width: double.infinity,
-                                                  child: ListView(
-                                                    children: [
-                                                      TrendingShimmer(),
-                                                      TrendingShimmer(),
-                                                      TrendingShimmer(),
-                                                      TrendingShimmer(),
-                                                    ],
-                                                  ),
-                                                );
+                                                    height: 300,
+                                                    width: double.infinity,
+                                                    child: TrendingShimmer());
                                               } else if (snapshot.hasError) {
                                                 logout().then((value) => {
                                                       Navigator.of(context)
@@ -642,35 +644,70 @@ class _DashboardState extends State<Dashboard>
                                                           child: Column(
                                                             children: [
                                                               GestureDetector(
-                                                                onTap: () {
+                                                                onTap:
+                                                                    () async {
+                                                                  _dialog.show(
+                                                                      message:
+                                                                          'Waiting...',
+                                                                      type: SimpleFontelicoProgressDialogType
+                                                                          .hurricane);
+                                                                  await Future.delayed(
+                                                                      Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                  _dialog
+                                                                      .hide();
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
                                                                           builder: ((context) =>
                                                                               DetailNews(title: trend[index].id))));
                                                                 },
-                                                                child:
+                                                                child: Stack(
+                                                                  children: [
                                                                     Container(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  height: 200,
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          200,
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
                                                                               10),
-                                                                      image: trend[index].featuredImage !=
-                                                                              null
-                                                                          ? DecorationImage(
-                                                                              image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"),
-                                                                              fit: BoxFit.cover)
-                                                                          : null),
+                                                                          image: trend[index].featuredImage != null
+                                                                              ? DecorationImage(image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"), fit: BoxFit.cover)
+                                                                              : null),
+                                                                    ),
+                                                                    trend[index].featuredImage !=
+                                                                            null
+                                                                        ? Container(
+                                                                            width:
+                                                                                double.infinity,
+                                                                            height:
+                                                                                200,
+                                                                            decoration:
+                                                                                BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.3)),
+                                                                          )
+                                                                        : Center(),
+                                                                  ],
                                                                 ),
                                                               ),
                                                               const SizedBox(
                                                                 height: 10,
                                                               ),
                                                               GestureDetector(
-                                                                onTap: () {
+                                                                onTap:
+                                                                    () async {
+                                                                  _dialog.show(
+                                                                      message:
+                                                                          'Waiting...',
+                                                                      type: SimpleFontelicoProgressDialogType
+                                                                          .hurricane);
+                                                                  await Future.delayed(
+                                                                      Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                  _dialog
+                                                                      .hide();
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(

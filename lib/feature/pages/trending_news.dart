@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 // import 'package:audioplayers/audioplayers.dart';
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class TrendingNewsPage extends StatefulWidget {
   const TrendingNewsPage({super.key});
@@ -26,6 +27,30 @@ class TrendingNewsPage extends StatefulWidget {
 
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
   bool isLoading = false;
+  ScrollController _scrollController = ScrollController();
+  List<Announcement> _dataList = [];
+  int _currentPage = 1;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    // _fetchData();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      // _fetchData();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<void> likeAnnouncement(int category_id, int status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -79,6 +104,8 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
     final trendProvider =
         Provider.of<TrendingNewsProvider>(context, listen: false);
     return Scaffold(
@@ -159,14 +186,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
-                                      return ListView(
-                                        children: [
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                          TrendingShimmer(),
-                                        ],
-                                      );
+                                      return TrendingShimmer();
                                     } else if (!snapshot.hasData) {
                                       return Center(
                                         child: Text(
@@ -190,6 +210,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                     } else {
                                       final trend = snapshot.data!;
                                       return ListView.builder(
+                                        controller: _scrollController,
                                         physics: BouncingScrollPhysics(),
                                         itemCount: trend.length,
                                         scrollDirection: Axis.vertical,
@@ -206,7 +227,15 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async{
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -216,29 +245,59 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                                               index]
                                                                           .id))));
                                                     },
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      height: 200,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          image: trend[index]
-                                                                      .featuredImage !=
-                                                                  null
-                                                              ? DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      "${announcement_imgUri}${trend[index].featuredImage}"),
-                                                                  fit: BoxFit
-                                                                      .cover)
-                                                              : null),
+                                                    child: Stack(
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 200,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              image: trend[index]
+                                                                          .featuredImage !=
+                                                                      null
+                                                                  ? DecorationImage(
+                                                                      image: NetworkImage(
+                                                                          "${announcement_imgUri}${trend[index].featuredImage}"),
+                                                                      fit: BoxFit
+                                                                          .cover)
+                                                                  : null),
+                                                        ),
+                                                        trend[index].featuredImage !=
+                                                                null
+                                                            ? Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 200,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.3)),
+                                                              )
+                                                            : Center(),
+                                                      ],
                                                     ),
                                                   ),
                                                   const SizedBox(
                                                     height: 10,
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async{
+                                              _dialog.show(
+                                                  message: 'Waiting...',
+                                                  type:
+                                                      SimpleFontelicoProgressDialogType
+                                                          .hurricane);
+                                              await Future.delayed(
+                                                  Duration(seconds: 1));
+                                              _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -373,7 +432,6 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                         )
                                                       ],
                                                     ),
-                                                  
                                                   ),
                                                   const SizedBox(
                                                     height: 10,

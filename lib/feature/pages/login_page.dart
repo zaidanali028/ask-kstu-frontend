@@ -1,4 +1,4 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';

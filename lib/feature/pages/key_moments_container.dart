@@ -1,4 +1,4 @@
-import 'package:first_app/feature/colors.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/constant.dart';
@@ -49,7 +49,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                 return ListView.builder(
                     shrinkWrap: true,
                     controller: _scrollController,
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: BouncingScrollPhysics(),
                     itemCount: keymoments.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -84,7 +84,8 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
                                 child: Text(
                                   "${keymoments[index].imageSubTitle}",
                                   style: TextStyle(
-                                      fontSize: 15, color: Colors.black45),
+                                      fontSize: 15,
+                                      color: Colors.black.withOpacity(0.7)),
                                   textAlign: TextAlign.start,
                                 ),
                               ),
