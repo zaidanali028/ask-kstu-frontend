@@ -28,9 +28,6 @@ class TrendingNewsPage extends StatefulWidget {
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
   bool isLoading = false;
   ScrollController _scrollController = ScrollController();
-  List<Announcement> _dataList = [];
-  int _currentPage = 1;
-  bool _isLoading = false;
 
   @override
   void initState() {

@@ -133,7 +133,7 @@ class _SideMenuState extends State<SideMenu> {
                       type: SimpleFontelicoProgressDialogType.hurricane);
                   await Future.delayed(Duration(seconds: 1));
                   _dialog.hide();
-                  mylauntcher('https://kstu.edu.gh');
+                  mylauntcher('https://vclass.kstu.edu.gh/login/index.php');
                 },
               ),
               SideMenuTitle(

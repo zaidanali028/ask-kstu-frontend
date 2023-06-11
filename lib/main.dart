@@ -2,6 +2,7 @@ import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/loading.dart';
 import 'package:first_app/services/key_moments_service.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/services/paginating_provider.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,8 @@ void main() {
       ChangeNotifierProvider(
         create: (_) => KeyMomentProvider(),
       ),
-      ChangeNotifierProvider(create: (_) => ConnectivityProvider())
+      ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+      ChangeNotifierProvider(create: (_) => PaginatingProvider()),
     ],
     child: MyApp(),
   ));

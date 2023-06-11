@@ -71,6 +71,7 @@ class User {
         updatedAt: json['user']['updated_at'],
         facultyName: json['user']['faculty_name'],
         deptName: json['user']['dept_name'],
+        programName: json['user']['program_name'],
         token: json['authorisation']['token'],
         type: json['authorisation']['type']);
   }
