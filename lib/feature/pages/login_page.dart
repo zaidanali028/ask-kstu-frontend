@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                                               height: 25,
                                             ),
                                             const Text(
-                                              "SIGN IN",
+                                              "No internet connection",
                                               style: TextStyle(
                                                   color: bottomColor,
                                                   fontWeight: FontWeight.bold,
