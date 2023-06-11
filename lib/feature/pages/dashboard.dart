@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 // import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/components/side_menu.dart';
+import 'package:first_app/feature/pages/connectivity_provider.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
@@ -404,461 +405,454 @@ class _DashboardState extends State<Dashboard>
                                   ),
                                   Expanded(
                                     flex: 7,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height:
-                                          MediaQuery.of(context).size.height -
+                                    child: Consumer<ConnectivityProvider>(
+                                        builder: (context, provider, _) {
+                                      if (provider.status ==
+                                          ConnectivityStatus.Offline) {
+                                        logout().then((value) => {
+                                              Navigator.of(context)
+                                                  .pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LoginPage()),
+                                                      (route) => false)
+                                            });
+                                        return Center();
+                                      } else {
+                                        return Container(
+                                          width: double.infinity,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
                                               50,
-                                      decoration: const BoxDecoration(
-                                          color: bottomColor,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(30))),
-                                      child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10.0,
-                                                vertical: 15.0),
-                                            child: Text(
-                                              "Notice Board",
-                                              style: TextStyle(
-                                                  color: topColor,
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          FutureBuilder<List<Announcement>>(
-                                            future:
-                                                noticeProvider.fetchNotice(),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 10.0),
-                                                    child: Container(
-                                                        height: 243,
-                                                        child:
-                                                            NoticeBoardShimmer()));
-                                              } else if (snapshot.hasError) {
-                                                logout().then((value) => {
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          LoginPage()),
-                                                              (route) => false)
-                                                    });
-                                                return Center();
-                                              } else {
-                                                final noticeboard =
-                                                    snapshot.data!;
-                                                return Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 10.0),
-                                                  child: Container(
-                                                    height: 250,
-                                                    child: ListView.builder(
-                                                      physics:
-                                                          BouncingScrollPhysics(),
-                                                      itemCount:
-                                                          noticeboard.length,
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return GestureDetector(
-                                                          onTap: () async {
-                                                            _dialog.show(
-                                                                message:
-                                                                    'Waiting...',
-                                                                type: SimpleFontelicoProgressDialogType
-                                                                    .hurricane);
-                                                            await Future
-                                                                .delayed(
+                                          decoration: const BoxDecoration(
+                                              color: bottomColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(30))),
+                                          child: ListView(
+                                            physics: BouncingScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10.0,
+                                                    vertical: 15.0),
+                                                child: Text(
+                                                  "Notice Board",
+                                                  style: TextStyle(
+                                                      color: topColor,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              FutureBuilder<List<Announcement>>(
+                                                future: noticeProvider
+                                                    .fetchNotice(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    10.0),
+                                                        child: Container(
+                                                            height: 243,
+                                                            child:
+                                                                NoticeBoardShimmer()));
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    logout().then((value) => {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              LoginPage()),
+                                                                  (route) =>
+                                                                      false)
+                                                        });
+                                                    return Center();
+                                                  } else {
+                                                    final noticeboard =
+                                                        snapshot.data!;
+                                                    return Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 10.0),
+                                                      child: Container(
+                                                        height: 250,
+                                                        child: ListView.builder(
+                                                          physics:
+                                                              BouncingScrollPhysics(),
+                                                          itemCount: noticeboard
+                                                              .length,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return GestureDetector(
+                                                              onTap: () async {
+                                                                _dialog.show(
+                                                                    message:
+                                                                        'Waiting...',
+                                                                    type: SimpleFontelicoProgressDialogType
+                                                                        .hurricane);
+                                                                await Future.delayed(
                                                                     Duration(
                                                                         seconds:
                                                                             1));
-                                                            _dialog.hide();
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: ((context) =>
-                                                                        DetailNews(
-                                                                            title:
-                                                                                noticeboard[index].id))));
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right:
-                                                                        15.0),
-                                                            child: Container(
-                                                              width: 160,
-                                                              height: 150,
-                                                              decoration: BoxDecoration(
-                                                                  color:
-                                                                      topColor,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10)),
+                                                                _dialog.hide();
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            ((context) =>
+                                                                                DetailNews(title: noticeboard[index].id))));
+                                                              },
                                                               child: Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
-                                                                        8.0),
-                                                                child: Column(
-                                                                  // mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
+                                                                            .only(
+                                                                        right:
+                                                                            15.0),
+                                                                child:
                                                                     Container(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height:
-                                                                          138,
-                                                                      //
-                                                                      decoration: BoxDecoration(
-                                                                          image: noticeboard[index].featuredImage != null
-                                                                              ? DecorationImage(image: NetworkImage("${announcement_imgUri}${noticeboard[index].featuredImage}"), fit: BoxFit.fill)
-                                                                              : DecorationImage(image: NetworkImage("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"), fit: BoxFit.fill),
-                                                                          color: topColor,
-                                                                          borderRadius: BorderRadius.circular(10)),
+                                                                  width: 160,
+                                                                  height: 150,
+                                                                  decoration: BoxDecoration(
+                                                                      color:
+                                                                          topColor,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            8.0),
+                                                                    child:
+                                                                        Column(
+                                                                      // mainAxisAlignment: MainAxisAlignment.center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          height:
+                                                                              138,
+                                                                          //
+                                                                          decoration: BoxDecoration(
+                                                                              image: noticeboard[index].featuredImage != null ? DecorationImage(image: NetworkImage("${announcement_imgUri}${noticeboard[index].featuredImage}"), fit: BoxFit.fill) : DecorationImage(image: NetworkImage("https://cdn-icons-png.flaticon.com/512/3135/3135715.png"), fit: BoxFit.fill),
+                                                                              color: topColor,
+                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              15,
+                                                                        ),
+                                                                        Text(
+                                                                          "${noticeboard[index].title.trim()}",
+                                                                          style: const TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 17.5),
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              20,
+                                                                        ),
+                                                                        Text(
+                                                                          "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                                          style: TextStyle(
+                                                                              color: Colors.grey.shade300,
+                                                                              fontSize: 15),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.fade,
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          15,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 18,
+                                              ),
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 10.0),
+                                                child: Text(
+                                                  "What's trending?",
+                                                  style: TextStyle(
+                                                      color: topColor,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future:
+                                                    trendProvider.fetchTrend(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Container(
+                                                        height: 300,
+                                                        width: double.infinity,
+                                                        child:
+                                                            TrendingShimmer());
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    logout().then((value) => {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              LoginPage()),
+                                                                  (route) =>
+                                                                      false)
+                                                        });
+                                                    return Center();
+                                                  } else {
+                                                    final trend =
+                                                        snapshot.data!;
+                                                    return Container(
+                                                      height: 530,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                        physics:
+                                                            BouncingScrollPhysics(),
+                                                        itemCount: trend.length,
+                                                        itemBuilder:
+                                                            ((context, index) {
+                                                          return Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 320,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      _dialog.show(
+                                                                          message:
+                                                                              'Waiting...',
+                                                                          type:
+                                                                              SimpleFontelicoProgressDialogType.hurricane);
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                      _dialog
+                                                                          .hide();
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          height:
+                                                                              200,
+                                                                          decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              image: trend[index].featuredImage != null ? DecorationImage(image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"), fit: BoxFit.cover) : null),
+                                                                        ),
+                                                                        trend[index].featuredImage !=
+                                                                                null
+                                                                            ? Container(
+                                                                                width: double.infinity,
+                                                                                height: 200,
+                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.3)),
+                                                                              )
+                                                                            : Center(),
+                                                                      ],
                                                                     ),
-                                                                    Text(
-                                                                      "${noticeboard[index].title.trim()}",
-                                                                      style: const TextStyle(
-                                                                          color: Colors
-                                                                              .white,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                              17.5),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      _dialog.show(
+                                                                          message:
+                                                                              'Waiting...',
+                                                                          type:
+                                                                              SimpleFontelicoProgressDialogType.hurricane);
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                      _dialog
+                                                                          .hide();
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
+                                                                    },
+                                                                    child: Text(
+                                                                      trend[index]
+                                                                          .title
+                                                                          .trim(),
                                                                       maxLines:
                                                                           2,
                                                                       overflow:
                                                                           TextOverflow
                                                                               .ellipsis,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          20,
-                                                                    ),
-                                                                    Text(
-                                                                      "${DateTime.parse(noticeboard[index].createdAt)}",
                                                                       style: TextStyle(
                                                                           color: Colors
-                                                                              .grey
-                                                                              .shade300,
+                                                                              .black,
                                                                           fontSize:
-                                                                              15),
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .fade,
+                                                                              20,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 18,
-                                          ),
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 15.0,
-                                                horizontal: 10.0),
-                                            child: Text(
-                                              "What's trending?",
-                                              style: TextStyle(
-                                                  color: topColor,
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          FutureBuilder(
-                                            future: trendProvider.fetchTrend(),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return Container(
-                                                    height: 300,
-                                                    width: double.infinity,
-                                                    child: TrendingShimmer());
-                                              } else if (snapshot.hasError) {
-                                                logout().then((value) => {
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          LoginPage()),
-                                                              (route) => false)
-                                                    });
-                                                return Center();
-                                              } else {
-                                                final trend = snapshot.data!;
-                                                return Container(
-                                                  height: 530,
-                                                  width: double.infinity,
-                                                  child: ListView.builder(
-                                                    physics:
-                                                        BouncingScrollPhysics(),
-                                                    itemCount: trend.length,
-                                                    itemBuilder:
-                                                        ((context, index) {
-                                                      return Container(
-                                                        width: double.infinity,
-                                                        height: 320,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10.0),
-                                                          child: Column(
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap:
-                                                                    () async {
-                                                                  _dialog.show(
-                                                                      message:
-                                                                          'Waiting...',
-                                                                      type: SimpleFontelicoProgressDialogType
-                                                                          .hurricane);
-                                                                  await Future.delayed(
-                                                                      Duration(
-                                                                          seconds:
-                                                                              1));
-                                                                  _dialog
-                                                                      .hide();
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: ((context) =>
-                                                                              DetailNews(title: trend[index].id))));
-                                                                },
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Container(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height:
-                                                                          200,
-                                                                      decoration: BoxDecoration(
-                                                                          borderRadius: BorderRadius.circular(
-                                                                              10),
-                                                                          image: trend[index].featuredImage != null
-                                                                              ? DecorationImage(image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"), fit: BoxFit.cover)
-                                                                              : null),
-                                                                    ),
-                                                                    trend[index].featuredImage !=
-                                                                            null
-                                                                        ? Container(
-                                                                            width:
-                                                                                double.infinity,
-                                                                            height:
-                                                                                200,
-                                                                            decoration:
-                                                                                BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.3)),
-                                                                          )
-                                                                        : Center(),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap:
-                                                                    () async {
-                                                                  _dialog.show(
-                                                                      message:
-                                                                          'Waiting...',
-                                                                      type: SimpleFontelicoProgressDialogType
-                                                                          .hurricane);
-                                                                  await Future.delayed(
-                                                                      Duration(
-                                                                          seconds:
-                                                                              1));
-                                                                  _dialog
-                                                                      .hide();
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: ((context) =>
-                                                                              DetailNews(title: trend[index].id))));
-                                                                },
-                                                                child: Text(
-                                                                  trend[index]
-                                                                      .title
-                                                                      .trim(),
-                                                                  maxLines: 2,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        15),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Row(
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            15),
+                                                                    child: Row(
                                                                       mainAxisAlignment:
                                                                           MainAxisAlignment
-                                                                              .spaceEvenly,
+                                                                              .spaceBetween,
                                                                       children: [
-                                                                        FaIcon(
-                                                                          FontAwesomeIcons
-                                                                              .clock,
-                                                                          color:
-                                                                              Colors.grey,
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceEvenly,
+                                                                          children: [
+                                                                            FaIcon(
+                                                                              FontAwesomeIcons.clock,
+                                                                              color: Colors.grey,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 5,
+                                                                            ),
+                                                                            Container(
+                                                                              width: 100,
+                                                                              child: Text(
+                                                                                '${DateTime.parse(trend[index].createdAt)}',
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.fade,
+                                                                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            )
+                                                                          ],
                                                                         ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        Container(
-                                                                          width:
-                                                                              100,
-                                                                          child:
-                                                                              Text(
-                                                                            '${DateTime.parse(trend[index].createdAt)}',
-                                                                            maxLines:
-                                                                                1,
-                                                                            overflow:
-                                                                                TextOverflow.fade,
-                                                                            style:
-                                                                                TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-                                                                          ),
+                                                                        // SizedBox(
+                                                                        //   width: 58,
+                                                                        // ),
+
+                                                                        Spacer(),
+                                                                        Row(
+                                                                          children: [
+                                                                            GestureDetector(
+                                                                              onTap: () {
+                                                                                // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
+                                                                                if (trend[index].likedByAuthUser == true) {
+                                                                                  likeAnnouncement(trend[index].id, 0);
+                                                                                } else {
+                                                                                  likeAnnouncement(trend[index].id, 1);
+                                                                                }
+                                                                              },
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  trend[index].likedByAuthUser == true
+                                                                                      ? Icon(
+                                                                                          CupertinoIcons.hand_thumbsup_fill,
+                                                                                          color: topColor,
+                                                                                        )
+                                                                                      : Icon(
+                                                                                          CupertinoIcons.hand_thumbsup,
+                                                                                          color: Colors.grey,
+                                                                                        ),
+                                                                                  const SizedBox(
+                                                                                    width: 2,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    '${trend[index].likesCountFormatted}',
+                                                                                    style: TextStyle(color: Colors.grey),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(width: 12),
+                                                                            FaIcon(FontAwesomeIcons.eye,
+                                                                                color: Colors.grey),
+                                                                            const SizedBox(
+                                                                              width: 6,
+                                                                            ),
+                                                                            Text(
+                                                                              '${trend[index].viewsCountFormatted}',
+                                                                              style: TextStyle(color: Colors.grey),
+                                                                            )
+                                                                          ],
                                                                         )
                                                                       ],
                                                                     ),
-                                                                    // SizedBox(
-                                                                    //   width: 58,
-                                                                    // ),
-
-                                                                    Spacer(),
-                                                                    Row(
-                                                                      children: [
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
-                                                                            if (trend[index].likedByAuthUser ==
-                                                                                true) {
-                                                                              likeAnnouncement(trend[index].id, 0);
-                                                                            } else {
-                                                                              likeAnnouncement(trend[index].id, 1);
-                                                                            }
-                                                                          },
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              trend[index].likedByAuthUser == true
-                                                                                  ? Icon(
-                                                                                      CupertinoIcons.hand_thumbsup_fill,
-                                                                                      color: topColor,
-                                                                                    )
-                                                                                  : Icon(
-                                                                                      CupertinoIcons.hand_thumbsup,
-                                                                                      color: Colors.grey,
-                                                                                    ),
-                                                                              const SizedBox(
-                                                                                width: 2,
-                                                                              ),
-                                                                              Text(
-                                                                                '${trend[index].likesCountFormatted}',
-                                                                                style: TextStyle(color: Colors.grey),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(
-                                                                            width:
-                                                                                12),
-                                                                        FaIcon(
-                                                                            FontAwesomeIcons
-                                                                                .eye,
-                                                                            color:
-                                                                                Colors.grey),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              6,
-                                                                        ),
-                                                                        Text(
-                                                                          '${trend[index].viewsCountFormatted}',
-                                                                          style:
-                                                                              TextStyle(color: Colors.grey),
-                                                                        )
-                                                                      ],
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Divider(
+                                                                    thickness:
+                                                                        1,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )
+                                                                ],
                                                               ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Divider(
-                                                                thickness: 1,
-                                                                color:
-                                                                    Colors.grey,
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                                            ),
+                                                          );
+                                                        }),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    }),
                                   ),
                                 ],
                               )
