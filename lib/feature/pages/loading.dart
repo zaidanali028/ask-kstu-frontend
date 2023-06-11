@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:first_app/components/colors.dart';
-import 'package:first_app/feature/pages/connectivity_provider.dart';
+import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';

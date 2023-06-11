@@ -1,4 +1,4 @@
-import 'package:first_app/feature/pages/connectivity_provider.dart';
+import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/loading.dart';
 import 'package:first_app/services/key_moments_service.dart';
 import 'package:first_app/services/notice_board.dart';

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 // import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/components/side_menu.dart';
-import 'package:first_app/feature/pages/connectivity_provider.dart';
+import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/notice_board_shimmer.dart';
