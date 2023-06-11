@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:first_app/components/colors.dart';
+import 'package:first_app/feature/pages/connectivity_provider.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
@@ -9,6 +10,7 @@ import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'news_details.dart';
@@ -82,7 +84,8 @@ class _LoadingPageState extends State<LoadingPage> {
 
     Timer(Duration(seconds: 4), _loadUserInfo);
   }
- void listenForPushNotifications(BuildContext context) {
+
+  void listenForPushNotifications(BuildContext context) {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       final data = result.notification.additionalData;
@@ -115,6 +118,7 @@ class _LoadingPageState extends State<LoadingPage> {
     //   },
     // );
   }
+
   @override
   Widget build(BuildContext context) {
     // Future.delayed(Duration(seconds: 7), () {
@@ -123,53 +127,99 @@ class _LoadingPageState extends State<LoadingPage> {
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: topColor,
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  Container(
-                    width: 240,
-                    height: 240,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("assets/images/f.png"),
-                            fit: BoxFit.contain)),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Students Represantative Council KsTU",
-                    style: TextStyle(
-                        color: bottomColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                  Spacer(),
-                  SpinKitFadingCircle(
-                    itemBuilder: (BuildContext context, int index) {
-                      return DecoratedBox(
+          child:
+              Consumer<ConnectivityProvider>(builder: (context, provider, _) {
+            if (provider.status == ConnectivityStatus.Offline) {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: topColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      Container(
+                        width: 240,
+                        height: 240,
                         decoration: BoxDecoration(
-                          color: index.isEven ? bottomColor : bottomColor,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      );
-                    },
-                    size: 60,
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/f.png"),
+                                fit: BoxFit.contain)),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "Students Represantative Council KsTU",
+                        style: TextStyle(
+                            color: bottomColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      Spacer(),
+                      const Text(
+                        "No internet connection",
+                        style: TextStyle(
+                            color: bottomColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 40,
-                  )
-                ],
-              ),
-            ),
-          ),
+                ),
+              );
+            } else {
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: topColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      Container(
+                        width: 240,
+                        height: 240,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/images/f.png"),
+                                fit: BoxFit.contain)),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "Students Represantative Council KsTU",
+                        style: TextStyle(
+                            color: bottomColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      Spacer(),
+                      SpinKitFadingCircle(
+                        itemBuilder: (BuildContext context, int index) {
+                          return DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: index.isEven ? bottomColor : bottomColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          );
+                        },
+                        size: 60,
+                      ),
+                      SizedBox(
+                        height: 40,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+          }),
         ));
   }
 }

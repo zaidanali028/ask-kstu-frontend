@@ -1,7 +1,9 @@
 import 'package:first_app/components/colors.dart';
+import 'package:first_app/feature/pages/connectivity_provider.dart';
 import 'package:first_app/feature/pages/forgot_password.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class WelcomeScreenPage extends StatefulWidget {
@@ -112,7 +114,6 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                         const SizedBox(
                                           height: 25,
                                         ),
-                                        
                                         AnimatedBuilder(
                                             animation: animation1,
                                             builder: (context, child) =>
@@ -120,100 +121,144 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                       ],
                                     ),
                                   )),
-                              Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: bottomColor,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(30))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 18.0, vertical: 15.0),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 25,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              _dialog.show(
-                                                  message: 'Waiting...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: ((context) =>
-                                                          const LoginPage())));
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: topColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: const Center(
-                                                child: Text(
-                                                  "Tap To Login",
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                              Consumer<ConnectivityProvider>(
+                                  builder: (context, provider, _) {
+                                if (provider.status ==
+                                    ConnectivityStatus.Offline) {
+                                  return Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: bottomColor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(30))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0, vertical: 15.0),
+                                          child: Column(
+                                            children: [
+                                              Spacer(),
+                                              Container(
+                                                height: 50,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: topColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "No internet connection",
+                                                    style: TextStyle(
+                                                        color: bottomColor,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              Spacer(),
+                                            ],
                                           ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              _dialog.show(
-                                                  message: 'Waiting...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const ForgotPasswordPage()));
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                  color: topColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: const Center(
-                                                child: Text(
-                                                  "Forgot Password?",
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                        ),
+                                      ));
+                                } else {
+                                  return Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: bottomColor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(30))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0, vertical: 15.0),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 25,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  _dialog.show(
+                                                      message: 'Waiting...',
+                                                      type:
+                                                          SimpleFontelicoProgressDialogType
+                                                              .hurricane);
+                                                  await Future.delayed(
+                                                      Duration(seconds: 1));
+                                                  _dialog.hide();
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: ((context) =>
+                                                              const LoginPage())));
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                      color: topColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Tap To Login",
+                                                      style: TextStyle(
+                                                          color: bottomColor,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  _dialog.show(
+                                                      message: 'Waiting...',
+                                                      type:
+                                                          SimpleFontelicoProgressDialogType
+                                                              .hurricane);
+                                                  await Future.delayed(
+                                                      Duration(seconds: 1));
+                                                  _dialog.hide();
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const ForgotPasswordPage()));
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                      color: topColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Forgot Password?",
+                                                      style: TextStyle(
+                                                          color: bottomColor,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ))
+                                        ),
+                                      ));
+                                }
+                              })
                             ],
                           )
                         ]))))));

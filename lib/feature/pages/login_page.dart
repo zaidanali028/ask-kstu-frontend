@@ -1,10 +1,12 @@
 import 'package:first_app/components/colors.dart';
+import 'package:first_app/feature/pages/connectivity_provider.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/user.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -143,142 +145,59 @@ class _LoginPageState extends State<LoginPage> {
                               width: MediaQuery.of(context).size.width / 2,
                             ),
                           ]),
-                          Column(
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: const BoxDecoration(
-                                        color: topColor,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(30))),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 200,
-                                          child: Image.asset(
-                                            "assets/images/f.png",
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 25,
-                                        ),
-                                        const Text(
-                                          "SIGN IN",
-                                          style: TextStyle(
-                                              color: bottomColor,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 30),
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        color: bottomColor,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(30))),
-                                    child: Form(
-                                      key: formkey,
-                                      child: Column(children: [
-                                        const SizedBox(
-                                          height: 50,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 18.0, vertical: 10),
-                                          child: TextFormField(
-                                            validator: ((value) {
-                                              if (value!.isEmpty) {
-                                                return "Email field is required";
-                                              }
-                                              return null;
-                                            }),
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            controller: emailController,
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.all(10),
-                                              label: Text("Email"),
-                                              hintText: '',
-                                              prefixIcon: Icon(Icons.email),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
+                          Consumer<ConnectivityProvider>(
+                              builder: (context, provider, _) {
+                            if (provider.status == ConnectivityStatus.Offline) {
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: topColor,
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(30))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 200,
+                                              child: Image.asset(
+                                                "assets/images/f.png",
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 18.0, vertical: 10),
-                                          child: TextFormField(
-                                            validator: ((value) {
-                                              if (value!.isEmpty) {
-                                                return "Password field is required";
-                                              }
-                                              return null;
-                                            }),
-                                            keyboardType:
-                                                TextInputType.visiblePassword,
-                                            controller: passwordController,
-                                            obscureText: ispassword,
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.all(10),
-                                              label: Text("Password"),
-                                              hintText: '',
-                                              prefixIcon: Icon(Icons.lock),
-                                              suffixIcon: IconButton(
-                                                icon: Icon(ispassword
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    ispassword = !ispassword;
-                                                  });
-                                                },
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
+                                            const SizedBox(
+                                              height: 25,
                                             ),
-                                          ),
+                                            const Text(
+                                              "SIGN IN",
+                                              style: TextStyle(
+                                                  color: bottomColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 30),
+                                            )
+                                          ],
                                         ),
-                                        const SizedBox(
-                                          height: 15,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 18.0),
-                                          child: GestureDetector(
-                                            onTap: () async {
-                                              _dialog.show(
-                                                  message: 'Logging...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
-                                              if (formkey.currentState!
-                                                  .validate()) {
-                                                setState(() {
-                                                  loading = true;
-                                                  _loginUser();
-                                                });
-                                              }
-                                            },
+                                      )),
+                                  Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: bottomColor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(30))),
+                                        child: Column(children: [
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 18.0),
                                             child: Container(
                                               width: double.infinity,
                                               height: 50,
@@ -288,46 +207,221 @@ class _LoginPageState extends State<LoginPage> {
                                                       BorderRadius.circular(
                                                           10)),
                                               child: Center(
-                                                child: loading
-                                                    ? SpinKitFadingCircle(
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index) {
-                                                          return DecoratedBox(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: index
-                                                                      .isEven
-                                                                  ? bottomColor
-                                                                  : bottomColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                          );
-                                                        },
-                                                        size: 40,
-                                                      )
-                                                    : Text(
-                                                        "SIGN IN",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                child: Text(
+                                                  "No internet connection",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        )
-                                      ]),
-                                    ),
-                                  ))
-                            ],
-                          )
+                                          Spacer(),
+                                        ]),
+                                      ))
+                                ],
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: const BoxDecoration(
+                                            color: topColor,
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(30))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 200,
+                                              child: Image.asset(
+                                                "assets/images/f.png",
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 25,
+                                            ),
+                                            const Text(
+                                              "SIGN IN",
+                                              style: TextStyle(
+                                                  color: bottomColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 30),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: bottomColor,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(30))),
+                                        child: Form(
+                                          key: formkey,
+                                          child: Column(children: [
+                                            const SizedBox(
+                                              height: 50,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18.0,
+                                                      vertical: 10),
+                                              child: TextFormField(
+                                                validator: ((value) {
+                                                  if (value!.isEmpty) {
+                                                    return "Email field is required";
+                                                  }
+                                                  return null;
+                                                }),
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                controller: emailController,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.all(10),
+                                                  label: Text("Email"),
+                                                  hintText: '',
+                                                  prefixIcon: Icon(Icons.email),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18.0,
+                                                      vertical: 10),
+                                              child: TextFormField(
+                                                validator: ((value) {
+                                                  if (value!.isEmpty) {
+                                                    return "Password field is required";
+                                                  }
+                                                  return null;
+                                                }),
+                                                keyboardType: TextInputType
+                                                    .visiblePassword,
+                                                controller: passwordController,
+                                                obscureText: ispassword,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.all(10),
+                                                  label: Text("Password"),
+                                                  hintText: '',
+                                                  prefixIcon: Icon(Icons.lock),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(ispassword
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        ispassword =
+                                                            !ispassword;
+                                                      });
+                                                    },
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 18.0),
+                                              child: GestureDetector(
+                                                onTap: () async {
+                                                  _dialog.show(
+                                                      message: 'Logging...',
+                                                      type:
+                                                          SimpleFontelicoProgressDialogType
+                                                              .hurricane);
+                                                  await Future.delayed(
+                                                      Duration(seconds: 1));
+                                                  _dialog.hide();
+                                                  if (formkey.currentState!
+                                                      .validate()) {
+                                                    setState(() {
+                                                      loading = true;
+                                                      _loginUser();
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      color: topColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Center(
+                                                    child: loading
+                                                        ? SpinKitFadingCircle(
+                                                            itemBuilder:
+                                                                (BuildContext
+                                                                        context,
+                                                                    int index) {
+                                                              return DecoratedBox(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: index
+                                                                          .isEven
+                                                                      ? bottomColor
+                                                                      : bottomColor,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20),
+                                                                ),
+                                                              );
+                                                            },
+                                                            size: 40,
+                                                          )
+                                                        : Text(
+                                                            "SIGN IN",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                        ),
+                                      ))
+                                ],
+                              );
+                            }
+                          })
                         ])))),
           )),
     );
