@@ -343,10 +343,10 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                               width: 5,
                                                             ),
                                                             Container(
-                                                              width: 80,
+                                                              width: 100,
                                                               child: Text(
-                                                                '${DateTime.parse(trend[index].createdAt)}',
-                                                                maxLines: 1,
+                                                                '${trend[index].createdAtFormatted.split(', ')[1]}',
+                                                                maxLines: 2,
                                                                 overflow:
                                                                     TextOverflow
                                                                         .fade,
