@@ -149,6 +149,18 @@ class _SideMenuState extends State<SideMenu> {
                 },
               ),
               SideMenuTitle(
+                iconData: CupertinoIcons.cube_box,
+                title: "Kstu Site",
+                myfunction: () async {
+                  _dialog.show(
+                      message: 'opening...',
+                      type: SimpleFontelicoProgressDialogType.hurricane);
+                  await Future.delayed(Duration(seconds: 1));
+                  _dialog.hide();
+                  mylauntcher('https://kstu.edu.gh/');
+                },
+              ),
+              SideMenuTitle(
                 iconData: CupertinoIcons.piano,
                 title: "Change Password",
                 myfunction: () async{
@@ -176,11 +188,6 @@ class _SideMenuState extends State<SideMenu> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => AboutPage()));},
-              ),
-              SideMenuTitle(
-                iconData: CupertinoIcons.chat_bubble_2_fill,
-                title: "Help",
-                myfunction: () {},
               ),
               SizedBox(
                 height: 70,

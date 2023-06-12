@@ -15,6 +15,7 @@ class Announcement {
     int adminId;
     int categoryId;
     String createdAt;
+    String createdAtFormatted;
     String updatedAt;
     int likesCount;
     int likesCountFormatted;
@@ -32,6 +33,7 @@ class Announcement {
         required this.adminId,
         required this.categoryId,
         required this.createdAt,
+        required this.createdAtFormatted,
         required this.updatedAt,
         required this.likesCount,
         required this.likesCountFormatted,
@@ -50,6 +52,8 @@ class Announcement {
         adminId: json["admin_id"],
         categoryId: json["category_id"],
         createdAt:json["created_at"] ?? '',
+        createdAtFormatted:json["created_at_formatted"] ?? '',
+        
         updatedAt: json["updated_at"],
         likesCount: json["likes_count"],
         likesCountFormatted: json["likes_count_formatted"],

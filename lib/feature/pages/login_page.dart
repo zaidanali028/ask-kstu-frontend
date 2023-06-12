@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:notification_permissions/notification_permissions.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // 052141350070  SHANI IDDI
 class LoginPage extends StatefulWidget {
@@ -31,6 +33,94 @@ class _LoginPageState extends State<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  showAlertDialog(BuildContext context, Function() runthis) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK,cool am all in!"),
+      onPressed: runthis,
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Receive notification alerts"),
+      content: Text(
+          'This app would like to send you push notifications when there is any activity on campus'),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void requestNotificationPermission_() async {
+    // open prompt for user to enable notification
+    PermissionStatus permissionStatus =
+        await NotificationPermissions.getNotificationPermissionStatus();
+    // if(permissionStatus == PermissionStatus.denied) {
+    //   // if user explicitly denied notifications, we don't want to show them again
+    //   return;
+    // }
+
+    if (permissionStatus != PermissionStatus.granted) {
+      if (!mounted) return;
+
+      // showConfirmDialog(context, title: 'Receive notification alerts',
+      //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
+      //   onConfirmTapped: () async {
+      //     }
+      //   },
+      // );
+      showAlertDialog(context, () async {
+        final requestResponse =
+            await NotificationPermissions.requestNotificationPermissions();
+        if (requestResponse == PermissionStatus.granted) {
+          // user granted permission
+          registerUserForPushNotification();
+          return;
+        }
+      });
+    } else {
+      registerUserForPushNotification();
+    }
+  }
+
+  void registerUserForPushNotification() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    var user_id = localStorage.getInt('id');
+    print("in dashboard!: ${user_id}");
+
+    var myCustomUniqueUserId = "${user_id}";
+    //await OneSignal.shared.removeExternalUserId();
+    final setExtPushIdResponse =
+        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+    debugPrint(
+        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+
+    if (setExtPushIdResponse['push']['success'] != null) {
+      if (setExtPushIdResponse['push']['success'] is bool) {
+        final status = setExtPushIdResponse['push']['success'] as bool;
+        // if (status) {
+        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+        // }
+      } else if (setExtPushIdResponse['push']['success'] is int) {
+        final status = setExtPushIdResponse['push']['success'] as int;
+        // if (status == 1) {
+        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+        // }
+      }
+      debugPrint(
+          "registered for push: ${setExtPushIdResponse['push']['success']}");
+    }
   }
 
   void _loginUser() async {
@@ -82,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
   void _saveAndRedirectToDashboard(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("token", user.token ?? '');
+    await prefs.setInt("id", user.id ?? 0);
 
     await prefs.setString("name", user.name ?? '');
     await prefs.setInt("index", user.indexNo ?? 0);
@@ -101,6 +192,7 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString("yrOfAdmission", user.yrOfAdmission ?? '');
     await prefs.setString("yrOfCompletion", user.yrOfCompletion ?? '');
     // await prefs.setInt("userId", user.id ?? 0);
+    requestNotificationPermission_();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Dashboard()), (route) => false);
     var name = await prefs.getString('name');

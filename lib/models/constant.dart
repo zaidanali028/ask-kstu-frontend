@@ -18,6 +18,8 @@ const updatePasswordUrl = buildUrl + '/update-password';
 const noticeUrl = buildUrl + '/announcements/notice-board';
 const trendingUrl = buildUrl + '/announcements/trending-news';
 const announcementDetailUrl = buildUrl + '/announcement';
+
+
 const likesUrl = buildUrl + '/post-interact/announcements';
 const keyMomentsUrl = buildUrl + '/announcement/moments';
 

@@ -19,10 +19,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:http/http.dart' as http;
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:notification_permissions/notification_permissions.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 // Make some changes /  Push to github on Date: 04/06/2023 Time:03:55am
@@ -46,6 +47,8 @@ class _DashboardState extends State<Dashboard>
   bool isLoading = false;
   @override
   initState() {
+    // requestNotificationPermission_();
+
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -56,7 +59,6 @@ class _DashboardState extends State<Dashboard>
         parent: _animationController, curve: Curves.fastOutSlowIn));
     scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
-    requestNotificationPermission_();
     getUser();
     listenForPushNotifications(context);
 
@@ -82,93 +84,93 @@ class _DashboardState extends State<Dashboard>
     });
   }
 
-  showAlertDialog(BuildContext context, Function() runthis) {
-    // set up the button
-    Widget okButton = TextButton(
-      child: Text("OK"),
-      onPressed: runthis,
-    );
+  // showAlertDialog(BuildContext context, Function() runthis) {
+  //   // set up the button
+  //   Widget okButton = TextButton(
+  //     child: Text("OK,cool am all in!"),
+  //     onPressed: runthis,
+  //   );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Receive notification alerts"),
-      content: Text(
-          'This app would like to send you push notifications when there is any activity on your account'),
-      actions: [
-        okButton,
-      ],
-    );
+  //   // set up the AlertDialog
+  //   AlertDialog alert = AlertDialog(
+  //     title: Text("Receive notification alerts"),
+  //     content: Text(
+  //         'This app would like to send you push notifications when there is any activity on campus'),
+  //     actions: [
+  //       okButton,
+  //     ],
+  //   );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
+  //   // show the dialog
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alert;
+  //     },
+  //   );
+  // }
 
-  void requestNotificationPermission_() async {
-    // open prompt for user to enable notification
-    PermissionStatus permissionStatus =
-        await NotificationPermissions.getNotificationPermissionStatus();
-    // if(permissionStatus == PermissionStatus.denied) {
-    //   // if user explicitly denied notifications, we don't want to show them again
-    //   return;
-    // }
+  // void requestNotificationPermission_() async {
+  //   // open prompt for user to enable notification
+  //   PermissionStatus permissionStatus =
+  //       await NotificationPermissions.getNotificationPermissionStatus();
+  //   // if(permissionStatus == PermissionStatus.denied) {
+  //   //   // if user explicitly denied notifications, we don't want to show them again
+  //   //   return;
+  //   // }
 
-    if (permissionStatus != PermissionStatus.granted) {
-      if (!mounted) return;
+  //   if (permissionStatus != PermissionStatus.granted) {
+  //     if (!mounted) return;
 
-      // showConfirmDialog(context, title: 'Receive notification alerts',
-      //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
-      //   onConfirmTapped: () async {
-      //     }
-      //   },
-      // );
-      showAlertDialog(context, () async {
-        final requestResponse =
-            await NotificationPermissions.requestNotificationPermissions();
-        if (requestResponse == PermissionStatus.granted) {
-          // user granted permission
-          registerUserForPushNotification();
-          return;
-        }
-      });
-    } else {
-      registerUserForPushNotification();
-    }
-  }
+  //     // showConfirmDialog(context, title: 'Receive notification alerts',
+  //     //   subtitle: 'This app would like to send you push notifications when there is any activity on your account',
+  //     //   onConfirmTapped: () async {
+  //     //     }
+  //     //   },
+  //     // );
+  //     showAlertDialog(context, () async {
+  //       final requestResponse =
+  //           await NotificationPermissions.requestNotificationPermissions();
+  //       if (requestResponse == PermissionStatus.granted) {
+  //         // user granted permission
+  //         registerUserForPushNotification();
+  //         return;
+  //       }
+  //     });
+  //   } else {
+  //     registerUserForPushNotification();
+  //   }
+  // }
 
-  void registerUserForPushNotification() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
+  // void registerUserForPushNotification() async {
+  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
 
-    var user_id = localStorage.getInt('userId');
-    print("in dashboard!: ${user_id}");
+  //   var user_id = localStorage.getInt('userId');
+  //   print("in dashboard!: ${user_id}");
 
-    var myCustomUniqueUserId = "${user_id}";
-    //await OneSignal.shared.removeExternalUserId();
-    final setExtPushIdResponse =
-        await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
-    debugPrint(
-        "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
+  //   var myCustomUniqueUserId = "${user_id}";
+  //   //await OneSignal.shared.removeExternalUserId();
+  //   final setExtPushIdResponse =
+  //       await OneSignal.shared.setExternalUserId(myCustomUniqueUserId);
+  //   debugPrint(
+  //       "setExtPushIdResponse: $setExtPushIdResponse :: newDeviceId: $myCustomUniqueUserId");
 
-    if (setExtPushIdResponse['push']['success'] != null) {
-      if (setExtPushIdResponse['push']['success'] is bool) {
-        final status = setExtPushIdResponse['push']['success'] as bool;
-        // if (status) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      } else if (setExtPushIdResponse['push']['success'] is int) {
-        final status = setExtPushIdResponse['push']['success'] as int;
-        // if (status == 1) {
-        //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
-        // }
-      }
-      debugPrint(
-          "registered for push: ${setExtPushIdResponse['push']['success']}");
-    }
-  }
+  //   if (setExtPushIdResponse['push']['success'] != null) {
+  //     if (setExtPushIdResponse['push']['success'] is bool) {
+  //       final status = setExtPushIdResponse['push']['success'] as bool;
+  //       // if (status) {
+  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+  //       // }
+  //     } else if (setExtPushIdResponse['push']['success'] is int) {
+  //       final status = setExtPushIdResponse['push']['success'] as int;
+  //       // if (status == 1) {
+  //       //   ShowwcaseStorage.setPushRegistrationStatus = "registered";
+  //       // }
+  //     }
+  //     debugPrint(
+  //         "registered for push: ${setExtPushIdResponse['push']['success']}");
+  //   }
+  // }
 
 // HANDING APP NOTIFICATIONS
   void listenForPushNotifications(BuildContext context) {
@@ -186,14 +188,21 @@ class _DashboardState extends State<Dashboard>
 
     OneSignal.shared.setNotificationWillShowInForegroundHandler(
       (OSNotificationReceivedEvent notification) async {
+        // if (notification.notification.clicke) {
+
         final data = notification.notification.additionalData;
         final announcemet_id = data!['announcemet_id'];
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailNews(title: announcemet_id),
-          ),
-        );
+     OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    // print('"OneSignal: notification opened: ${result}');
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailNews(title: announcemet_id),
+            ),
+          );
+});
+          
+        // }
       },
     );
   }
@@ -573,7 +582,7 @@ class _DashboardState extends State<Dashboard>
                                                                               20,
                                                                         ),
                                                                         Text(
-                                                                          "${DateTime.parse(noticeboard[index].createdAt)}",
+                                                                          "${noticeboard[index].createdAtFormatted.split(', ')[1]}",
                                                                           style: TextStyle(
                                                                               color: Colors.grey.shade300,
                                                                               fontSize: 15),
@@ -769,7 +778,7 @@ class _DashboardState extends State<Dashboard>
                                                                             Container(
                                                                               width: 100,
                                                                               child: Text(
-                                                                                '${DateTime.parse(trend[index].createdAt)}',
+                                                                                '${trend[index].createdAtFormatted.split(', ')[1]}',
                                                                                 maxLines: 1,
                                                                                 overflow: TextOverflow.fade,
                                                                                 style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),

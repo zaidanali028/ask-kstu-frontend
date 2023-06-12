@@ -13,7 +13,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   OneSignal.shared.setAppId("7e696d2c-01f7-4742-9a4f-f0a900d76526");
 
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+
 
   runApp(MultiProvider(
     providers: [
