@@ -7,7 +7,7 @@ import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/announcement.dart';
-import 'package:first_app/services/trending_news.dart';
+import 'package:first_app/services/announcement_pagiantion.dart';
 import 'package:first_app/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,13 +34,16 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
     super.initState();
     _scrollController.addListener(_scrollListener);
     // _fetchData();
-  } 
+  }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      print("Scrolling");
-    } else {}
+    if (!AnnouncementPaginationProvider().isLoading &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+      AnnouncementPaginationProvider().nextPage();
+    } else {
+      AnnouncementPaginationProvider().previousPage();
+    }
   }
 
   @override
@@ -104,7 +107,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
     SimpleFontelicoProgressDialog _dialog =
         SimpleFontelicoProgressDialog(context: context);
     final trendProvider =
-        Provider.of<TrendingNewsProvider>(context, listen: false);
+        Provider.of<AnnouncementPaginationProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: topColor,
       body: SafeArea(
@@ -179,7 +182,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10.0, vertical: 18.0),
                               child: FutureBuilder<List<Announcement>>(
-                                  future: trendProvider.fetchTrend(),
+                                  future: trendProvider.fetchItems(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -205,13 +208,13 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                           });
                                       return Center();
                                     } else {
-                                      final trend = snapshot.data!;
                                       return ListView.builder(
                                         controller: _scrollController,
                                         physics: BouncingScrollPhysics(),
-                                        itemCount: trend.length,
+                                        itemCount: trendProvider.trend.length,
                                         scrollDirection: Axis.vertical,
                                         itemBuilder: (context, index) {
+                                          final trend = trendProvider.trend;
                                           return Container(
                                             width: double.infinity,
                                             height: 320,
@@ -436,7 +439,7 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                   Divider(
                                                     thickness: 1,
                                                     color: Colors.grey,
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),

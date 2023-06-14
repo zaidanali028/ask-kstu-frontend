@@ -1,3 +1,4 @@
+import 'package:first_app/services/announcement_pagiantion.dart';
 import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/loading.dart';
 import 'package:first_app/services/key_moments_service.dart';
@@ -27,6 +28,7 @@ void main() {
         create: (_) => KeyMomentProvider(),
       ),
       ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+      ChangeNotifierProvider(create: (_) => AnnouncementPaginationProvider()),
     ],
     child: MyApp(),
   ));
@@ -46,7 +48,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ASK-KsTU',
+      title: 'SRC-KsTU-23',
       theme: ThemeData(
           primarySwatch: Colors.blue,
           textTheme: TextTheme(
