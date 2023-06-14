@@ -21,6 +21,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
       TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool ispassword = true;
+  bool oldpassword = true;
   bool loading = false;
   @override
   void dispose() {
@@ -169,7 +170,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                         }),
                                         keyboardType:
                                             TextInputType.visiblePassword,
-                                        obscureText: ispassword,
+                                        obscureText: oldpassword,
                                         controller: oldPasswordController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
@@ -178,12 +179,12 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                           prefixIcon: Icon(
                                               CupertinoIcons.lock_circle_fill),
                                           suffixIcon: IconButton(
-                                            icon: Icon(ispassword
+                                            icon: Icon(oldpassword
                                                 ? Icons.visibility_off
                                                 : Icons.visibility),
                                             onPressed: () {
                                               setState(() {
-                                                ispassword = !ispassword;
+                                                oldpassword = !oldpassword;
                                               });
                                             },
                                           ),

@@ -26,6 +26,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool ispassword = true;
+  double isOnTap = 50;
+  int reduceConatiner = 4;
   bool loading = false;
 
   @override
@@ -216,7 +218,13 @@ class _LoginPageState extends State<LoginPage> {
     SimpleFontelicoProgressDialog _dialog =
         SimpleFontelicoProgressDialog(context: context);
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+        setState(() {
+          isOnTap = 50;
+          reduceConatiner = 4;
+        });
+      },
       child: Scaffold(
           backgroundColor: topColor,
           resizeToAvoidBottomInset: false,
@@ -355,7 +363,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       )),
                                   Expanded(
-                                      flex: 4,
+                                      flex: reduceConatiner,
                                       child: Container(
                                         decoration: const BoxDecoration(
                                             color: bottomColor,
@@ -364,8 +372,8 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Form(
                                           key: formkey,
                                           child: Column(children: [
-                                            const SizedBox(
-                                              height: 50,
+                                            SizedBox(
+                                              height: isOnTap,
                                             ),
                                             Padding(
                                               padding:
@@ -373,6 +381,12 @@ class _LoginPageState extends State<LoginPage> {
                                                       horizontal: 18.0,
                                                       vertical: 10),
                                               child: TextFormField(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isOnTap = 20;
+                                                    reduceConatiner = 6;
+                                                  });
+                                                },
                                                 validator: ((value) {
                                                   if (value!.isEmpty) {
                                                     return "Email field is required";
@@ -402,6 +416,10 @@ class _LoginPageState extends State<LoginPage> {
                                                       horizontal: 18.0,
                                                       vertical: 10),
                                               child: TextFormField(
+                                                onTap: () {
+                                                  isOnTap = 20;
+                                                  reduceConatiner = 6;
+                                                },
                                                 validator: ((value) {
                                                   if (value!.isEmpty) {
                                                     return "Password field is required";

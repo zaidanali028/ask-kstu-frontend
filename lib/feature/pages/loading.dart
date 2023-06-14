@@ -205,9 +205,6 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Future.delayed(Duration(seconds: 7), () {
-
-    // });
     return Scaffold(
         backgroundColor: topColor,
         body: SafeArea(
@@ -236,7 +233,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         height: 20,
                       ),
                       const Text(
-                        "Students Represantative Council KsTU",
+                        "Students Representative Council KsTU",
                         style: TextStyle(
                             color: bottomColor,
                             fontWeight: FontWeight.bold,
@@ -277,7 +274,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         height: 20,
                       ),
                       const Text(
-                        "Students Represantative Council KsTU",
+                        "Students Representative Council KsTU",
                         style: TextStyle(
                             color: bottomColor,
                             fontWeight: FontWeight.bold,

@@ -106,7 +106,7 @@ class _DetailNewsState extends State<DetailNews> {
     final trending = Provider.of<TrendingNewsProvider>(context, listen: false);
     return WillPopScope(
       // this will aid users in going backto dashboardpage after coming here by clicking on a notification
-         onWillPop: () async {
+      onWillPop: () async {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => Dashboard()),
@@ -140,10 +140,7 @@ class _DetailNewsState extends State<DetailNews> {
                                   left: 10,
                                   child: GestureDetector(
                                       onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Dashboard()));
+                                        Navigator.pop(context);
                                       },
                                       child: Icon(
                                         Icons.arrow_back_ios,
@@ -232,7 +229,8 @@ class _DetailNewsState extends State<DetailNews> {
                                               // AudioPlayer().play(
                                               //     AssetSource(
                                               //         "audio/my_audio.mp3"));
-                                              if (trend.likedByAuthUser == true) {
+                                              if (trend.likedByAuthUser ==
+                                                  true) {
                                                 likeAnnouncement(trend.id, 0);
                                               } else {
                                                 likeAnnouncement(trend.id, 1);
@@ -270,7 +268,8 @@ class _DetailNewsState extends State<DetailNews> {
                                           ),
                                           Text(
                                             '${trend.viewsCountFormatted}',
-                                            style: TextStyle(color: Colors.grey),
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           )
                                         ],
                                       )
@@ -298,8 +297,8 @@ class _DetailNewsState extends State<DetailNews> {
                         width: double.infinity,
                         decoration: const BoxDecoration(
                             color: bottomColor,
-                            borderRadius:
-                                BorderRadius.only(topRight: Radius.circular(30))),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30))),
                         child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10.0, vertical: 18.0),

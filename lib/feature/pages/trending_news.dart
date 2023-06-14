@@ -28,19 +28,19 @@ class TrendingNewsPage extends StatefulWidget {
 class _TrendingNewsPageState extends State<TrendingNewsPage> {
   bool isLoading = false;
   ScrollController _scrollController = ScrollController();
-
+  List announcements = [];
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
     // _fetchData();
-  }
+  } 
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      // _fetchData();
-    }
+      print("Scrolling");
+    } else {}
   }
 
   @override
@@ -224,15 +224,15 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   GestureDetector(
-                                                    onTap: () async{
-                                              _dialog.show(
-                                                  message: 'Waiting...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
+                                                    onTap: () async {
+                                                      _dialog.show(
+                                                          message: 'Waiting...',
+                                                          type:
+                                                              SimpleFontelicoProgressDialogType
+                                                                  .hurricane);
+                                                      await Future.delayed(
+                                                          Duration(seconds: 1));
+                                                      _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -286,15 +286,15 @@ class _TrendingNewsPageState extends State<TrendingNewsPage> {
                                                     height: 10,
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () async{
-                                              _dialog.show(
-                                                  message: 'Waiting...',
-                                                  type:
-                                                      SimpleFontelicoProgressDialogType
-                                                          .hurricane);
-                                              await Future.delayed(
-                                                  Duration(seconds: 1));
-                                              _dialog.hide();
+                                                    onTap: () async {
+                                                      _dialog.show(
+                                                          message: 'Waiting...',
+                                                          type:
+                                                              SimpleFontelicoProgressDialogType
+                                                                  .hurricane);
+                                                      await Future.delayed(
+                                                          Duration(seconds: 1));
+                                                      _dialog.hide();
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(

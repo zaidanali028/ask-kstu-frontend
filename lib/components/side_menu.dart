@@ -126,7 +126,7 @@ class _SideMenuState extends State<SideMenu> {
               ),
               SideMenuTitle(
                 iconData: CupertinoIcons.globe,
-                title: "Kstu Vclass",
+                title: "Kstu V-class",
                 myfunction: () async {
                   _dialog.show(
                       message: 'Opening...',
