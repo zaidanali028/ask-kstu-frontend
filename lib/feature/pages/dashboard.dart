@@ -499,17 +499,17 @@ class _DashboardState extends State<Dashboard>
                                                                 NoticeBoardShimmer()));
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    logout().then((value) => {
-                                                          Navigator.of(context)
-                                                              .pushAndRemoveUntil(
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              LoginPage()),
-                                                                  (route) =>
-                                                                      false)
-                                                        });
-                                                    return Center();
+                                                    // logout().then((value) => {
+                                                    //       Navigator.of(context)
+                                                    //           .pushAndRemoveUntil(
+                                                    //               MaterialPageRoute(
+                                                    //                   builder:
+                                                    //                       (context) =>
+                                                    //                           LoginPage()),
+                                                    //               (route) =>
+                                                    //                   false)
+                                                    //     });
+                                                    return Text("${snapshot.error}");
                                                   } else {
                                                     final noticeboard =
                                                         snapshot.data!;
@@ -661,17 +661,17 @@ class _DashboardState extends State<Dashboard>
                                                             TrendingShimmer());
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    logout().then((value) => {
-                                                          Navigator.of(context)
-                                                              .pushAndRemoveUntil(
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              LoginPage()),
-                                                                  (route) =>
-                                                                      false)
-                                                        });
-                                                    return Center();
+                                                    // logout().then((value) => {
+                                                    //       Navigator.of(context)
+                                                    //           .pushAndRemoveUntil(
+                                                    //               MaterialPageRoute(
+                                                    //                   builder:
+                                                    //                       (context) =>
+                                                    //                           LoginPage()),
+                                                    //               (route) =>
+                                                    //                   false)
+                                                    //     });
+                                                    return Text("${snapshot.error}");
                                                   } else {
                                                     final trend =
                                                         snapshot.data!;
