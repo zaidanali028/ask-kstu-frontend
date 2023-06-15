@@ -419,8 +419,7 @@ class _DashboardState extends State<Dashboard>
                                         builder: (context, provider, _) {
                                       if (provider.status ==
                                           ConnectivityStatus.Offline) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
+                                            SnackBar(
                                           content:
                                               Text("No internet connection"),
                                           backgroundColor: topColor,
@@ -433,8 +432,7 @@ class _DashboardState extends State<Dashboard>
                                               ScaffoldMessenger.of(context)
                                                   .hideCurrentSnackBar();
                                             },
-                                          ),
-                                        ));
+                                          ));
                                         return Container(
                                           width: double.infinity,
                                           height: MediaQuery.of(context)

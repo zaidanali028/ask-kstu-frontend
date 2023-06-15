@@ -258,21 +258,19 @@ class _LoginPageState extends State<LoginPage> {
                                 builder: (context, provider, _) {
                               if (provider.status ==
                                   ConnectivityStatus.Offline) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text("No internet connection"),
-                                  backgroundColor: topColor,
-                                  behavior: SnackBarBehavior.floating,
-                                  action: SnackBarAction(
-                                    label: 'Dismiss',
-                                    disabledTextColor: Colors.white,
-                                    textColor: Colors.yellow,
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .hideCurrentSnackBar();
-                                    },
-                                  ),
-                                ));
+                                SnackBar(
+                                    content: Text("No internet connection"),
+                                    backgroundColor: topColor,
+                                    behavior: SnackBarBehavior.floating,
+                                    action: SnackBarAction(
+                                      label: 'Dismiss',
+                                      disabledTextColor: Colors.white,
+                                      textColor: Colors.yellow,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      },
+                                    ));
                                 return Column(
                                   children: [
                                     Expanded(

@@ -211,19 +211,18 @@ class _LoadingPageState extends State<LoadingPage> {
           child:
               Consumer<ConnectivityProvider>(builder: (context, provider, _) {
             if (provider.status == ConnectivityStatus.Offline) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("No internet connection"),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-                action: SnackBarAction(
-                  label: 'Dismiss',
-                  disabledTextColor: Colors.white,
-                  textColor: Colors.yellow,
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  },
-                ),
-              ));
+              SnackBar(
+                  content: Text("No internet connection"),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                  action: SnackBarAction(
+                    label: 'Dismiss',
+                    disabledTextColor: Colors.white,
+                    textColor: Colors.yellow,
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                  ));
               return Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
