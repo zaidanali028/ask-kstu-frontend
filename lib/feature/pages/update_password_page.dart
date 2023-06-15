@@ -249,7 +249,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(10),
-                                          label: Text("Confirm Password"),
+                                          label: Text("Confirm New Password"),
                                           hintText: '',
                                           prefixIcon:
                                               Icon(CupertinoIcons.lock_fill),
