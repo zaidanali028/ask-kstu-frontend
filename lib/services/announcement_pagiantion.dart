@@ -45,7 +45,7 @@ class AnnouncementPaginationProvider with ChangeNotifier {
         notifyListeners();
         return _trend;
       } else if (response.statusCode == 401) {
-        throw Exception('Unauthorized!');
+        throw Exception(jsonDecode(response.body)['message']);
       } else {
         throw Exception('Failed to fetch noticeboard!');
       }

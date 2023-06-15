@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:first_app/models/annoucement_key_moment.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +25,7 @@ class KeyMomentProvider extends ChangeNotifier {
       notifyListeners();
       return _key;
     } else if (response.statusCode == 401) {
-      throw Exception('Unauthorized!');
+      throw Exception(jsonDecode(response.body)['message']);
     } else {
       throw Exception('Failed to fetch noticeboard!');
     }

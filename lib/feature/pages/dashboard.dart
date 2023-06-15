@@ -661,17 +661,17 @@ class _DashboardState extends State<Dashboard>
                                                             TrendingShimmer());
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    // logout().then((value) => {
-                                                    //       Navigator.of(context)
-                                                    //           .pushAndRemoveUntil(
-                                                    //               MaterialPageRoute(
-                                                    //                   builder:
-                                                    //                       (context) =>
-                                                    //                           LoginPage()),
-                                                    //               (route) =>
-                                                    //                   false)
-                                                    //     });
-                                                    return Text("${snapshot.error}");
+                                                    logout().then((value) => {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              LoginPage()),
+                                                                  (route) =>
+                                                                      false)
+                                                        });
+                                                    return Center();
                                                   } else {
                                                     final trend =
                                                         snapshot.data!;
@@ -679,6 +679,7 @@ class _DashboardState extends State<Dashboard>
                                                       height: 530,
                                                       width: double.infinity,
                                                       child: ListView.builder(
+                                                        shrinkWrap: true,
                                                         physics:
                                                             BouncingScrollPhysics(),
                                                         itemCount: trend.length,

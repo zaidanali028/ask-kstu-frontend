@@ -29,7 +29,7 @@ class _KeyMomentContainerState extends State<KeyMomentContainer> {
             future: keymoments.fetchKeymoment(widget.title),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Center();
+                return Text("${snapshot.error}");
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: SpinKitFadingCircle(
