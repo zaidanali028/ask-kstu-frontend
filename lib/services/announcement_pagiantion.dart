@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 class AnnouncementPaginationProvider with ChangeNotifier {
   List<Announcement> _trend = [];
-  int _currentPage = 3;
+  int _currentPage = 2;
   int _totalPages = 1;
   bool _isLoading = false;
 
@@ -21,14 +21,13 @@ class AnnouncementPaginationProvider with ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
+      String url =
+          "https://kingthrive-com.stackstaging.com/api/v1/announcements/trending-news?page=2";
 
-      final response = await http.get(
-          Uri.parse(
-              "http://16.16.192.97/api/v1/announcements/trending-news?page=$_currentPage"),
-          headers: {
-            "Accept": "application/json",
-            'Authorization': 'Bearer $token'
-          });
+      final response = await http.get(Uri.parse(url), headers: {
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token'
+      });
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData =
             json.decode(response.body)['announcements'];
@@ -51,7 +50,7 @@ class AnnouncementPaginationProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
   void nextPage() {
     if (_currentPage < _totalPages) {
       _currentPage++;

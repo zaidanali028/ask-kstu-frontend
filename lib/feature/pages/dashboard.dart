@@ -192,16 +192,17 @@ class _DashboardState extends State<Dashboard>
 
         final data = notification.notification.additionalData;
         final announcemet_id = data!['announcemet_id'];
-     OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    // print('"OneSignal: notification opened: ${result}');
-    Navigator.push(
+        OneSignal.shared
+            .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+          // print('"OneSignal: notification opened: ${result}');
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => DetailNews(title: announcemet_id),
             ),
           );
-});
-          
+        });
+
         // }
       },
     );
@@ -418,15 +419,40 @@ class _DashboardState extends State<Dashboard>
                                         builder: (context, provider, _) {
                                       if (provider.status ==
                                           ConnectivityStatus.Offline) {
-                                        logout().then((value) => {
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              LoginPage()),
-                                                      (route) => false)
-                                            });
-                                        return Center();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content:
+                                              Text("No internet connection"),
+                                          backgroundColor: topColor,
+                                          behavior: SnackBarBehavior.floating,
+                                          action: SnackBarAction(
+                                            label: 'Dismiss',
+                                            disabledTextColor: Colors.white,
+                                            textColor: Colors.yellow,
+                                            onPressed: () {
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                            },
+                                          ),
+                                        ));
+                                        return Container(
+                                          width: double.infinity,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
+                                              50,
+                                          decoration: BoxDecoration(
+                                              color: bottomColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(30))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10.0,
+                                                vertical: 18.0),
+                                            child: TrendingShimmer(),
+                                          ),
+                                        );
                                       } else {
                                         return Container(
                                           width: double.infinity,
