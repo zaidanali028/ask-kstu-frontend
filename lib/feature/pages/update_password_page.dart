@@ -164,7 +164,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                       child: TextFormField(
                                         validator: ((value) {
                                           if (value!.isEmpty) {
-                                            return "Current password field is required";
+                                            return "Current password is required";
                                           }
                                           return null;
                                         }),
@@ -201,7 +201,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                       child: TextFormField(
                                         validator: ((value) {
                                           if (value!.isEmpty) {
-                                            return "New Password field is required";
+                                            return "New Password is required";
                                           }
                                           return null;
                                         }),
@@ -238,7 +238,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                                       child: TextFormField(
                                         validator: ((value) {
                                           if (value!.isEmpty) {
-                                            return "Password Confirmation field is required";
+                                            return "New Password Confirmation is required";
                                           }
                                           return null;
                                         }),
