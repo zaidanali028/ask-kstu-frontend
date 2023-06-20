@@ -1,7 +1,8 @@
-// const buildUrl = 'http://16.16.192.97/api/v1';
-const buildUrl = 'https://kingthrive-com.stackstaging.com/api/v1';
-const asset_base_url = 'https://kingthrive-com.stackstaging.com';
-// const asset_base_url = 'http://16.16.192.97';
+const buildUrl = 'http://16.16.192.97/api/v1';
+const asset_base_url = 'http://16.16.192.97';
+
+// const buildUrl = 'https://kingthrive-com.stackstaging.com/api/v1';
+// const asset_base_url = 'https://kingthrive-com.stackstaging.com';
 
 // const buildUrl = 'http://10.0.2.2:8000/api/v1';
 // const asset_base_url = 'http://10.0.2.2:8000';

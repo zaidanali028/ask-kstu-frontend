@@ -25,7 +25,7 @@ class AnnouncementPaginationProvider with ChangeNotifier {
       await Future.delayed(Duration(seconds: 2));
 
       String url =
-          "https://kingthrive-com.stackstaging.com/api/v1/announcements/trending-news?page=" +
+          "http://16.16.192.97/api/v1/announcements/trending-news?page=" +
               _currentPage.toString();
 
       final response = await http.get(Uri.parse(url), headers: {
