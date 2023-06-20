@@ -97,7 +97,7 @@ class _AboutPageState extends State<AboutPage> {
                                     items: [
                                       CarouselItem(
                                           image: AssetImage(
-                                              "assets/images/about-2.jpg"),
+                                              "assets/images/kstu_1.jpg"),
                                           boxDecoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                   begin: FractionalOffset
@@ -121,10 +121,12 @@ class _AboutPageState extends State<AboutPage> {
                                           leftSubtitle: "12/02/2023",
                                           leftSubtitleTextStyle: TextStyle(
                                               fontSize: 13,
-                                              color: bottomColor)),
+                                              color: bottomColor)
+                                        ),
+                                        
                                       CarouselItem(
                                           image: AssetImage(
-                                              "assets/images/package-1.jpg"),
+                                              "assets/images/kstu_2.jpg"),
                                           boxDecoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                   begin: FractionalOffset
@@ -142,15 +144,17 @@ class _AboutPageState extends State<AboutPage> {
                                           title:
                                               "Push your gravity to its limits by reimaging this classic puzzle",
                                           titleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black),
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
                                           leftSubtitle: "12/02/2023",
                                           leftSubtitleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black)),
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
                                       CarouselItem(
                                           image: AssetImage(
-                                              "assets/images/package-2.jpg"),
+                                              "assets/images/kstu_3.jpg"),
                                           boxDecoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                   begin: FractionalOffset
@@ -168,15 +172,17 @@ class _AboutPageState extends State<AboutPage> {
                                           title:
                                               "Push your gravity to its limits by reimaging this classic puzzle",
                                           titleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black),
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
                                           leftSubtitle: "12/02/2023",
                                           leftSubtitleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black)),
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
                                       CarouselItem(
                                           image: AssetImage(
-                                              "assets/images/package-3.jpg"),
+                                              "assets/images/kstu_4.jpg"),
                                           boxDecoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                   begin: FractionalOffset
@@ -194,13 +200,16 @@ class _AboutPageState extends State<AboutPage> {
                                           title:
                                               "Push your gravity to its limits by reimaging this classic puzzle",
                                           titleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black),
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
                                           leftSubtitle: "12/02/2023",
                                           leftSubtitleTextStyle: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black)),
-                                    ],
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
+
+                                        ],
                                     height: 230,
                                     subHeight: 60,
                                     width: MediaQuery.of(context).size.width,
