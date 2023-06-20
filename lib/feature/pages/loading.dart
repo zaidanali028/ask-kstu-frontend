@@ -107,10 +107,10 @@ class _LoadingPageState extends State<LoadingPage> {
     // open prompt for user to enable notification
     PermissionStatus permissionStatus =
         await NotificationPermissions.getNotificationPermissionStatus();
-    // if(permissionStatus == PermissionStatus.denied) {
+     if(permissionStatus == PermissionStatus.denied) {
     //   // if user explicitly denied notifications, we don't want to show them again
-    //   return;
-    // }
+       return;
+     }
 
     if (permissionStatus != PermissionStatus.granted) {
       if (!mounted) return;

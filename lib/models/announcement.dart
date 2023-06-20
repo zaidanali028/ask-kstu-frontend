@@ -20,14 +20,8 @@ class Announcement {
     String updatedAt;
 
     int likesCount;
-<<<<<<< HEAD
     int likesCountFormatted;
     int viewsCountFormatted;
-=======
-    
-    String likesCountFormatted;
-    String viewsCountFormatted;
->>>>>>> 7f14d5ebf8d2adcf3a8d66c60cddacb8fd538b54
     bool likedByAuthUser;
     List<dynamic> likedUsers;
 

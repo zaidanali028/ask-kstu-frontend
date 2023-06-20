@@ -47,7 +47,7 @@ class AnnouncementPaginationProvider with ChangeNotifier {
       } else if (response.statusCode == 401) {
         throw Exception(jsonDecode(response.body)['message']);
       } else {
-        throw Exception('Failed to fetch noticeboard!');
+        throw Exception(jsonDecode(response.body)['message']);
       }
     } catch (error) {
       throw Exception(error);
