@@ -10,9 +10,10 @@ class NoticeBoardProvider extends ChangeNotifier {
 
   List<Announcement> get notice => _notice;
 
-  Future<List<Announcement>> fetchNotice() async {
+  Future<List<Announcement>> fetchNotice(int currentPageNumber) async {
     String token = await getToken();
-    final response = await http.get(Uri.parse(noticeUrl), headers: {
+    final response = await http.get(Uri.parse(noticeUrl+ '?page='+currentPageNumber.toString()), headers: {
+
       "Accept": "application/json",
       'Authorization': 'Bearer $token'
     });

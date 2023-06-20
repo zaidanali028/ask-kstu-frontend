@@ -182,7 +182,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   void _saveupdatedProfile() async {
     var user = await getUserDetails();
     User userData = user.data as User;
-    print('is it working? ${userData.userImg}');
+    // print('is it working? ${userData.userImg}');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString("user_img", userData.userImg ?? '');
 

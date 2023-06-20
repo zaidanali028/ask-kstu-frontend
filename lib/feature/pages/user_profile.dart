@@ -46,6 +46,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       semester = localStorage.getInt('semester');
       level = localStorage.getString('level');
     });
+    // print(image);
   }
 
   @override

@@ -15,11 +15,19 @@ class Announcement {
     int adminId;
     int categoryId;
     String createdAt;
+
     String createdAtFormatted;
     String updatedAt;
+
     int likesCount;
+<<<<<<< HEAD
     int likesCountFormatted;
     int viewsCountFormatted;
+=======
+    
+    String likesCountFormatted;
+    String viewsCountFormatted;
+>>>>>>> 7f14d5ebf8d2adcf3a8d66c60cddacb8fd538b54
     bool likedByAuthUser;
     List<dynamic> likedUsers;
 
@@ -42,7 +50,7 @@ class Announcement {
         required this.likedUsers,
     });
 
-    factory Announcement.fromJson(Map<String, dynamic> json) => Announcement(
+    factory Announcement.fromJson(Map<dynamic, dynamic> json) => Announcement(
         id: json["id"],
         featuredImage: json["featured_image"],
         featuredImageMin: json["featured_image_min"],
@@ -62,7 +70,7 @@ class Announcement {
         likedUsers: List<dynamic>.from(json["liked_users"].map((x) => x)),
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<dynamic, dynamic> toJson() => {
         "id": id,
         "featured_image": featuredImage,
         "featured_image_min": featuredImageMin,
