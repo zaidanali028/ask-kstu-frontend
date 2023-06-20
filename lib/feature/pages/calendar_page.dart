@@ -190,7 +190,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                               topLeft: Radius.circular(10),
                                               topRight: Radius.circular(10))),
                                       child: FutureBuilder<List<Announcement>>(
-                                        future: noticeProvider.fetchNotice(),
+                                        future: noticeProvider.fetchNotice(1),
                                         builder: (context, snapshot) {
                                           if (snapshot.connectionState ==
                                               ConnectionState.waiting) {

@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
+import 'package:first_app/components/trending_component.dart';
 
 class AllNoticeBoardPage extends StatefulWidget {
   const AllNoticeBoardPage({super.key});
@@ -145,24 +146,11 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                         ]),
                       ),
                     )),
-                    Expanded(
+                   Expanded(
                         flex: 10,
                         child: Consumer<ConnectivityProvider>(
                             builder: (context, provider, _) {
                           if (provider.status == ConnectivityStatus.Offline) {
-                            SnackBar(
-                                content: Text("No internet connection"),
-                                backgroundColor: topColor,
-                                behavior: SnackBarBehavior.floating,
-                                action: SnackBarAction(
-                                  label: 'Dismiss',
-                                  disabledTextColor: Colors.white,
-                                  textColor: Colors.yellow,
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
-                                  },
-                                ));
                             return Container(
                               height: MediaQuery.of(context).size.height,
                               width: double.infinity,
@@ -178,273 +166,54 @@ class _AllNoticeBoardPageState extends State<AllNoticeBoardPage> {
                             );
                           } else {
                             return Container(
-                                height: MediaQuery.of(context).size.height / 2,
+                                // height: 100,
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
                                     color: bottomColor,
+                                // color: Colors.red,
+
                                     borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(30))),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 18.0),
-                                  child: FutureBuilder<List<Announcement>>(
-                                      future: noticeboardProvider.fetchNotice(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return TrendingShimmer();
-                                        } else if (snapshot.hasError) {
-                                          logout().then((value) => {
-                                                Navigator.of(context)
-                                                    .pushAndRemoveUntil(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                LoginPage()),
-                                                        (route) => false)
-                                              });
-                                          return Center();
-                                        } else {
-                                          final trend = snapshot.data!;
-                                          return ListView.builder(
+                                child: ListView(
                                             physics: BouncingScrollPhysics(),
-                                            itemCount: trend.length,
-                                            scrollDirection: Axis.vertical,
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                width: double.infinity,
-                                                height: 320,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 10.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          _dialog.show(
-                                                              message:
-                                                                  'Waiting...',
-                                                              type: SimpleFontelicoProgressDialogType
-                                                                  .hurricane);
-                                                          await Future.delayed(
-                                                              Duration(
-                                                                  seconds: 1));
-                                                          _dialog.hide();
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: ((context) =>
-                                                                      DetailNews(
-                                                                          title:
-                                                                              trend[index].id))));
-                                                        },
-                                                        child: Stack(
-                                                          children: [
-                                                            Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 200,
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                  image: trend[index]
-                                                                              .featuredImage !=
-                                                                          null
-                                                                      ? DecorationImage(
-                                                                          image: NetworkImage(
-                                                                              "${announcement_imgUri}${trend[index].featuredImage}"),
-                                                                          fit: BoxFit
-                                                                              .cover)
-                                                                      : null),
-                                                            ),
-                                                            trend[index].featuredImage !=
-                                                                    null
-                                                                ? Container(
-                                                                    width: double
-                                                                        .infinity,
-                                                                    height: 200,
-                                                                    decoration: BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                10),
-                                                                        color: Colors
-                                                                            .black
-                                                                            .withOpacity(0.3)),
-                                                                  )
-                                                                : Center(),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          _dialog.show(
-                                                              message:
-                                                                  'Waiting...',
-                                                              type: SimpleFontelicoProgressDialogType
-                                                                  .hurricane);
-                                                          await Future.delayed(
-                                                              Duration(
-                                                                  seconds: 1));
-                                                          _dialog.hide();
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: ((context) =>
-                                                                      DetailNews(
-                                                                          title:
-                                                                              trend[index].id))));
-                                                        },
-                                                        child: Text(
-                                                          trend[index]
-                                                              .title
-                                                              .trim(),
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal: 15),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                FaIcon(
-                                                                  FontAwesomeIcons
-                                                                      .clock,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 5,
-                                                                ),
-                                                                Container(
-                                                                  width: 100,
-                                                                  child: Text(
-                                                                    '${trend[index].createdAtFormatted.split(', ')[1]}',
-                                                                    maxLines: 2,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .fade,
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            Spacer(),
-                                                            Row(
-                                                              children: [
-                                                                GestureDetector(
-                                                                  onTap: () {
-                                                                    // AudioPlayer().play(
-                                                                    //     AssetSource(
-                                                                    //         "audio/my_audio.mp3"));
-                                                                    if (trend[index]
-                                                                            .likedByAuthUser ==
-                                                                        true) {
-                                                                      likeAnnouncement(
-                                                                          trend[index]
-                                                                              .id,
-                                                                          0);
-                                                                    } else {
-                                                                      likeAnnouncement(
-                                                                          trend[index]
-                                                                              .id,
-                                                                          1);
-                                                                    }
-                                                                  },
-                                                                  child: Row(
-                                                                    children: [
-                                                                      trend[index].likedByAuthUser ==
-                                                                              true
-                                                                          ? Icon(
-                                                                              CupertinoIcons.hand_thumbsup_fill,
-                                                                              color: topColor,
-                                                                            )
-                                                                          : Icon(
-                                                                              CupertinoIcons.hand_thumbsup,
-                                                                              color: Colors.grey,
-                                                                            ),
-                                                                      const SizedBox(
-                                                                        width:
-                                                                            2,
-                                                                      ),
-                                                                      Text(
-                                                                        '${trend[index].likesCountFormatted}',
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.grey),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 12),
-                                                                FaIcon(
-                                                                    FontAwesomeIcons
-                                                                        .eye,
-                                                                    color: Colors
-                                                                        .grey),
-                                                                const SizedBox(
-                                                                  width: 6,
-                                                                ),
-                                                                Text(
-                                                                  '${trend[index].viewsCountFormatted}',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .grey),
-                                                                )
-                                                              ],
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Divider(
-                                                        thickness: 1,
-                                                        color: Colors.grey,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }
-                                      }),
+                                            
+
+                                  children: [Container(
+                                    height: MediaQuery.of(context).size.height,
+                                    child: FutureBuilder<List<Announcement>>(
+                                        future: noticeboardProvider.fetchNotice(1),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return TrendingShimmer();
+                                          } else if (snapshot.hasError) {
+                                            // logout().then((value) => {
+                                            //       Navigator.of(context)
+                                            //           .pushAndRemoveUntil(
+                                            //               MaterialPageRoute(
+                                            //                   builder: (context) =>
+                                            //                       LoginPage()),
+                                            //               (route) => false)
+                                            //     });
+                                            return Text("${snapshot.error}");
+                                          } else {
+                                            // return ListView.builder(
+                                            //     controller: _scrollController,
+                                            //     physics: BouncingScrollPhysics(),
+                                            //     itemCount:
+                                            //         trendProvider.trend.length,
+                                            //     scrollDirection: Axis.vertical,
+                                            //     itemBuilder: (context, index) {
+                                                  final noticeBoardData =
+                                                      noticeboardProvider.notice;
+                                                  return Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: TrendingComponent(gottenData: noticeBoardData,page: 2,hasLimit: false,isTrending:false),
+                                                  );
+                                                
+                                          }
+                                        }),
+                                  ),]
                                 ));
                           }
                         }))

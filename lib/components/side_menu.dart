@@ -31,7 +31,7 @@ class _SideMenuState extends State<SideMenu> {
     setState(() {
       name = localStorage.getString('name');
       indexNo = localStorage.getInt('index');
-      image = localStorage.getString('image');
+      image = localStorage.getString('user_img');
     });
   }
 
