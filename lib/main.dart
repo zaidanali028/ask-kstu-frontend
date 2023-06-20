@@ -28,7 +28,8 @@ void main() {
         create: (_) => KeyMomentProvider(),
       ),
       ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
-      ChangeNotifierProvider(create: (_) => AnnouncementPaginationProvider()),
+      // ChangeNotifierProvider(create: (_) => AnnouncementPaginationProvider()
+      // ),
     ],
     child: MyApp(),
   ));

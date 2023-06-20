@@ -14,7 +14,6 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: topColor,
       body: SafeArea(
           child: Center(
@@ -89,16 +88,6 @@ class _AboutPageState extends State<AboutPage> {
                                   horizontal: 8.0, vertical: 10),
                               child: ListView(
                                 children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "What's trending?",
-                                    style: TextStyle(
-                                        color: topColor,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold),
-                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),
