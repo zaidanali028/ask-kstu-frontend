@@ -84,7 +84,7 @@ Future<ApiResponse> getUserDetails() async {
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 401:
-        apiResponse.error = jsonDecode(response.body)['message'];
+        apiResponse.error = unauthorized;
         break;
       default:
         apiResponse.error = somethingWentwrong;
@@ -95,6 +95,11 @@ Future<ApiResponse> getUserDetails() async {
   }
 
   return apiResponse;
+}
+
+Future<bool> hasOpenedApp() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getBool("hasOpended") ?? false;
 }
 
 Future<String> getToken() async {
@@ -148,7 +153,8 @@ Future<http.StreamedResponse> updateUserProfile(String pickedImagePath) async {
   try {
     String token = await getToken();
     var request = http.MultipartRequest('POST', Uri.parse(updateDpUrl));
-    request.files.add(await http.MultipartFile.fromPath('user_img', pickedImagePath));
+    request.files
+        .add(await http.MultipartFile.fromPath('user_img', pickedImagePath));
     request.headers.addAll({
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',

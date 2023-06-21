@@ -122,8 +122,7 @@ class _AboutPageState extends State<AboutPage> {
                                           leftSubtitleTextStyle: TextStyle(
                                               fontSize: 13,
                                               color: bottomColor)
-                                        ),
-                                        
+                                        ),    
                                       CarouselItem(
                                           image: AssetImage(
                                               "assets/images/kstu_2.jpg"),
@@ -208,9 +207,121 @@ class _AboutPageState extends State<AboutPage> {
                                               fontSize: 13,
                                               color: bottomColor)
                                         ),
+                                      CarouselItem(
+                                          image: AssetImage(
+                                              "assets/images/kstu_5.jpg"),
+                                          boxDecoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset
+                                                      .topCenter,
+                                                  colors: [
+                                                Colors.black.withOpacity(.3),
+                                                Colors.black.withOpacity(.3)
+                                              ],
+                                                  stops: const [
+                                                0.0,
+                                                1.0
+                                              ])),
+                                          title:
+                                              "Push your gravity to its limits by reimaging this classic puzzle",
+                                          titleTextStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
+                                          leftSubtitle: "12/02/2023",
+                                          leftSubtitleTextStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
+                                      CarouselItem(
+                                          image: AssetImage(
+                                              "assets/images/kstu_6.jpg"),
+                                          boxDecoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset
+                                                      .topCenter,
+                                                  colors: [
+                                                Colors.black.withOpacity(.3),
+                                                Colors.black.withOpacity(.3)
+                                              ],
+                                                  stops: const [
+                                                0.0,
+                                                1.0
+                                              ])),
+                                          title:
+                                              "Push your gravity to its limits by reimaging this classic puzzle",
+                                          titleTextStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
+                                          leftSubtitle: "12/02/2023",
+                                          leftSubtitleTextStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
+                                      CarouselItem(
+                                          image: AssetImage(
+                                              "assets/images/kstu_7.jpg"),
+                                          boxDecoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset
+                                                      .topCenter,
+                                                  colors: [
+                                                Colors.black.withOpacity(.3),
+                                                Colors.black.withOpacity(.3)
+                                              ],
+                                                  stops: const [
+                                                0.0,
+                                                1.0
+                                              ])),
+                                          title:
+                                              "Push your gravity to its limits by reimaging this classic puzzle",
+                                          titleTextStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
+                                          leftSubtitle: "12/02/2023",
+                                          leftSubtitleTextStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
+                                      CarouselItem(
+                                          image: AssetImage(
+                                              "assets/images/kstu_8.jpg"),
+                                          boxDecoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset
+                                                      .topCenter,
+                                                  colors: [
+                                                Colors.black.withOpacity(.3),
+                                                Colors.black.withOpacity(.3)
+                                              ],
+                                                  stops: const [
+                                                0.0,
+                                                1.0
+                                              ])),
+                                          title:
+                                              "Push your gravity to its limits by reimaging this classic puzzle",
+                                          titleTextStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: bottomColor,
+                                              fontWeight: FontWeight.bold),
+                                          leftSubtitle: "12/02/2023",
+                                          leftSubtitleTextStyle: TextStyle(
+                                              fontSize: 13,
+                                              color: bottomColor)
+                                        ),
 
                                         ],
-                                    height: 230,
+                                    height: 200,
                                     subHeight: 60,
                                     width: MediaQuery.of(context).size.width,
                                     autoplay: true,

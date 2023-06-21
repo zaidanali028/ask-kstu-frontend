@@ -4,6 +4,7 @@ import 'package:first_app/components/colors.dart';
 import 'package:first_app/services/connectivity_provider.dart';
 import 'package:first_app/feature/pages/dashboard.dart';
 import 'package:first_app/feature/pages/login_page.dart';
+import 'package:first_app/feature/pages/on-boarding/onboarding-parent.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
 import 'package:first_app/models/api_response.dart';
 import 'package:first_app/models/constant.dart';
@@ -27,51 +28,65 @@ class _LoadingPageState extends State<LoadingPage> {
   void _loadUserInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var name = localStorage.getString('name');
+
     String token = await getToken();
-    if (token == '') {
+    bool isOpened = await hasOpenedApp();
+    // print(isOpened);
+    if (!isOpened == true) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
+          MaterialPageRoute(builder: (context) => onBoardingParent()),
           (route) => false);
+      // has not opened app b4
+
+
     } else {
-      ApiResponse response = await getUserDetails();
-      if (response.error == null) {
+      // has opened app b4
+
+      if (token == '') {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard()),
+            MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
             (route) => false);
-        SnackBar(
-          content: Text('Welcome back, ${name}'),
-          backgroundColor: topColor,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-            label: 'Dismiss',
-            disabledTextColor: Colors.white,
-            textColor: Colors.yellow,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        );
-      } else if (response.error == unauthorized) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
-            (route) => false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("You have been logged out"),
-          backgroundColor: topColor,
-          behavior: SnackBarBehavior.floating,
-          action: SnackBarAction(
-            label: 'Dismiss',
-            disabledTextColor: Colors.white,
-            textColor: Colors.yellow,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ));
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("${response.error}")));
-        // print(response.error);
+        ApiResponse response = await getUserDetails();
+        if (response.error == null) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Dashboard()),
+              (route) => false);
+          SnackBar(
+            content: Text('Welcome back, ${name}'),
+            backgroundColor: topColor,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Dismiss',
+              disabledTextColor: Colors.white,
+              textColor: Colors.yellow,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          );
+        } else if (response.error == unauthorized) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => LoginPage()),
+              (route) => false);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("You have been logged out"),
+            backgroundColor: topColor,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Dismiss',
+              disabledTextColor: Colors.white,
+              textColor: Colors.yellow,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("${response.error}")));
+          // print(response.error);
+        }
       }
     }
   }
@@ -107,10 +122,10 @@ class _LoadingPageState extends State<LoadingPage> {
     // open prompt for user to enable notification
     PermissionStatus permissionStatus =
         await NotificationPermissions.getNotificationPermissionStatus();
-     if(permissionStatus == PermissionStatus.denied) {
+    // if(permissionStatus == PermissionStatus.denied) {
     //   // if user explicitly denied notifications, we don't want to show them again
-       return;
-     }
+    //   return;
+    // }
 
     if (permissionStatus != PermissionStatus.granted) {
       if (!mounted) return;

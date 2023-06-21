@@ -1,6 +1,5 @@
 import 'package:first_app/components/colors.dart';
 import 'package:first_app/services/connectivity_provider.dart';
-import 'package:first_app/feature/pages/forgot_password.dart';
 import 'package:first_app/feature/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -193,14 +192,14 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                               ),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  _dialog.show(
-                                                      message: 'Waiting...',
-                                                      type:
-                                                          SimpleFontelicoProgressDialogType
-                                                              .hurricane);
+                                                  // _dialog.show(
+                                                  //     message: 'Waiting...',
+                                                  //     type:
+                                                  //         SimpleFontelicoProgressDialogType
+                                                  //             .hurricane);
                                                   await Future.delayed(
                                                       Duration(seconds: 1));
-                                                  _dialog.hide();
+                                                  // _dialog.hide();
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -232,19 +231,19 @@ class _WelcomeScreenPageState extends State<WelcomeScreenPage>
                                               ),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  _dialog.show(
-                                                      message: 'Waiting...',
-                                                      type:
-                                                          SimpleFontelicoProgressDialogType
-                                                              .hurricane);
-                                                  await Future.delayed(
-                                                      Duration(seconds: 1));
-                                                  _dialog.hide();
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const ForgotPasswordPage()));
+                                                  // _dialog.show(
+                                                  //     message: 'Waiting...',
+                                                  //     type:
+                                                  //         SimpleFontelicoProgressDialogType
+                                                  //             .hurricane);
+                                                  // await Future.delayed(
+                                                  //     Duration(seconds: 1));
+                                                  // _dialog.hide();
+                                                  // Navigator.push(
+                                                  //     context,
+                                                  //     MaterialPageRoute(
+                                                  //         builder: (context) =>
+                                                  //             const ForgotPasswordPage()));
                                                 },
                                                 child: Container(
                                                   height: 50,

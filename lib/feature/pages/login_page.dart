@@ -181,6 +181,8 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString("gender", user.gender ?? '');
     await prefs.setString("level", user.currentLevel ?? '');
     await prefs.setString("user_img", user.userImg ?? '');
+    await prefs.setBool('hasOpended', true);
+    //determine  if app has been opened before
 
     // await prefs.setString("semester", user.currentSemester ?? '');
     // semester has been changed from styring to id,so we may need to create a new field to handle the semester relastion,leave it as 0 for now
@@ -493,14 +495,14 @@ class _LoginPageState extends State<LoginPage> {
                                                         horizontal: 18.0),
                                                 child: GestureDetector(
                                                   onTap: () async {
-                                                    _dialog.show(
-                                                        message: 'Logging...',
-                                                        type:
-                                                            SimpleFontelicoProgressDialogType
-                                                                .hurricane);
-                                                    await Future.delayed(
-                                                        Duration(seconds: 1));
-                                                    _dialog.hide();
+                                                    // _dialog.show(
+                                                    //     message: 'Logging...',
+                                                    //     type:
+                                                    //         SimpleFontelicoProgressDialogType
+                                                    //             .hurricane);
+                                                    // await Future.delayed(
+                                                    //     Duration(seconds: 1));
+                                                    // _dialog.hide();
                                                     if (formkey.currentState!
                                                         .validate()) {
                                                       setState(() {

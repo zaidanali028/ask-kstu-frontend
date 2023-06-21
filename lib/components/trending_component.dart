@@ -1,11 +1,15 @@
-import 'package:first_app/feature/pages/news_details.dart';
-import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/models/announcement.dart';
+import 'dart:convert';
+import 'package:first_app/feature/pages/news_details.dart';
+import 'package:first_app/feature/pages/trending_shimmer.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/components/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
+import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:async/async.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -83,6 +87,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
               loadMoreStatus == AnnouncementLoadMoreStatus.STABLE) {
             loadMoreStatus = AnnouncementLoadMoreStatus.LOADING;
 
+// ................
             if (widget.isTrending) {
               announcementOperation = CancelableOperation.fromFuture(
                       trendProvider.fetchTrend(currentPageNumber))
@@ -153,6 +158,48 @@ class _TrendingComponentState extends State<TrendingComponent> {
     return true;
   }
 
+//
+  Future<void> likeAnnouncement(int announcmentId, int status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.post(
+        Uri.parse(likesUrl + '/' + '${announcmentId}' + '/' + '${status}'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${data['message']}"),
+        backgroundColor: topColor,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${jsonDecode(response.body)['message']}"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
+  }
+
   Future refreshAnnouncements() async {
     setState(() {
       final trendProvider =
@@ -173,6 +220,10 @@ class _TrendingComponentState extends State<TrendingComponent> {
     final trend = widget.gottenData!;
     SimpleFontelicoProgressDialog _dialog =
         SimpleFontelicoProgressDialog(context: context);
+    // final noticeProvider =
+    //     Provider.of<NoticeBoardProvider>(context, listen: false);
+    // final trendProvider =
+    //     Provider.of<TrendingNewsProvider>(context, listen: false);
     return NotificationListener(
         onNotification: onNotification,
         child: Container(
@@ -185,7 +236,9 @@ class _TrendingComponentState extends State<TrendingComponent> {
               physics: BouncingScrollPhysics(),
               itemCount: trend.length,
               // itemCount: trend.length!=0?trend.length:maxPaginatedAnnouncementsValue,
+
               itemBuilder: ((context, index) {
+                // if (index < trend.length) {
                 return dataLoading
                     ? TrendingShimmer()
                     : Container(
@@ -194,8 +247,6 @@ class _TrendingComponentState extends State<TrendingComponent> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               GestureDetector(
                                 onTap: () async {
@@ -302,9 +353,51 @@ class _TrendingComponentState extends State<TrendingComponent> {
                                         )
                                       ],
                                     ),
+                                    // SizedBox(
+                                    //   width: 58,
+                                    // ),
+
                                     Spacer(),
                                     Row(
                                       children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
+                                            if (trend[index].likedByAuthUser ==
+                                                true) {
+                                              likeAnnouncement(
+                                                  trend[index].id, 0);
+                                            } else {
+                                              likeAnnouncement(
+                                                  trend[index].id, 1);
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              // trend[index].likedByAuthUser ==
+                                              //         true
+                                              //     ? Icon(
+                                              //         CupertinoIcons
+                                              //             .hand_thumbsup_fill,
+                                              //         color: topColor,
+                                              //       )
+                                              //     : Icon(
+                                              //         CupertinoIcons
+                                              //             .hand_thumbsup,
+                                              //         color: Colors.grey,
+                                              //       ),
+                                              // const SizedBox(
+                                              //   width: 2,
+                                              // ),
+                                              // Text(
+                                              //   '${trend[index].likesCountFormatted}',
+                                              //   style: TextStyle(
+                                              //       color: Colors.grey),
+                                              // )
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 12),
                                         FaIcon(FontAwesomeIcons.eye,
                                             color: Colors.grey),
                                         const SizedBox(
@@ -330,6 +423,12 @@ class _TrendingComponentState extends State<TrendingComponent> {
                           ),
                         ),
                       );
+                // }
+                // else  {
+                //   return Padding(
+                //       padding: EdgeInsets.symmetric(vertical: 32),
+                //       child: Center(child: TrendingShimmer()));
+                // }
               }),
             ),
           ),
