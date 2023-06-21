@@ -80,7 +80,7 @@ class _onBoardingParent extends State<onBoardingParent> {
 
   TextStyle Stylefunction() {
     return TextStyle(
-        fontSize: 30,
+        fontSize: 25,
         fontFamily: "Billy",
         fontWeight: FontWeight.w600,
         color: Colors.white);
