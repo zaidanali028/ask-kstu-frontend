@@ -13,17 +13,12 @@ import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
 import 'package:first_app/services/user_service.dart';
-import 'package:first_app/components/trending_component.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/components/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
-import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:notification_permissions/notification_permissions.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -219,56 +214,6 @@ class _DashboardState extends State<Dashboard>
     );
   }
 
-  Future<void> likeAnnouncement(int category_id, int status) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    final response = await http.post(
-        Uri.parse(likesUrl + '/' + '${category_id}' + '/' + '${status}'),
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer $token"
-        });
-    if (response.statusCode == 200) {
-      setState(() {
-        isLoading = true;
-      });
-      final data = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${data['message']}"),
-        backgroundColor: topColor,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = true;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${jsonDecode(response.body)['message']}"),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'Dismiss',
-          disabledTextColor: Colors.white,
-          textColor: Colors.yellow,
-          onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          },
-        ),
-      ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     SimpleFontelicoProgressDialog _dialog =
@@ -322,6 +267,7 @@ class _DashboardState extends State<Dashboard>
                               ]),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     flex: 1,
@@ -510,18 +456,17 @@ class _DashboardState extends State<Dashboard>
                                                                 NoticeBoardShimmer()));
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    // logout().then((value) => {
-                                                    //       Navigator.of(context)
-                                                    //           .pushAndRemoveUntil(
-                                                    //               MaterialPageRoute(
-                                                    //                   builder:
-                                                    //                       (context) =>
-                                                    //                           LoginPage()),
-                                                    //               (route) =>
-                                                    //                   false)
-                                                    //     });
-                                                    return Text(
-                                                        "${snapshot.error}");
+                                                    logout().then((value) => {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              LoginPage()),
+                                                                  (route) =>
+                                                                      false)
+                                                        });
+                                                    return Center();
                                                   } else {
                                                     final noticeboard =
                                                         snapshot.data!;
@@ -545,7 +490,7 @@ class _DashboardState extends State<Dashboard>
                                                                     .length >
                                                                 5) {
                                                               setState(() {
-                                                                isFive = false;
+                                                                isFive = true;
                                                               });
                                                             }
                                                             return index !=
@@ -705,18 +650,17 @@ class _DashboardState extends State<Dashboard>
                                                             TrendingShimmer());
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    // logout().then((value) => {
-                                                    //       Navigator.of(context)
-                                                    //           .pushAndRemoveUntil(
-                                                    //               MaterialPageRoute(
-                                                    //                   builder:
-                                                    //                       (context) =>
-                                                    //                           LoginPage()),
-                                                    //               (route) =>
-                                                    //                   false)
-                                                    //     });
-                                                    return Text(
-                                                        "${snapshot.error}");
+                                                    logout().then((value) => {
+                                                          Navigator.of(context)
+                                                              .pushAndRemoveUntil(
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              LoginPage()),
+                                                                  (route) =>
+                                                                      false)
+                                                        });
+                                                    return Center();
                                                   } else {
                                                     final trend =
                                                         snapshot.data!;
@@ -740,6 +684,8 @@ class _DashboardState extends State<Dashboard>
                                                                   horizontal:
                                                                       10.0),
                                                               child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
                                                                 children: [
                                                                   GestureDetector(
                                                                     onTap:
@@ -856,47 +802,9 @@ class _DashboardState extends State<Dashboard>
                                                                             )
                                                                           ],
                                                                         ),
-                                                                        // SizedBox(
-                                                                        //   width: 58,
-                                                                        // ),
-
                                                                         Spacer(),
                                                                         Row(
                                                                           children: [
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
-                                                                                if (trend[index].likedByAuthUser == true) {
-                                                                                  likeAnnouncement(trend[index].id, 0);
-                                                                                } else {
-                                                                                  likeAnnouncement(trend[index].id, 1);
-                                                                                }
-                                                                              },
-                                                                              child: Row(
-                                                                                children: [
-                                                                                  // trend[index].likedByAuthUser ==
-                                                                                  //         true
-                                                                                  //     ? Icon(
-                                                                                  //         CupertinoIcons
-                                                                                  //             .hand_thumbsup_fill,
-                                                                                  //         color: topColor,
-                                                                                  //       )
-                                                                                  //     : Icon(
-                                                                                  //         CupertinoIcons
-                                                                                  //             .hand_thumbsup,
-                                                                                  //         color: Colors.grey,
-                                                                                  //       ),
-                                                                                  // const SizedBox(
-                                                                                  //   width: 2,
-                                                                                  // ),
-                                                                                  // Text(
-                                                                                  //   '${trend[index].likesCountFormatted}',
-                                                                                  //   style: TextStyle(
-                                                                                  //       color: Colors.grey),
-                                                                                  // )
-                                                                                ],
-                                                                              ),
-                                                                            ),
                                                                             SizedBox(width: 12),
                                                                             FaIcon(FontAwesomeIcons.eye,
                                                                                 color: Colors.grey),
