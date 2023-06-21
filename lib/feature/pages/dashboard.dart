@@ -83,6 +83,7 @@ class _DashboardState extends State<Dashboard>
 
   bool isSideBarClosed = true;
   bool isSideMenuClosed = true;
+  bool isFive = false;
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -540,6 +541,13 @@ class _DashboardState extends State<Dashboard>
                                                               Axis.horizontal,
                                                           itemBuilder:
                                                               (context, index) {
+                                                            if (noticeboard
+                                                                    .length >
+                                                                5) {
+                                                              setState(() {
+                                                                isFive = false;
+                                                              });
+                                                            }
                                                             return index !=
                                                                     noticeboard
                                                                         .length
@@ -618,45 +626,44 @@ class _DashboardState extends State<Dashboard>
                                                                       ),
                                                                     ),
                                                                   )
-                                                                : Container(
-                                                                    width: 50,
-                                                                    height: 50,
-                                                                    child:
-                                                                        DecoratedBox(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        shape: BoxShape
-                                                                            .circle,
-                                                                        border:
-                                                                            Border.all(
-                                                                          color:
-                                                                              topColor,
-                                                                          width:
-                                                                              2.0,
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          InkWell(
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.of(context).push(
-                                                                              MaterialPageRoute(builder: (context) => AllNoticeBoardPage()),
-                                                                              );
-                                                                        },
+                                                                : isFive == true
+                                                                    ? Container(
+                                                                        width:
+                                                                            50,
+                                                                        height:
+                                                                            50,
                                                                         child:
-                                                                            Center(
+                                                                            DecoratedBox(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                            border:
+                                                                                Border.all(
+                                                                              color: topColor,
+                                                                              width: 2.0,
+                                                                            ),
+                                                                          ),
                                                                           child:
-                                                                              const Icon(
-                                                                            Icons.arrow_forward_ios,
-                                                                            color:
-                                                                                topColor,
-                                                                            size:
-                                                                                25,
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.of(context).push(
+                                                                                MaterialPageRoute(builder: (context) => AllNoticeBoardPage()),
+                                                                              );
+                                                                            },
+                                                                            child:
+                                                                                Center(
+                                                                              child: const Icon(
+                                                                                Icons.arrow_forward_ios,
+                                                                                color: topColor,
+                                                                                size: 25,
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  );
+                                                                      )
+                                                                    : Center();
                                                           },
                                                         ),
                                                       ),
@@ -714,11 +721,220 @@ class _DashboardState extends State<Dashboard>
                                                     final trend =
                                                         snapshot.data!;
 
-                                                    return TrendingComponent(
-                                                        gottenData: trend,
-                                                        page: 2,
-                                                        hasLimit: true,
-                                                        isTrending: true);
+                                                    return Container(
+                                                      height: 530,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                        physics:
+                                                            BouncingScrollPhysics(),
+                                                        itemCount: trend.length,
+                                                        itemBuilder:
+                                                            ((context, index) {
+                                                          return Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 320,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      _dialog.show(
+                                                                          message:
+                                                                              'Waiting...',
+                                                                          type:
+                                                                              SimpleFontelicoProgressDialogType.hurricane);
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                      _dialog
+                                                                          .hide();
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          height:
+                                                                              200,
+                                                                          decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              image: trend[index].featuredImage != null ? DecorationImage(image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"), fit: BoxFit.cover) : null),
+                                                                        ),
+                                                                        trend[index].featuredImage !=
+                                                                                null
+                                                                            ? Container(
+                                                                                width: double.infinity,
+                                                                                height: 200,
+                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.3)),
+                                                                              )
+                                                                            : Center(),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      _dialog.show(
+                                                                          message:
+                                                                              'Waiting...',
+                                                                          type:
+                                                                              SimpleFontelicoProgressDialogType.hurricane);
+                                                                      await Future.delayed(Duration(
+                                                                          seconds:
+                                                                              1));
+                                                                      _dialog
+                                                                          .hide();
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
+                                                                    },
+                                                                    child: Text(
+                                                                      trend[index]
+                                                                          .title
+                                                                          .trim(),
+                                                                      maxLines:
+                                                                          2,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              20,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            15),
+                                                                    child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceEvenly,
+                                                                          children: [
+                                                                            FaIcon(
+                                                                              FontAwesomeIcons.clock,
+                                                                              color: Colors.grey,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 5,
+                                                                            ),
+                                                                            Container(
+                                                                              width: 100,
+                                                                              child: Text(
+                                                                                '${trend[index].createdAtFormatted.split(', ')[1]}',
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.fade,
+                                                                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        // SizedBox(
+                                                                        //   width: 58,
+                                                                        // ),
+
+                                                                        Spacer(),
+                                                                        Row(
+                                                                          children: [
+                                                                            GestureDetector(
+                                                                              onTap: () {
+                                                                                // AudioPlayer().play(AssetSource("audio/my_audio.mp3"));
+                                                                                if (trend[index].likedByAuthUser == true) {
+                                                                                  likeAnnouncement(trend[index].id, 0);
+                                                                                } else {
+                                                                                  likeAnnouncement(trend[index].id, 1);
+                                                                                }
+                                                                              },
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  // trend[index].likedByAuthUser ==
+                                                                                  //         true
+                                                                                  //     ? Icon(
+                                                                                  //         CupertinoIcons
+                                                                                  //             .hand_thumbsup_fill,
+                                                                                  //         color: topColor,
+                                                                                  //       )
+                                                                                  //     : Icon(
+                                                                                  //         CupertinoIcons
+                                                                                  //             .hand_thumbsup,
+                                                                                  //         color: Colors.grey,
+                                                                                  //       ),
+                                                                                  // const SizedBox(
+                                                                                  //   width: 2,
+                                                                                  // ),
+                                                                                  // Text(
+                                                                                  //   '${trend[index].likesCountFormatted}',
+                                                                                  //   style: TextStyle(
+                                                                                  //       color: Colors.grey),
+                                                                                  // )
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(width: 12),
+                                                                            FaIcon(FontAwesomeIcons.eye,
+                                                                                color: Colors.grey),
+                                                                            const SizedBox(
+                                                                              width: 6,
+                                                                            ),
+                                                                            Text(
+                                                                              '${trend[index].viewsCountFormatted}',
+                                                                              style: TextStyle(color: Colors.grey),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                  Divider(
+                                                                    thickness:
+                                                                        1,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+
+                                                          // }
+                                                          // else  {
+                                                          //   return Padding(
+                                                          //       padding: EdgeInsets.symmetric(vertical: 32),
+                                                          //       child: Center(child: TrendingShimmer()));
+                                                          // }
+                                                        }),
+                                                      ),
+                                                    );
                                                   }
                                                 },
                                               )

@@ -423,6 +423,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
                           ),
                         ),
                       );
+                
                 // }
                 // else  {
                 //   return Padding(
@@ -432,6 +433,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
               }),
             ),
           ),
-        ));
+        )
+        );
   }
 }

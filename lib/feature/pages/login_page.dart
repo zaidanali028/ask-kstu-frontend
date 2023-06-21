@@ -495,14 +495,14 @@ class _LoginPageState extends State<LoginPage> {
                                                         horizontal: 18.0),
                                                 child: GestureDetector(
                                                   onTap: () async {
-                                                    // _dialog.show(
-                                                    //     message: 'Logging...',
-                                                    //     type:
-                                                    //         SimpleFontelicoProgressDialogType
-                                                    //             .hurricane);
-                                                    // await Future.delayed(
-                                                    //     Duration(seconds: 1));
-                                                    // _dialog.hide();
+                                                    _dialog.show(
+                                                        message: 'Logging...',
+                                                        type:
+                                                            SimpleFontelicoProgressDialogType
+                                                                .hurricane);
+                                                    await Future.delayed(
+                                                        Duration(seconds: 1));
+                                                    _dialog.hide();
                                                     if (formkey.currentState!
                                                         .validate()) {
                                                       setState(() {
