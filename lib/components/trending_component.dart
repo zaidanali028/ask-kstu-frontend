@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/models/announcement.dart';
 import 'dart:convert';
+import 'dart:math';
+// import 'package:audioplayers/audioplayers.dart';
+import 'package:first_app/components/side_menu.dart';
+import 'package:first_app/services/connectivity_provider.dart';
+import 'package:first_app/feature/pages/login_page.dart';
 import 'package:first_app/feature/pages/news_details.dart';
+import 'package:first_app/feature/pages/notice_board_shimmer.dart';
 import 'package:first_app/feature/pages/trending_shimmer.dart';
+import 'package:first_app/feature/pages/user_profile.dart';
+import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
+import 'package:first_app/services/user_service.dart';
+import 'package:first_app/components/trending_component.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:first_app/components/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:first_app/services/notice_board.dart';
+
+import 'package:notification_permissions/notification_permissions.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:async/async.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
@@ -21,9 +37,11 @@ class TrendingComponent extends StatefulWidget {
   int page;
   final bool isTrending;
   final bool hasLimit;
+  final bool showRefresh;
 
   TrendingComponent(
       {super.key,
+      required this.showRefresh,
       required this.gottenData,
       required this.page,
       required this.isTrending,
@@ -40,7 +58,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
   //
   AnnouncementLoadMoreStatus loadMoreStatus = AnnouncementLoadMoreStatus.STABLE;
   final ScrollController scrollController = new ScrollController();
-  // static const String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185";
+  // static const String IMAGE_BASE_URL = "http://image.tmdb.org/t/";
   List<Announcement>? announcements = [];
 
   int currentPageNumber = 0;
@@ -90,7 +108,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
 // ................
             if (widget.isTrending) {
               announcementOperation = CancelableOperation.fromFuture(
-                      trendProvider.fetchTrend(currentPageNumber))
+                      trendProvider.fetchTrend( currentPageNumber))
                   .then((announcementObject) {
                 setState(() {
                   dataLoading = false;
@@ -207,9 +225,10 @@ class _TrendingComponentState extends State<TrendingComponent> {
       final noticeboardProvider =
           Provider.of<NoticeBoardProvider>(context, listen: false);
       announcements!.clear();
-      announcements != widget.isTrending
+      announcements!= widget.isTrending
           ? trendProvider.fetchTrend(1)
           : noticeboardProvider.fetchNotice(1);
+          
     });
 
     // SQq7t8AF
@@ -217,9 +236,7 @@ class _TrendingComponentState extends State<TrendingComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final trend = widget.gottenData!;
-    SimpleFontelicoProgressDialog _dialog =
-        SimpleFontelicoProgressDialog(context: context);
+   
     // final noticeProvider =
     //     Provider.of<NoticeBoardProvider>(context, listen: false);
     // final trendProvider =
@@ -229,14 +246,25 @@ class _TrendingComponentState extends State<TrendingComponent> {
         child: Container(
           height: 530,
           width: double.infinity,
-          child: RefreshIndicator(
+          child:widget.showRefresh? RefreshIndicator(
             onRefresh: refreshAnnouncements,
-            child: ListView.builder(
+            child: announcementBuilder()):
+            announcementBuilder(),
+            ),
+          );
+        // );
+  }
+
+  Widget announcementBuilder(){
+     final trend = widget.gottenData!;
+    SimpleFontelicoProgressDialog _dialog =
+        SimpleFontelicoProgressDialog(context: context);
+    return ListView.builder(
               controller: scrollController,
               physics: BouncingScrollPhysics(),
               itemCount: trend.length,
               // itemCount: trend.length!=0?trend.length:maxPaginatedAnnouncementsValue,
-
+              
               itemBuilder: ((context, index) {
                 // if (index < trend.length) {
                 return dataLoading
@@ -423,17 +451,12 @@ class _TrendingComponentState extends State<TrendingComponent> {
                           ),
                         ),
                       );
-                
                 // }
                 // else  {
                 //   return Padding(
                 //       padding: EdgeInsets.symmetric(vertical: 32),
                 //       child: Center(child: TrendingShimmer()));
                 // }
-              }),
-            ),
-          ),
-        )
-        );
+              }));
   }
 }

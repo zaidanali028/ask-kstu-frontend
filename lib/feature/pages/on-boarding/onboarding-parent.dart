@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:first_app/feature/pages/welcome_screen.dart';
+import 'package:first_app/components/colors.dart';
 
 ///Class to hold data for itembuilder in onBoardingParent app.
 class ItemData {
@@ -73,7 +74,7 @@ class _onBoardingParent extends State<onBoardingParent> {
 
   TextStyle Stylefunction() {
     return TextStyle(
-        fontSize: 25,
+        fontSize: 30,
         fontFamily: "Billy",
         fontWeight: FontWeight.w600,
         color: Colors.white);
@@ -131,14 +132,19 @@ class _onBoardingParent extends State<onBoardingParent> {
               );
             },
             positionSlideIcon: 0.8,
-            slideIconWidget: Icon(Icons.arrow_back_ios, color: Colors.white),
+            slideIconWidget: liquidController.currentPage == 4
+                ? InkWell(onTap:(){
+                        toWelcome();
+
+                },child:Icon(Icons.arrow_forward_ios, color: Colors.white))
+                : Icon(Icons.arrow_back_ios, color: Colors.white),
             onPageChangeCallback: pageChangeCallback,
             waveType: WaveType.liquidReveal,
             liquidController: liquidController,
             fullTransitionValue: 880,
             enableSideReveal: true,
             preferDragFromRevealedArea: true,
-            enableLoop: true,
+            enableLoop: false,
             ignoreUserGestureWhileAnimating: true,
           ),
           Padding(
@@ -157,19 +163,32 @@ class _onBoardingParent extends State<onBoardingParent> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.all(25.0),
-              child: TextButton(
-                onPressed: () {
-                  liquidController.animateToPage(
-                      page: data.length - 1, duration: 700);
-                },
-                child: Text(
-                  "Skip to End",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.01),
-                    foregroundColor: Colors.black),
-              ),
+              child: liquidController.currentPage == 4
+                  ? TextButton(
+                      onPressed: () {
+                        toWelcome();
+                      },
+                      child: Text(
+                        "Get Started!",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.01),
+                          foregroundColor: Colors.black),
+                    )
+                  : TextButton(
+                      onPressed: () {
+                        liquidController.animateToPage(
+                            page: data.length - 1, duration: 700);
+                      },
+                      child: Text(
+                        "Skip to End",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.01),
+                          foregroundColor: Colors.black),
+                    ),
             ),
           ),
           Align(
@@ -198,6 +217,12 @@ class _onBoardingParent extends State<onBoardingParent> {
     );
   }
 
+  toWelcome() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
+        (route) => false);
+  }
+
   pageChangeCallback(int lpage) {
     setState(() {
       page = lpage;
@@ -221,36 +246,36 @@ class _ActionSliderState extends State<ActionSlider> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 80,
-        ),
-        Container(
-          width: 50,
-          height: 50,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white,
-                width: 2.0,
-              ),
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
-                );
-              },
-              child: Center(
-                child: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-            ),
-          ),
-        ),
+        // SizedBox(
+        //   height: 80,
+        // ),
+        // Container(
+        //   width: 50,
+        //   height: 50,
+        //   child: DecoratedBox(
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       border: Border.all(
+        //         color: Colors.white,
+        //         width: 2.0,
+        //       ),
+        //     ),
+        //     child: InkWell(
+        //       onTap: () {
+        //         Navigator.of(context).push(
+        //           MaterialPageRoute(builder: (context) => WelcomeScreenPage()),
+        //         );
+        //       },
+        //       child: Center(
+        //         child: const Icon(
+        //           Icons.arrow_forward_ios,
+        //           color: Colors.white,
+        //           size: 25,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

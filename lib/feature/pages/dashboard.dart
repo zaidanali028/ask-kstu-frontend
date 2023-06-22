@@ -13,12 +13,17 @@ import 'package:first_app/models/announcement.dart';
 import 'package:first_app/models/constant.dart';
 import 'package:first_app/services/notice_board.dart';
 import 'package:first_app/services/user_service.dart';
+import 'package:first_app/components/trending_component.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/components/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:first_app/services/trending_news.dart';
+import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:notification_permissions/notification_permissions.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
@@ -78,7 +83,6 @@ class _DashboardState extends State<Dashboard>
 
   bool isSideBarClosed = true;
   bool isSideMenuClosed = true;
-  bool isFive = false;
 
   void getUser() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -214,6 +218,56 @@ class _DashboardState extends State<Dashboard>
     );
   }
 
+  Future<void> likeAnnouncement(int category_id, int status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.post(
+        Uri.parse(likesUrl + '/' + '${category_id}' + '/' + '${status}'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        });
+    if (response.statusCode == 200) {
+      setState(() {
+        isLoading = true;
+      });
+      final data = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${data['message']}"),
+        backgroundColor: topColor,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${jsonDecode(response.body)['message']}"),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SimpleFontelicoProgressDialog _dialog =
@@ -267,7 +321,6 @@ class _DashboardState extends State<Dashboard>
                               ]),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     flex: 1,
@@ -456,17 +509,18 @@ class _DashboardState extends State<Dashboard>
                                                                 NoticeBoardShimmer()));
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    logout().then((value) => {
-                                                          Navigator.of(context)
-                                                              .pushAndRemoveUntil(
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              LoginPage()),
-                                                                  (route) =>
-                                                                      false)
-                                                        });
-                                                    return Center();
+                                                    // logout().then((value) => {
+                                                    //       Navigator.of(context)
+                                                    //           .pushAndRemoveUntil(
+                                                    //               MaterialPageRoute(
+                                                    //                   builder:
+                                                    //                       (context) =>
+                                                    //                           LoginPage()),
+                                                    //               (route) =>
+                                                    //                   false)
+                                                    //     });
+                                                    return Text(
+                                                        "${snapshot.error}");
                                                   } else {
                                                     final noticeboard =
                                                         snapshot.data!;
@@ -486,13 +540,6 @@ class _DashboardState extends State<Dashboard>
                                                               Axis.horizontal,
                                                           itemBuilder:
                                                               (context, index) {
-                                                            if (noticeboard
-                                                                    .length >
-                                                                5) {
-                                                              setState(() {
-                                                                isFive = true;
-                                                              });
-                                                            }
                                                             return index !=
                                                                     noticeboard
                                                                         .length
@@ -571,44 +618,45 @@ class _DashboardState extends State<Dashboard>
                                                                       ),
                                                                     ),
                                                                   )
-                                                                : isFive == true
-                                                                    ? Container(
-                                                                        width:
-                                                                            50,
-                                                                        height:
-                                                                            50,
-                                                                        child:
-                                                                            DecoratedBox(
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            shape:
-                                                                                BoxShape.circle,
-                                                                            border:
-                                                                                Border.all(
-                                                                              color: topColor,
-                                                                              width: 2.0,
-                                                                            ),
-                                                                          ),
-                                                                          child:
-                                                                              InkWell(
-                                                                            onTap:
-                                                                                () {
-                                                                              Navigator.of(context).push(
-                                                                                MaterialPageRoute(builder: (context) => AllNoticeBoardPage()),
+                                                                :noticeboard.length>=10? Container(
+                                                                    width: 50,
+                                                                    height: 50,
+                                                                    child:
+                                                                        DecoratedBox(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        shape: BoxShape
+                                                                            .circle,
+                                                                        border:
+                                                                            Border.all(
+                                                                          color:
+                                                                              topColor,
+                                                                          width:
+                                                                              2.0,
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                         InkWell(
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.of(context).push(
+                                                                              MaterialPageRoute(builder: (context) => AllNoticeBoardPage()),
                                                                               );
-                                                                            },
-                                                                            child:
-                                                                                Center(
-                                                                              child: const Icon(
-                                                                                Icons.arrow_forward_ios,
-                                                                                color: topColor,
-                                                                                size: 25,
-                                                                              ),
-                                                                            ),
+                                                                        },
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              const Icon(
+                                                                            Icons.arrow_forward_ios,
+                                                                            color:
+                                                                                topColor,
+                                                                            size:
+                                                                                25,
                                                                           ),
                                                                         ),
-                                                                      )
-                                                                    : Center();
+                                                                      ),
+                                                                    ),
+                                                                  ):Container();
                                                           },
                                                         ),
                                                       ),
@@ -650,199 +698,28 @@ class _DashboardState extends State<Dashboard>
                                                             TrendingShimmer());
                                                   } else if (snapshot
                                                       .hasError) {
-                                                    logout().then((value) => {
-                                                          Navigator.of(context)
-                                                              .pushAndRemoveUntil(
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              LoginPage()),
-                                                                  (route) =>
-                                                                      false)
-                                                        });
-                                                    return Center();
+                                                    // logout().then((value) => {
+                                                    //       Navigator.of(context)
+                                                    //           .pushAndRemoveUntil(
+                                                    //               MaterialPageRoute(
+                                                    //                   builder:
+                                                    //                       (context) =>
+                                                    //                           LoginPage()),
+                                                    //               (route) =>
+                                                    //                   false)
+                                                    //     });
+                                                    return Text(
+                                                        "${snapshot.error}");
                                                   } else {
                                                     final trend =
                                                         snapshot.data!;
 
-                                                    return Container(
-                                                      height: 530,
-                                                      width: double.infinity,
-                                                      child: ListView.builder(
-                                                        physics:
-                                                            BouncingScrollPhysics(),
-                                                        itemCount: trend.length,
-                                                        itemBuilder:
-                                                            ((context, index) {
-                                                          return Container(
-                                                            width:
-                                                                double.infinity,
-                                                            height: 320,
-                                                            child: Padding(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      10.0),
-                                                              child: Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      _dialog.show(
-                                                                          message:
-                                                                              'Waiting...',
-                                                                          type:
-                                                                              SimpleFontelicoProgressDialogType.hurricane);
-                                                                      await Future.delayed(Duration(
-                                                                          seconds:
-                                                                              1));
-                                                                      _dialog
-                                                                          .hide();
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
-                                                                    },
-                                                                    child:
-                                                                        Stack(
-                                                                      children: [
-                                                                        Container(
-                                                                          width:
-                                                                              double.infinity,
-                                                                          height:
-                                                                              200,
-                                                                          decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(10),
-                                                                              image: trend[index].featuredImage != null ? DecorationImage(image: NetworkImage("${announcement_imgUri}${trend[index].featuredImage}"), fit: BoxFit.cover) : null),
-                                                                        ),
-                                                                        trend[index].featuredImage !=
-                                                                                null
-                                                                            ? Container(
-                                                                                width: double.infinity,
-                                                                                height: 200,
-                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.3)),
-                                                                              )
-                                                                            : Center(),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      _dialog.show(
-                                                                          message:
-                                                                              'Waiting...',
-                                                                          type:
-                                                                              SimpleFontelicoProgressDialogType.hurricane);
-                                                                      await Future.delayed(Duration(
-                                                                          seconds:
-                                                                              1));
-                                                                      _dialog
-                                                                          .hide();
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: ((context) => DetailNews(title: trend[index].id))));
-                                                                    },
-                                                                    child: Text(
-                                                                      trend[index]
-                                                                          .title
-                                                                          .trim(),
-                                                                      maxLines:
-                                                                          2,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontSize:
-                                                                              20,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .symmetric(
-                                                                        horizontal:
-                                                                            15),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceEvenly,
-                                                                          children: [
-                                                                            FaIcon(
-                                                                              FontAwesomeIcons.clock,
-                                                                              color: Colors.grey,
-                                                                            ),
-                                                                            const SizedBox(
-                                                                              width: 5,
-                                                                            ),
-                                                                            Container(
-                                                                              width: 100,
-                                                                              child: Text(
-                                                                                '${trend[index].createdAtFormatted.split(', ')[1]}',
-                                                                                maxLines: 1,
-                                                                                overflow: TextOverflow.fade,
-                                                                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-                                                                              ),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                        Spacer(),
-                                                                        Row(
-                                                                          children: [
-                                                                            SizedBox(width: 12),
-                                                                            FaIcon(FontAwesomeIcons.eye,
-                                                                                color: Colors.grey),
-                                                                            const SizedBox(
-                                                                              width: 6,
-                                                                            ),
-                                                                            Text(
-                                                                              '${trend[index].viewsCountFormatted}',
-                                                                              style: TextStyle(color: Colors.grey),
-                                                                            )
-                                                                          ],
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  Divider(
-                                                                    thickness:
-                                                                        1,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-
-                                                          // }
-                                                          // else  {
-                                                          //   return Padding(
-                                                          //       padding: EdgeInsets.symmetric(vertical: 32),
-                                                          //       child: Center(child: TrendingShimmer()));
-                                                          // }
-                                                        }),
-                                                      ),
-                                                    );
+                                                    return TrendingComponent(
+                                                        gottenData: trend,
+                                                        showRefresh: false,
+                                                        page: 2,
+                                                        hasLimit: true,
+                                                        isTrending: true);
                                                   }
                                                 },
                                               )
